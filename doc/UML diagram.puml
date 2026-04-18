@@ -1,0 +1,116 @@
+@startuml
+
+class std::exception <<external>>
+
+namespace genMatrix {
+
+    class "Matrix<T>" {
+        - T* data
+        - size_t n
+        - size_t m
+        - bool isDynamic
+
+        + Matrix(size_t n = 0, size_t m = 0)
+        + Matrix(const Matrix<T>& other)
+        + Matrix<T>& operator=(const Matrix<T>& other)
+
+        + CommaInit operator<<(const T& val)
+
+        + size_t getRows() const
+        + size_t getCols() const
+        + size_t size() const
+
+        + const T& operator()(size_t row, size_t col) const
+        + T& operator()(size_t row, size_t col)
+
+        + bool operator==(const Matrix<T>& other)
+
+        + Matrix_Iterator begin()
+        + Matrix_Iterator end()
+
+        + Matrix<T>& swapRow(size_t n1, size_t n2)
+        + Matrix<T>& swapCol(size_t m1, size_t m2)
+
+        + Matrix<T> operator+(const Matrix<T>& rhs_mtx) const
+        + Matrix<T> operator+(const T& rhs_type)
+        + Matrix<T>& operator+=(const Matrix<T>& rhs_mtx)
+        + Matrix<T>& operator+=(const T& rhs_type)
+
+        + Matrix<T> operator-(const Matrix<T>& rhs_mtx) const
+        + Matrix<T>& operator-(const T& rhs_type)
+        + Matrix<T>& operator-=(const Matrix<T>& rhs_mtx)
+        + Matrix<T>& operator-=(const T& rhs_type)
+
+        + Matrix<T> operator*(const Matrix<T>& rhs_mtx) const
+        + Matrix<T> operator*(const T& rhs_type) const
+        + Matrix<T>& operator*=(const Matrix<T>& rhs_mtx)
+        + Matrix<T> operator*=(const T& rhs_type) const
+
+        + void transpose()
+        + Matrix<T> inverse()
+        + T determinant()
+
+        + ~Matrix()
+    }
+
+    class "Matrix<T>::CommaInit" {
+        + Matrix<T>& mtx
+        + size_t nextidx
+
+        + CommaInit(Matrix<T>& _mtx, const T& init)
+        + CommaInit& operator,(const T& rhs_val)
+        + ~CommaInit()
+    }
+
+    class "Matrix<T>::Matrix_Iterator" {
+        - T* ptr
+
+        + Matrix_Iterator(T* _ptr = nullptr)
+
+        + T& operator*() const
+        + T* operator->() const
+        + T& operator[](difference_type rhs_diff) const
+
+        + Matrix_Iterator& operator++()
+        + Matrix_Iterator operator++(int)
+        + Matrix_Iterator& operator--()
+        + Matrix_Iterator operator--(int)
+
+        + Matrix_Iterator operator+(difference_type rhs_diff) const
+        + Matrix_Iterator operator-(difference_type rhs_diff) const
+        + Matrix_Iterator& operator+=(difference_type rhs_diff)
+        + Matrix_Iterator& operator-=(difference_type rhs_diff)
+
+        + difference_type operator-(const Matrix_Iterator& rhs_iter) const
+
+        + bool operator==(const Matrix_Iterator& rhs_iter) const
+        + bool operator!=(const Matrix_Iterator& rhs_iter) const
+        + bool operator<=(const Matrix_Iterator& rhs_iter) const
+        + bool operator>=(const Matrix_Iterator& rhs_iter) const
+        + bool operator>(const Matrix_Iterator& rhs_iter) const
+        + bool operator<(const Matrix_Iterator& rhs_iter) const
+    }
+
+    class Matrix_Error {
+        - bool isFatal
+        - char* src_func
+        - char* msg
+
+        + Matrix_Error(const char* _src, const char* _msg, bool fatal = false)
+        + Matrix_Error(const Matrix_Error& other)
+
+        + const char* src() const
+        + const char* what() const
+
+        + ~Matrix_Error()
+    }
+
+    ' Relationships
+    "Matrix<T>" *-- "Matrix<T>::CommaInit"
+    "Matrix<T>" *-- "Matrix<T>::Matrix_Iterator"
+
+    Matrix_Error --|> std::exception
+
+}
+
+@enduml
