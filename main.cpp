@@ -168,5 +168,100 @@ int main(int argc, char **argv) {
         EXPECT_TRUE(M1 == M6);
     END
 
+    TEST("Szorzas konstanssal", "genMatrix<int> statikus")
+        Matrix<int> M1 = M, M2 = M;
+        M1 *= -7;
+        M2 *= 4;
+
+        for (size_t i = 0; i < M1.getCols(); i++) {
+            for (size_t k = 0; k < M1.getRows(); k++) {
+                EXPECT_EQ(M(i, k) * -7, M1(i, k));
+                EXPECT_EQ(M(i, k) * 4, M2(i, k));
+            }
+        }
+    END 
+
+    TEST("Osszeadas, kivonas", "genMatrix<int> statikus")
+        Matrix<int> M1 = M, M2 = M1 + 1, M3 = M1 + 9, M4 = M1, M5 = M1, M6 = M2 + M3, M7 = M - M1;
+        M4 += 9;
+        M5 -= 1;
+
+        for (size_t i = 0; i < M1.getCols(); i++) {
+            for (size_t k = 0; k < M1.getRows(); k++) {
+                EXPECT_EQ(M1(i, k) + 1, M2(i, k));
+                EXPECT_EQ(M1(i, k) + 9, M3(i, k));
+                EXPECT_EQ(M2(i, k) + M3(i, k), M6(i, k));
+                EXPECT_EQ((int)0, M7(i, k));
+            }
+        }
+
+        EXPECT_TRUE(M4 == M3);
+        EXPECT_TRUE(M5 == M2);    
+    END
+
+    TEST("Matrixszorzas", "genMatrix<int> statikus")
+        Matrix<int> M1(3, 4);
+        M1 << 1, 0, 2, 1,
+              0, 3, 1, 2,
+              2, 1, 0, 1;
+
+        Matrix<int> M2(4, 3);
+        M2 << 1, 2, 0,
+              0, 1, 1,
+              2, 0, 3,
+              1, 1, 2;
+
+        Matrix<int> M12(3, 3);
+        M12 << 6, 3, 8,
+               4, 5, 10,
+               3, 6, 3;
+
+        Matrix<int> M21(4, 4);
+        M21 << 1, 6, 4, 5,
+               2, 4, 1, 3,
+               8, 3, 4, 5,
+               5, 5, 3, 5;
+
+        EXPECT_TRUE((M1 * M2) == M12);
+        EXPECT_TRUE((M2 * M1) == M21);
+    END
+
+    TEST("Transzponal negyzetes matrix", "genMatrix<int> statikus")
+        Matrix<int> N(2, 2);
+        N << 1, 2, 
+             3, 4;
+
+        Matrix<int> L = N.transpose();
+
+        Matrix<int> U = N;
+        U.transposeInPlace();
+
+        Matrix<int> TN(2, 2);
+        TN << 1, 3, 
+              2, 4;
+
+        EXPECT_TRUE(TN == L);
+        EXPECT_TRUE(TN == U);
+    END
+
+    TEST("Transzponal altalanos matrix", "genMatrix<int> statikus")
+        Matrix<int> N(2, 3);
+        N << 1, 2, 3,
+             4, 5, 6;
+
+        Matrix<int> L = N.transpose();
+
+        Matrix<int> U = N;
+        U.transposeInPlace();
+
+        Matrix<int> TN(3, 2);
+        TN << 1, 4, 
+              2, 5,
+              3, 6;
+
+        EXPECT_TRUE(TN == L);
+        EXPECT_TRUE(TN == U);
+    END
+
     return 0;
 }

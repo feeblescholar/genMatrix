@@ -19,10 +19,20 @@ namespace genMatrix {
         size_t n, m;    /** A mátrix méretei (n sor, m oszlop). */
         bool isDynamic; /** Eltárolja, hogy a mátrix dinamikus-e. */
 
+        /**
+         * Megcseréli a és b-t.
+         */
         void swap(T* a, T* b) {
             T* tmp = a;
             a = b;
             b = tmp;
+        }
+
+        /**
+         * Megállapítja, hogy a két mátrix pontosan egy méretű (nem csak az (n*m) szorzatuk az).
+         */
+        bool exact_size(const Matrix<T>& matA, const Matrix<T> matB) {
+            return (matA.n == matB.n) && (matA.m && matB.m);
         }
     
     public:
@@ -43,26 +53,26 @@ namespace genMatrix {
             }
 
             try {
-                data = new T[this->size()];
+                data = new T[this->size()](); /** forceoljuk a default constructort elemi típusokra is */
             }
             catch (const std::bad_alloc&) {
                 throw "hibaosztaly ide";
             }
-        };
+        }
 
         Matrix(const Matrix<T>& other) : data(nullptr), n(0), m(0) {
             *this = other;
         }
 
         Matrix& operator=(const Matrix& other) {
-            if (this != &other) { /* nem módosítjuk, de csak így lehet őket összehasonlítani */
+            if (this != &other) {
                 delete[] data;
 
                 isDynamic = other.isDynamic;
                 n = other.n;
                 m = other.m;
 
-                data = new T[this->size()];
+                data = new T[this->size()]();
                 for (size_t i = 0; i < this->size(); i++) {
                     data[i] = other.data[i];
                 }
@@ -79,7 +89,7 @@ namespace genMatrix {
         CommaInit operator<<(const T& val) {
             if (isDynamic) throw "csak statikus mereture hivhato";
             return CommaInit(*this, val);
-        };
+        }
 
         /**
          * @return A sorok száma.
@@ -98,7 +108,7 @@ namespace genMatrix {
             if (!n) return m;
             if (!m) return n;
             return n * m;
-        };
+        }
 
         /**
          * @param row Sorindex
@@ -110,7 +120,7 @@ namespace genMatrix {
             if (!n && !m) throw "ures mtx";
             if (row < 0 || row >= n || col < 0 || col >= m) throw "tulindexeles";
             return data[row * m + col];
-        };
+        }
 
         /**
          * @param row Sorindex
@@ -174,14 +184,22 @@ namespace genMatrix {
          * @return Az új mátrix az eredménnyel.
          * @throws Matrix_Error kivétel, ha az összeadás nem értelmezett.
          */
-        Matrix operator+(const Matrix<T>& rhs_mtx) const;
+        Matrix operator+(const Matrix<T>& rhs_mtx) const {
+            Matrix<T> rval = *this;
+            rval += rhs_mtx;
+            return rval;
+        }
 
         /**
          * Hozzáadja a kapott paramétert a mátrixhoz.
          * @param rhs_type A másik tag.
          * @return Az új mátrix az eredménnyel.
          */
-        Matrix operator+(const T& rhs_type);
+        Matrix operator+(const T& rhs_type) const {
+            Matrix<T> rval = *this;
+            rval += rhs_type;
+            return rval;
+        };
 
         /**
          * Hozzáadja a mátrixot a kapott paraméterhez.
@@ -189,14 +207,25 @@ namespace genMatrix {
          * @return A balérték referenciája.
          * @throws Matrix_Error kivétel, ha az összeadás nem értelmezett.
          */
-        Matrix& operator+=(const Matrix<T>& rhs_mtx);
+        Matrix& operator+=(const Matrix<T>& rhs_mtx) {
+            if (!exact_size(*this, rhs_mtx)) throw "nem egy meret";
+            for (size_t i = 0; i < this->size(); i++)
+                data[i] = data[i] + rhs_mtx.data[i];
+
+            return *this;
+        };
 
         /**
          * Hozzáadja a kapott paramétert a mátrixhoz.
          * @param rhs_type A másik tag.
          * @return A balérték referenciája.
          */
-        Matrix& operator+=(const T& rhs_type);
+        Matrix& operator+=(const T& rhs_type) {
+            for (size_t i = 0; i < this->size(); i++)
+                data[i] = data[i] + rhs_type;
+
+            return *this;
+        };
 
 
         /**
@@ -205,14 +234,19 @@ namespace genMatrix {
          * @return Egy új mátrix az eredménnyel.
          * @throws Matrix_Error kivétel, ha a kivonás nem értelmezett.
          */
-        Matrix operator-(const Matrix<T>& rhs_mtx) const;
+        Matrix operator-(const Matrix<T>& rhs_mtx) const {
+            return *this + rhs_mtx * -1;
+        }
 
         /**
          * Kivonja a kapott paramétert a mátrixhoz.
          * @param rhs_type A másik tag.
          * @return A balérték referenciája.
          */
-        Matrix& operator-(const T& rhs_type);
+        Matrix& operator-(const T& rhs_type) {
+            *this += rhs_type * -1;
+            return *this;
+        }
 
         /**
          * Kivonja a mátrixból a kapott paramétert.
@@ -220,14 +254,20 @@ namespace genMatrix {
          * @return A balérték referenciája.
          * @throws Matrix_Error kivétel, ha a kivonás nem értelmezett.
          */
-        Matrix& operator-=(const Matrix<T>& rhs_mtx);
+        Matrix& operator-=(const Matrix<T>& rhs_mtx) {
+            *this += rhs_mtx * -1;
+            return *this;
+        }
 
         /**
          * Kivonja a kapott paramétert a mátrixhoz.
          * @param rhs_type A másik tag.
          * @return A balérték referenciája.
          */
-        Matrix& operator-=(const T& rhs_type);
+        Matrix& operator-=(const T& rhs_type) {
+            *this += rhs_type * -1;
+            return *this;
+        }
 
         /**
          * Összeszorozza a mátrixszal a kapott paramétert.
@@ -235,14 +275,26 @@ namespace genMatrix {
          * @return Egy új mátrix az eredménnyel.
          * @throws Matrix_Error kivétel, ha a szorzás nem értelmezett.
          */
-        Matrix operator*(const Matrix<T>& rhs_mtx) const;
+        Matrix operator*(const Matrix<T>& rhs_mtx) const {
+            if (m != rhs_mtx.n) throw "nem jok a meretek";
+            Matrix<T> rval(n, rhs_mtx.m);
+            for (size_t i = 0; i < n; i++)
+                for (size_t k = 0; k < m; k++)
+                    for (size_t j = 0; j < rhs_mtx.m; j++)
+                        rval(i, j) += this->operator()(i, k) * rhs_mtx(k, j);
+            return rval;
+        }
 
         /**
          * Összeszorozza a kapott paramétert a mátrixszal.
          * @param rhs_type A másik tag.
          * @return Egy új mátrix az eredménnyel.
          */
-        Matrix operator*(const T& rhs_type) const;
+        Matrix operator*(const T& rhs_type) const {
+            Matrix<T> rval = *this;
+            rval *= rhs_type;
+            return rval;
+        }
 
         /**
          * Összeszorozza a mátrixszal a kapott paramétert.
@@ -250,28 +302,54 @@ namespace genMatrix {
          * @return A balérték referenciája.
          * @throws Matrix_Error kivétel, ha a szorzás nem értelmezett.
          */
-        Matrix& operator*=(const Matrix<T>& rhs_mtx);
+        Matrix& operator*=(const Matrix<T>& rhs_mtx) {
+            Matrix<T> tmp = this * rhs_mtx;
+            this = tmp;
+            return *this; 
+        }
 
         /**
          * Összeszorozza a kapott paramétert a mátrixszal.
          * @param rhs_type A másik tag.
-         * @return Egy új mátrix az eredménnyel.
+         * @return A balérték referenciája.
          */
-        Matrix operator*=(const T& rhs_type) const;
+        Matrix& operator*=(const T& rhs_type) {
+            for (size_t i = 0; i < this->size(); i++) {
+                data[i] = data[i] * rhs_type;
+            }
+            return *this;
+        }
 
         /**
          * @brief Transzponálja a mátrixot.
          * @details A transzponálás során a mátrix i,j-dik elemét felcseréljük a j,i-dik elemével. 
          *          A transzponált mátrix mérete m*n-es lesz. Szimmetrikus mátrix transzponáltja önmaga.
          */
-        void transposeInPlace();
+        void transposeInPlace() {
+            if (n == m) {
+                for (size_t i = 0; i < n; i++)
+                    for (size_t j = i + 1; j < m; j++)
+                        swap(&this->operator()(i,j), &this->operator()(j, i));
+            }
+            else {
+                Matrix<T> tmp(m, n);
+                for (size_t i = 0; i < n; i++)
+                    for (size_t j = 0; j < m; j++)
+                        tmp(j, i) = this->operator()(i, j);
+                *this = tmp;
+            }
+        }
 
         /**
          * @brief Transzponálja a mátrixot.
          * @details A transzponálás során a mátrix i,j-dik elemét felcseréljük a j,i-dik elemével. 
          *          A transzponált mátrix mérete m*n-es lesz. Szimmetrikus mátrix transzponáltja önmaga.
          */
-        Matrix transpose();
+        Matrix transpose() {
+            Matrix<T> tmp = *this;
+            tmp.transposeInPlace();
+            return tmp;
+        };
 
         /**
          * @return A mátrix inverze.
