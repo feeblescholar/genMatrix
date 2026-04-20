@@ -79,7 +79,11 @@ namespace genMatrix {
          * @return A mátrix egy adott indexén lévő eleme.
          * @note A visszaadott elem nem módosítható.
          */
-        const T& operator()(size_t row, size_t col) const;
+        const T& operator()(const size_t row, const size_t col) const {
+            if (!n && !m) throw "ures mtx";
+            if (row < 0 || row >= n || col < 0 || col >= m) throw "tulindexeles";
+            return data[row * m + col];
+        };
 
         /**
          * @param row Sorindex
@@ -87,7 +91,11 @@ namespace genMatrix {
          * @return A mátrix egy adott indexén lévő eleme.
          * @throws Matrix_Error kivétel túlindexelés esetén.
          */
-        T& operator()(size_t row, size_t col);
+        T& operator()(const size_t row, const size_t col) {
+            if (!n && !m) throw "ures mtx";
+            if (row < 0 || row >= n || col < 0 || col >= m) throw "tulindexeles";
+            return data[row * m + col];
+        }
 
         /**
          * @return Igaz, ha mátrix minden eleme megegyezik (és ugyanakkorák). 
