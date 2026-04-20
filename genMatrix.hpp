@@ -27,7 +27,19 @@ namespace genMatrix {
          * @param _n Sorok száma
          * @param _m Oszlopok száma
          */
-        Matrix(size_t n = 0, size_t m = 0) {};
+        Matrix(size_t _n = 0, size_t _m = 0) : data(nullptr), n(_n), m(_m) {
+            if (!n && !m) {
+                isDynamic = true;
+                return;
+            }
+
+            try {
+                data = new T[this.size()];
+            }
+            catch (const std::bad_alloc&) {
+                throw "hibaosztaly ide";
+            }
+        };
 
         Matrix(const Matrix<T>& other);
         Matrix& operator=(const Matrix<T>& other);
@@ -37,22 +49,29 @@ namespace genMatrix {
          * @param val A mátrix első értéke.
          * @note Dinamikus mátrix esetében ez nem használható.
          */
-        CommaInit operator<<(const T& val);
+        CommaInit operator<<(const T& val) {
+            if (isDynamic) throw "csak statikus mereture hivhato";
+            return CommaInit(*this, val);
+        };
 
         /**
          * @return A sorok száma.
          */
-        size_t getRows() const;
+        size_t getRows() const { return n; }
 
         /**
          * @return Az oszlopok száma.
          */
-        size_t getCols() const;
+        size_t getCols() const { return m; }
 
         /**
          * @return A mátrix mérete.
          */
-        size_t size() const;
+        size_t size() const {
+            if (!n) return m;
+            if (!m) return n;
+            return n * m;
+        };
 
         /**
          * @param row Sorindex
@@ -212,7 +231,11 @@ namespace genMatrix {
          */
         T determinant();
 
-        ~Matrix();
+        ~Matrix() {
+            delete[] data;
+            data = nullptr; /* double delete ellen */
+            n = m = 0;
+        };
     };
 
     /**
@@ -233,16 +256,24 @@ namespace genMatrix {
         * @param _mtx A feltöltendő mátrix referenciája.
         * @param init Az első érték.
         */
-        CommaInit(Matrix<T>& _mtx, const T& init);
+        CommaInit(Matrix<T>& _mtx, const T& init) : mtx(_mtx), nextidx(0) {
+            mtx.data[nextidx++] = init;
+        }
 
         /**
         * Az mtx referencián elérhető mátrixot tölti fel a következő elemmel.
         * @param val A következő üres helyre szánt érték.
         * @return Önmaga referenciája, így lehet láncban hívni.
         */
-        CommaInit& operator,(const T& rhs_val);
+        CommaInit& operator,(const T& rhs_val) {
+            if (nextidx == mtx.size()) throw "tul sok parameter";
+            mtx.data[nextidx++] = rhs_val;
+            return *this;
+        }
 
-        ~CommaInit();
+        ~CommaInit() {
+            if (nextidx != mtx.size()) throw "tul keves parameter";
+        }
     };
 
     /**
