@@ -18,6 +18,12 @@ namespace genMatrix {
         T* data;        /** A mátrix elemei. */
         size_t n, m;    /** A mátrix méretei (n sor, m oszlop). */
         bool isDynamic; /** Eltárolja, hogy a mátrix dinamikus-e. */
+
+        void swap(T* a, T* b) {
+            T* tmp = a;
+            a = b;
+            b = tmp;
+        }
     
     public:
         /* Segédosztályok deklarációi */
@@ -142,7 +148,12 @@ namespace genMatrix {
          * @param n2 A másik sor.
          * @throws Matrix_Error kivétel túlindexelés esetén.
          */
-        Matrix& swapRow(size_t n1, size_t n2);
+        Matrix& swapRow(size_t n1, size_t n2) {
+            for (size_t i = 0; i < m; i++) {
+                swap(&this->operator()(n1, i), &this->operator()(n2, i));
+            }
+            return *this;
+        }
 
         /**
          * Felcseréli a mátrix két oszlopát.
@@ -150,7 +161,12 @@ namespace genMatrix {
          * @param n2 A másik oszlop.
          * @throws Matrix_Error kivétel túlindexelés esetén.
          */
-        Matrix& swapCol(size_t m1, size_t m2);
+        Matrix& swapCol(size_t m1, size_t m2) {
+            for (size_t i = 0; i < n; i++) {
+                swap(&this->operator()(i, m1), &this->operator()(i, m2));
+            }
+            return *this;
+        }
 
         /**
          * Hozzáadja a mátrixot a kapott paraméterhez.

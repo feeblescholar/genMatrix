@@ -122,7 +122,50 @@ int main(int argc, char **argv) {
 
         M1 = A;
         EXPECT_TRUE(M1 == A);
+    END
 
+    TEST("Sor- es oszlopcsere", "genMatrix<int> statikus")
+        Matrix<int> M1(4, 3);
+        M1 << -1, 2, 3,
+              4, -5, 6,
+              7, 8, 9,
+              10, 11, 12;
+        Matrix<int> M2(4, 3);
+        M2 << 4, -5, 6,
+              -1, 2, 3,
+              7, 8, 9,
+              10, 11, 12;
+        Matrix<int> M3 = M1;
+        Matrix<int> M4(4, 3);
+        M4 << 6, -5, 4,
+              3, 2, -1,
+              9, 8, 7,
+              12, 11, 10;
+        Matrix<int> M5 = M2;
+        Matrix<int> M6(4, 3);
+        M6 << 9, 8, 7,
+              6, -5, 4,
+              3, 2, -1,
+              12, 11, 10;
+
+        M1.swapRow(0, 1);
+        EXPECT_TRUE(M1 == M2);
+
+        M1.swapRow(0, 1);
+        EXPECT_TRUE(M1 == M3) << "valtozott valami sorcsere kozben";
+
+        EXPECT_THROW(M1.swapRow(-1, 62), const char*);
+
+        M2.swapCol(0, 2);
+        EXPECT_TRUE(M2 == M4);
+        
+        M2.swapCol(0, 2);
+        EXPECT_TRUE(M2 == M5) << "valtozott valami sorcsere kozben";
+
+        EXPECT_THROW(M2.swapCol(19, -62), const char*);
+
+        M1.swapRow(0, 2).swapCol(0, 2);
+        EXPECT_TRUE(M1 == M6);
     END
 
     return 0;
