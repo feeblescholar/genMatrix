@@ -28,17 +28,17 @@ int main(int argc, char **argv) {
 
     TEST("Eigen helyes", "genMatrix<int> statikus")
         Matrix<int> M(2, 2);
-        EXPECT_NO_THROW((M << 1, 2, 3, 4));
+        EXPECT_NO_THROW((M << 1, -2, -3, 4));
     END
 
     TEST("Eigen keves parameter", "genMatrix<int> statikus")
         Matrix<int> M(3, 3);
-        EXPECT_THROW((M << 1, 2, 3, 4), const char*);
+        EXPECT_THROW((M << 1, 2, 3, -4), const char*);
     END
 
     TEST("Eigen sok parameter", "genMatrix<int> statikus")
         Matrix<int> M(3, 3);
-        EXPECT_THROW((M << 1, 2, 3, 4, 5, 6, 7, 8, 9, 10), const char*);
+        EXPECT_THROW((M << 1, 2, 3, 4, -5, 6, 7, 8, 9, 10), const char*);
     END
 
     TEST("Eigen dinamikusra", "genMatrix<int> statikus")
@@ -48,14 +48,14 @@ int main(int argc, char **argv) {
 
     Matrix<int> M(4, 4);
     M << 1, 2, 3, 4, 
-         5, 6, 7, 8, 
-         9, 10, 11, 12,
+         5, -6, 7, 8, 
+         9, 10, 11, -12,
          13, 14, 15, 16;
 
     TEST("Indexeles", "genMatrix<int> statikus")
         EXPECT_NO_THROW(EXPECT_EQ((int)1, M(0, 0)));
         EXPECT_NO_THROW(EXPECT_EQ((int)16, M(3, 3)));
-        EXPECT_NO_THROW(EXPECT_EQ((int)12, M(2, 3)));
+        EXPECT_NO_THROW(EXPECT_EQ((int)-12, M(2, 3)));
         EXPECT_NO_THROW(EXPECT_EQ((int)10, M(2, 1)));
     END
 
@@ -68,6 +68,62 @@ int main(int argc, char **argv) {
         EXPECT_THROW(M(76, 84), const char*);
     END
 
+    TEST("Osszehasonlitasok", "genMatrix<int> statikus")
+        Matrix<int> M_cp = M;
+        Matrix<int> L(2, 2);
+        L << 1, 2, 
+             3, -7;
+        Matrix<int> A(3, 2);
+        A << -4, -6,
+             -6, 56,
+             72, 32;
+
+        Matrix<int> D;
+        Matrix<int> D2;
+
+        EXPECT_TRUE(A == A);
+        EXPECT_TRUE(M == M_cp);
+        EXPECT_TRUE(D == D2);
+
+        EXPECT_FALSE(M_cp == L);
+        EXPECT_FALSE(D == L);
+        EXPECT_FALSE(L == A);
+    END
+
+    TEST("Masolas kitoltott matrixon", "genMatrix<int> statikus")
+        Matrix<int> M_cp = M;
+        EXPECT_TRUE(M_cp == M);
+    END
+
+    TEST("Ertekadas onmagan", "genMatrix<int> statikus")
+        Matrix<int> M_cp = M;
+        M_cp = M_cp;
+        EXPECT_TRUE(M_cp == M);
+    END
+
+    TEST("Tobbszoros ertekadas", "genMatrix<int> statikus")
+        Matrix<int> M1 = M;
+        Matrix<int> L(2, 2);
+        L << 1, 2, 
+             3, -7;
+        Matrix<int> U(0, 2);
+        U << 1, 
+             3;
+        Matrix<int> A(3, 2);
+        A << -4, -6,
+             -6, 56,
+             72, 32;
+
+        M1 = L;
+        EXPECT_TRUE(M1 == L);
+
+        M1 = U;
+        EXPECT_TRUE(M1 == U);
+
+        M1 = A;
+        EXPECT_TRUE(M1 == A);
+
+    END
 
     return 0;
 }

@@ -30,7 +30,7 @@ namespace genMatrix {
          * @param _n Sorok száma
          * @param _m Oszlopok száma
          */
-        Matrix(size_t _n = 0, size_t _m = 0) : data(nullptr), n(_n), m(_m) {
+        Matrix(size_t _n = 0, size_t _m = 0) : data(nullptr), n(_n), m(_m), isDynamic(false) {
             if (!n && !m) {
                 isDynamic = true;
                 return;
@@ -44,8 +44,26 @@ namespace genMatrix {
             }
         };
 
-        Matrix(const Matrix<T>& other);
-        Matrix& operator=(const Matrix<T>& other);
+        Matrix(const Matrix<T>& other) : data(nullptr), n(0), m(0) {
+            *this = other;
+        }
+
+        Matrix& operator=(const Matrix& other) {
+            if (this != &other) { /* nem módosítjuk, de csak így lehet őket összehasonlítani */
+                delete[] data;
+
+                isDynamic = other.isDynamic;
+                n = other.n;
+                m = other.m;
+
+                data = new T[this->size()];
+                for (size_t i = 0; i < this->size(); i++) {
+                    data[i] = other.data[i];
+                }
+            }
+            
+            return *this;
+        }
 
         /** 
          * Eigen stílusú mátrix feltöltés.
@@ -103,7 +121,17 @@ namespace genMatrix {
         /**
          * @return Igaz, ha mátrix minden eleme megegyezik (és ugyanakkorák). 
          */
-        bool operator==(const Matrix<T>& other);
+        bool operator==(const Matrix<T>& other) {
+            if (this == &other) return true;
+            if ((n != other.n) || (m != other.m) || !(isDynamic == other.isDynamic)) return false;
+            
+            if (n == other.n == m == other.m == 0) return true;
+
+            for (size_t i = 0; i < this->size(); i++)
+                if (data[i] != other.data[i]) return false;
+
+            return true;
+        }
 
         Matrix_Iterator begin();
         Matrix_Iterator end();
