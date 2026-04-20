@@ -6,6 +6,9 @@
  *       függvény is inline.
  */
 
+#ifndef GENMATRIX
+#define GENMATRIX
+
 #include <exception>
 #include <cstddef>
 #include <iterator>
@@ -34,7 +37,7 @@ namespace genMatrix {
             }
 
             try {
-                data = new T[this.size()];
+                data = new T[this->size()];
             }
             catch (const std::bad_alloc&) {
                 throw "hibaosztaly ide";
@@ -279,7 +282,7 @@ namespace genMatrix {
             return *this;
         }
 
-        ~CommaInit() {
+        ~CommaInit() noexcept(false) {
             if (nextidx != mtx.size()) throw "tul keves parameter";
         }
     };
@@ -368,3 +371,5 @@ namespace genMatrix {
         ~Matrix_Error();
     };
 }
+
+#endif
