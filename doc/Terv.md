@@ -56,18 +56,18 @@ c\cdot a_{1,1} & \dots & c\cdot a_{1,n} \\
 \vdots & \ddots & \vdots \\
 c\cdot a_{m,1} & \dots & c\cdot a_{m,n}
 \end{pmatrix}$$
-Két mátrix szorzásának feltétele, hogy a bal tényezőnek annyi sora legyen, ahogy oszlopa a jobbnak. Az eredmény a matematikai formulát követi:
+Két mátrix szorzásának feltétele, hogy a bal tényezőnek annyi oszlopa legyen, ahány sora a jobbnak. Az eredmény a matematikai formulát követi:
 $$(AB)_{i,j} = \sum_{k=1}^{n} a_{i,k}b_{k,j}$$
 Az implementáció a sebesség érdekében viszont cache-barát eljárással történik, ami lényegében csak a sorrendben tér el a megszokottól. Először vesszük A `i`.-dik sorának `k`.-dik elemét majd megszorozzunk B teljes `j`.-dik sorával, amit a megfelelő helyen hozzáadunk C-hez.
 
 Az <i>"ikj"</i> mátrixszorzás ($A\cdot B$) algoritmusa pszeudokóddal:
 ```
 szoroz(Matrix<típus> A, Matrix <típus> B):
-    if (A.n != B.m) throw Matrix_Error(...);
+    if (A.m != B.n) throw Matrix_Error(...);
     Matrix C<típus>(A.n, B.m);
     for (i = 0; i < A.n; i++)
-        for (k = 0; k < A.n; k++)
-            for (j = 0; j < A.n; j++)
+        for (k = 0; k < A.m; k++)
+            for (j = 0; j < B.m; j++)
                 C(i,j) += A(i, k) * B(k, j);
     return C
 ```
@@ -89,7 +89,7 @@ Transzponál(Matrix<típus> A)
         Matrix<típus> tmp(A.m, A.n);
         for (i = 0; i < A.n; i++)
             for (j = 0; j < A.m; j++)
-                tmp(i, j) = a(j, i);
+                tmp(j, i) = a(i, j);
     A = tmp;
 ```
 Lépésszáma: $O(n^2)$.
