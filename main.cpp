@@ -3,10 +3,10 @@
 int main(int argc, char **argv) {
     using namespace genMatrix;
 
-    genMatrixTest::full_genMatrix_test__static<int>();
-    genMatrixTest::full_genMatrix_test__static<double>();
-    genMatrixTest::full_genMatrix_test__static<float>();
-    genMatrixTest::full_genMatrix_test__static<long>();
+    genMatrixTest::genMatrix_static_test<int>();
+    genMatrixTest::genMatrix_static_test<double>();
+    genMatrixTest::genMatrix_static_test<float>();
+    genMatrixTest::genMatrix_static_test<long>();
 
     return 0;
 }

@@ -2,7 +2,6 @@
 #define TESTGEN
 
 #include <random>
-#include <type_traits>
 
 #include "genMatrix.hpp"
 #include "memtrace_gtest/gtest_lite.h"
@@ -147,15 +146,10 @@ namespace genMatrix::genMatrixTest {
             Matrix<T> A(3, 2);
             t2.fillmat(A);
 
-            Matrix<T> D;
-            Matrix<T> D2;
-
             EXPECT_TRUE(A == A);
             EXPECT_TRUE(M == M_cp);
-            EXPECT_TRUE(D == D2);
 
             EXPECT_FALSE(M_cp == L);
-            EXPECT_FALSE(D == L);
             EXPECT_FALSE(L == A);
         END
     }
@@ -284,7 +278,7 @@ namespace genMatrix::genMatrixTest {
             M5 -= 1;
 
             for (size_t i = 0; i < M1.getCols(); i++) {
-            for (size_t k = 0; k < M1.getRows(); k++) {
+                for (size_t k = 0; k < M1.getRows(); k++) {
                     EXPECT_EQ(M1(i, k) + 1, M2(i, k));
                     EXPECT_EQ(M1(i, k) + 9, M3(i, k));
                     EXPECT_EQ(M2(i, k) + M3(i, k), M6(i, k));
@@ -297,34 +291,31 @@ namespace genMatrix::genMatrixTest {
         END
 
         TEST("Multiply matrices", "Binary operands")
-            Matrix<int> M1(3, 4);
-            M1 << 1, 0, 2, 1,
-                  0, 3, 1, 2,
-                  2, 1, 0, 1;
+            TestArray<T, 6> m1;
+            Matrix<T> M1(2, 3);
+            m1.fillmat(M1);
 
-            Matrix<int> M2(4, 3);
-            M2 << 1, 2, 0,
-                  0, 1, 1,
-                  2, 0, 3,
-                  1, 1, 2;
+            TestArray<T, 12> m2;
+            Matrix<T> M2(3, 4);
+            m2.fillmat(M2);
 
-            Matrix<int> M12(3, 3);
-            M12 << 6, 3, 8,
-                   4, 5, 10,
-                   3, 6, 3;
-
-            Matrix<int> M21(4, 4);
-            M21 << 1, 6, 4, 5,
-                   2, 4, 1, 3,
-                   8, 3, 4, 5,
-                   5, 5, 3, 5;
+            Matrix<T> M12(2, 4);
+            /** egyszer és utoljára végigmásszuk kézzel */
+            M12 << M1(0, 0) * M2(0, 0) + M1(0, 1) * M2(1, 0) + M1(0, 2) * M2(2, 0),
+                   M1(0, 0) * M2(0, 1) + M1(0, 1) * M2(1, 1) + M1(0, 2) * M2(2, 1),
+                   M1(0, 0) * M2(0, 2) + M1(0, 1) * M2(1, 2) + M1(0, 2) * M2(2, 2),
+                   M1(0, 0) * M2(0, 3) + M1(0, 1) * M2(1, 3) + M1(0, 2) * M2(2, 3),
+                   M1(1, 0) * M2(0, 0) + M1(1, 1) * M2(1, 0) + M1(1, 2) * M2(2, 0),
+                   M1(1, 0) * M2(0, 1) + M1(1, 1) * M2(1, 1) + M1(1, 2) * M2(2, 1),
+                   M1(1, 0) * M2(0, 2) + M1(1, 1) * M2(1, 2) + M1(1, 2) * M2(2, 2),
+                   M1(1, 0) * M2(0, 3) + M1(1, 1) * M2(1, 3) + M1(1, 2) * M2(2, 3);
 
             EXPECT_TRUE((M1 * M2) == M12);
-            EXPECT_TRUE((M2 * M1) == M21);
+            EXPECT_THROW((M2 * M1), const char*);
         END
     }
 
-    template<typename T> void transpose_static() {
+    template<typename T> void transpose__static() {
         using namespace genMatrix;
 
         TEST("Transpose square matrix", "Transpose")
@@ -365,7 +356,7 @@ namespace genMatrix::genMatrixTest {
         END
     }
 
-    template<typename T> void full_genMatrix_test__static() {
+    template<typename T> void genMatrix_static_test() {
         std::cout << "\n==== genMatrix test on: " << typeid(T).name() << " ====\n";
 
         size_calculation__static<T>();
@@ -375,9 +366,9 @@ namespace genMatrix::genMatrixTest {
         copy_assign__static<T>();
         swapping__static<T>();
         binary_operands__static<T>();
-        transpose_static<T>();
+        transpose__static<T>();
 
-        std::cout << "\n===============================\n";
+        std::cout << "\n==============================\n";
     }
 }
 

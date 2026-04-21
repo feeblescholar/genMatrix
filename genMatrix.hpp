@@ -9,9 +9,11 @@
 #ifndef GENMATRIX
 #define GENMATRIX
 
-#include <exception>
-#include <cstddef>
+#include <exception> /* std::exeption örökléséhez */
+#include <cstddef>   /* */
 #include <iterator>
+#include <limits>      /* típusbiztos összehasonlítás */
+#include <type_traits> /* típus kategória vizsgálathoz */
 
 namespace genMatrix {
     template<typename T> class Matrix {
@@ -33,6 +35,24 @@ namespace genMatrix {
          */
         bool exact_size(const Matrix<T>& matA, const Matrix<T> matB) {
             return (matA.n == matB.n) && (matA.m && matB.m);
+        }
+
+        /**
+         * Típusfüggő abszolútérték
+         */
+        T type_abs(const T& val) {
+            if constexpr (std::is_integral_v<T>) {
+                return abs(val);
+            }
+            
+            return fabs(val);
+        }
+
+        /**
+         * Típusfüggő összehansítás
+         */
+        bool type_numeric_eq(const T& a, const T& b) {
+            return (type_abs(a - b) <= std::numeric_limits<T>::epsilon());
         }
     
     public:
@@ -139,12 +159,12 @@ namespace genMatrix {
          */
         bool operator==(const Matrix<T>& other) {
             if (this == &other) return true;
-            if ((n != other.n) || (m != other.m) || !(isDynamic == other.isDynamic)) return false;
+            if (!(type_numeric_eq(n, other.n)) || !(type_numeric_eq(m, other.m)) || !(isDynamic == other.isDynamic)) return false;
             
             if (n == other.n == m == other.m == 0) return true;
 
             for (size_t i = 0; i < this->size(); i++)
-                if (data[i] != other.data[i]) return false;
+                if (type_abs(data[i] - other.data[i]) > std::numeric_limits<T>::epsilon()) return false;
 
             return true;
         }
@@ -362,7 +382,41 @@ namespace genMatrix {
          * @return A mátrix determinánsa a mátrix típusának megfelelően.
          * @throw Matrix_Error kivétel, ha nem létezik.
          */
-        T determinant();
+        T determinant() {
+            if (n != m) throw "nem negyzetes";
+
+            Matrix<T> tmp = *this;
+            T det(1);
+
+            for (size_t i = 0; i < tmp.n; i++) {
+                size_t pivot = i;
+
+                for (size_t j = i + 1; j < tmp.n; j++) {
+                    if (type_abs(tmp(i, j)) > type_abs(tmp(pivot, i)))
+                        pivot = j;
+                }
+
+                if (type_abs(tmp(pivot, i)) <= std::numeric_limits<T>::epsilon()) return T();
+
+                if (pivot != i) {
+                    tmp.swapRow(pivot, i);
+                    det = det * -1;
+                }
+
+                for (size_t j = i + 1; j < tmp.n; j++) {
+                    div = tmp(j, i) / tmp(i, i);
+                    for (size_t k = i; k < tmp.n; k++) {
+                        tmp(j, k) = tmp(j, k) - tmp(i, k) * div;
+                    }
+                }
+            }
+
+            for (size_t i = 0; i < n; i++) {
+                det = det * tmp(i, i);
+            }
+
+            return det;
+        }
 
         ~Matrix() {
             delete[] data;
