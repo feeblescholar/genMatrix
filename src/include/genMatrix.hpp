@@ -14,5 +14,6 @@
 #include "matrix_commaInit.hpp"
 #include "matrix_error.hpp"
 #include "determinant.hpp"
+#include "norms.hpp"
 
 #endif
