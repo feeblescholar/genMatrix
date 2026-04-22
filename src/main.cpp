@@ -1,4 +1,4 @@
-#include "test_static.hpp"
+#include "../test/test_static.hpp"
 
 int main(int argc, char **argv) {
     using namespace genMatrix;

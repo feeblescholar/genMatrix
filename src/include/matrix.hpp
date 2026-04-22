@@ -1,25 +1,15 @@
-/**
- * @file genMatrix.hpp
- * @author Kovács Botond
- * @brief Generikus mátrix osztály sablonja.
- * @note A C++ sablonokat inline kell megvalósítani. Mivel ez a kód jelentős része, az egyszerűség kedvéért az a pár kiszervezhető
- *       függvény is inline.
- */
+#ifndef MATRIX_H
+#define MATRIX_H
 
-#ifndef GENMATRIX
-#define GENMATRIX
-
-#include <exception> /* std::exeption örökléséhez */
+#include <exception>
 #include <cstddef>   
 #include <iterator>
 #include <iostream>
 
-#include "type_func.hpp"
 #include "matrix_error.hpp"
 
-
 namespace genMatrix {
-    template<typename T> class Matrix {
+        template<typename T> class Matrix {
         T* data;        /** A mátrix elemei. */
         size_t n, m;    /** A mátrix méretei (n sor, m oszlop). */
         bool isDynamic; /** Eltárolja, hogy a mátrix dinamikus-e. */
@@ -391,109 +381,11 @@ namespace genMatrix {
             return tmp;
         };
 
-        /**
-         * @return A mátrix inverze.
-         * @throws Matrix_Error kivétel, ha nem létezik.
-         */
-        Matrix inverse();
-
         ~Matrix() {
             delete[] data;
             data = nullptr; /* double delete ellen */
             n = m = 0;
         };
-    };
-
-    /**
-    * @struct CommaInit
-    * @brief Segédosztály az Eigen stílusú mátrixfeltöltéshez.
-    * @details Egy segédosztály segítségével, a mátrixot fel lehet tölteni sorfolytonosan ((0,0) ... (0,m) ... (1, 0) ...).
-    *          Ez időt spórol ha fel kell tölteni egy fix méretű mátrixot. Értékadás során pontosan annyi értéket kell megadni, 
-    *          amekkora a mátrix mérete, ezért csak ismert, fix méret esetén alkalmazható.
-    * @note Ez a segédosztály az egyszerűsége miatt teljesen public.
-    */
-    template<typename T> class Matrix<T>::CommaInit {
-    public:
-        Matrix<T>& mtx;  /** A cél mátrix referenciája. */
-        size_t nextidx;  /** A következő üres index mtx.data-ban. */
-
-        /**
-        * Berakja a mátrixba az első elemmet.
-        * @param _mtx A feltöltendő mátrix referenciája.
-        * @param init Az első érték.
-        */
-        CommaInit(Matrix<T>& _mtx, const T& init) : mtx(_mtx), nextidx(0) {
-            mtx.data[nextidx++] = init;
-        }
-
-        /**
-        * Az mtx referencián elérhető mátrixot tölti fel a következő elemmel.
-        * @param val A következő üres helyre szánt érték.
-        * @return Önmaga referenciája, így lehet láncban hívni.
-        */
-        CommaInit& operator,(const T& rhs_val) {
-            if (nextidx == mtx.size()) 
-                throw Matrix_Error("[CommaInit]", "Too many parameters.", true);
-
-            mtx.data[nextidx++] = rhs_val;
-            return *this;
-        }
-
-        ~CommaInit() noexcept(false) {
-            if (nextidx != mtx.size()) 
-                throw Matrix_Error("[CommaInit]", "Not enough parameters.", true);
-        }
-    };
-
-    /**
-     * @class Matrix_Iterator
-     * @brief Iterátor osztály a Matrix<T>-hez.
-     * @details Ez az iterátor implementálja a C++ szabvány szerinti operátorokat, amiket a std::random_access_iterator
-     *          megkövetel. A függvények nincsenek kommentelve, mert igazából pointer wrapperek.
-     * @note Operátor hadsereg osztály.
-     */
-    template<typename T> class Matrix<T>::Matrix_Iterator {
-        T* ptr;
-        
-    public:
-        using iterator_category = std::random_access_iterator_tag;
-        using value_type = T;
-        using difference_type = std::ptrdiff_t;
-        using pointer = T*;
-        using reference = T&;
-        
-        /**
-         * @note A konstruktor azért explicit, hogy megakadályozzuk az implicit típuskonverzióból származó bugokat. Például
-         *       raw pointer adunk egy olyan helyre ahol iteratort várunk.
-         */
-        explicit Matrix_Iterator(T* _ptr = nullptr);
-
-        reference operator*() const;
-        pointer operator->() const;
-        reference operator[](difference_type rhs_diff) const;
-
-        Matrix_Iterator& operator++();
-        Matrix_Iterator operator++(int);
-        Matrix_Iterator& operator--();
-        Matrix_Iterator operator--(int);
-
-        Matrix_Iterator  operator+(difference_type rhs_diff) const;
-        Matrix_Iterator  operator-(difference_type rhs_diff) const;
-        Matrix_Iterator& operator+=(difference_type rhs_diff);
-        Matrix_Iterator& operator-=(difference_type rhs_diff);
-
-        difference_type operator-(const Matrix_Iterator& rhs_iter) const;
-
-        /* Sajnos a C++ szabvány megköveteli ezt az operátort (ehhez az iterátorhoz), ezt meg csak friendként (vagy global) lehet implementálni. */
-        friend Matrix_Iterator operator+(difference_type lhs_diff, const Matrix_Iterator& rhs_iter);
-        
-        bool operator==(const Matrix_Iterator& rhs_iter) const;
-        bool operator!=(const Matrix_Iterator& rhs_iter) const;
-        bool operator<=(const Matrix_Iterator& rhs_iter) const;
-        bool operator>=(const Matrix_Iterator& rhs_iter) const;
-        bool operator>(const Matrix_Iterator& rhs_iter) const;
-        bool operator<(const Matrix_Iterator& rhs_iter) const;
-
     };
 }
 

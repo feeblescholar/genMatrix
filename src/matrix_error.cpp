@@ -1,4 +1,4 @@
-#include "matrix_error.hpp"
+#include "include/matrix_error.hpp"
 
 using namespace genMatrix;
 

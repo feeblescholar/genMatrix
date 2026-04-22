@@ -3,11 +3,9 @@
 
 #include <random>
 
-#include "genMatrix.hpp"
-#include "determinant.hpp"
-#include "matrix_error.hpp"
-#include "memtrace_gtest/gtest_lite.h"
-#include "memtrace_gtest/memtrace.h"
+#include "../src/include/genMatrix.hpp"
+#include "../memtrace_gtest/gtest_lite.h"
+#include "../memtrace_gtest/memtrace.h"
 
 namespace genMatrix::genMatrixTest {
     template<typename T, bool negzero = true> T random() {
