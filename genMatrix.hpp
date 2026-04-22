@@ -64,24 +64,43 @@ namespace genMatrix {
             }
         }
 
-        Matrix(const Matrix<T>& other) : data(nullptr), n(0), m(0) {
+        Matrix(const Matrix& other) : data(nullptr), n(0), m(0) {
             *this = other;
         }
 
+        /** template-re nem működik saját típuson, át kell irányítani */
         Matrix& operator=(const Matrix& other) {
             if (this != &other) {
-                delete[] data;
+                this->operator=<T>(other);
+            }
 
-                isDynamic = other.isDynamic;
-                n = other.n;
-                m = other.m;
+            return *this;
+        }
 
-                data = new T[this->size()]();
-                for (size_t i = 0; i < this->size(); i++) {
-                    data[i] = other.data[i];
+        /**
+         * Generikus másololó konstruktor
+         */
+        template<typename S> Matrix(const Matrix<S>& other) : data(nullptr), n(0), m(0) {
+            *this = other;
+        }
+
+        /**
+         * Generikus értékadó operátor
+         */
+        template<typename S> Matrix& operator=(const Matrix<S>& other) {
+            delete[] data;
+
+            isDynamic = other.getDynamic();
+            n = other.getRows();
+            m = other.getCols();
+
+            data = new T[this->size()]();
+            for (size_t i = 0; i < this->getRows(); i++) {
+                for (size_t j = 0; j < this->getCols(); j++) {
+                    this->operator()(i,j) = static_cast<T>(other(i,j));
                 }
             }
-            
+
             return *this;
         }
 
@@ -113,6 +132,8 @@ namespace genMatrix {
             if (!m) return n;
             return n * m;
         }
+
+        bool getDynamic() const { return isDynamic; }
 
         /**
          * @param row Sorindex
@@ -359,46 +380,6 @@ namespace genMatrix {
          * @throws Matrix_Error kivétel, ha nem létezik.
          */
         Matrix inverse();
-
-        /**
-         * @brief Kiszámítja a mátrix determinánsát.
-         * @return A mátrix determinánsa a mátrix típusának megfelelően.
-         * @throw Matrix_Error kivétel, ha nem létezik.
-         */
-        T determinant() const {
-            if (n != m) throw "nem negyzetes";
-            if (n == 1) return data[0];
-
-            Matrix<double> tmp = *this;
-            double det(1.0);
-
-            for (size_t i = 0; i < tmp.n; i++) {
-                size_t pivot = i;
-
-                for (size_t j = i + 1; j < tmp.n; j++) {
-                    if (std::abs(tmp(j, i)) > std::abs(tmp(pivot, i)))
-                        pivot = j;
-                }
-
-                if (pivot != i) {
-                    tmp.swapRow(pivot, i);
-                    det *= -1.0;
-                }
-
-                if (std::abs(tmp(i, i)) < 1e-12) return T(0);
-
-                for (size_t j = i + 1; j < tmp.n; j++) {
-                    double div = tmp(j, i) / tmp(i, i);
-                    for (size_t k = i + 1; k < tmp.n; k++) {
-                        tmp(j, k) -= tmp(i, k) * div;
-                    }
-                }
-
-                det *= tmp(i, i);
-            }
-
-            return static_cast<T>(det);
-        }
 
         ~Matrix() {
             delete[] data;

@@ -4,14 +4,15 @@
 #include <random>
 
 #include "genMatrix.hpp"
+#include "determinant.hpp"
 #include "memtrace_gtest/gtest_lite.h"
 #include "memtrace_gtest/memtrace.h"
 
 namespace genMatrix::genMatrixTest {
     template<typename T, bool negzero = true> T random() {
-        int lbound = -10;
-        if (!negzero) lbound = 1;
-        const int ubound = 10;
+        int lbound = -100;
+        if (!negzero) lbound = 10;
+        const int ubound = 100;
 
         std::default_random_engine eng(std::random_device{}());
 
@@ -24,6 +25,12 @@ namespace genMatrix::genMatrixTest {
             return d(eng);
         }
     }
+
+    template<typename T> T relaxed_epsilon() {
+        if constexpr (std::is_integral_v<T>) return T(0);
+        else if (std::is_same_v<T, double>) return 1e-10;
+        else return 1e-4;
+    } 
 
     /**
      * Egy fix tömb, random számokkal.
@@ -169,7 +176,7 @@ namespace genMatrix::genMatrixTest {
         TEST("Self assign", "Copy-assign")
             Matrix<T> M_cp = M;
 
-            /** Ki kell kapcsolni a fordító figyelmeztetését, pontosan tudjuk, hogy mit akarunk. */
+            /** Ki kell kapcsolni a fordító figyelmeztetését, pontosan tudjuk, hogy mit akarunk. */ 
 
             #pragma GCC diagnostic push
             #pragma GCC diagnostic ignored "-Wself-assign"
@@ -383,34 +390,73 @@ namespace genMatrix::genMatrixTest {
     }
 
     template<typename T> void determinant__static() {
-        TEST("Determinant", "Determinant")
-            TestArray<T, 4> m1;
-            TestArray<T, 9> m2;
+        TEST ("Determinant 1x1", "Determinant")
+            Matrix<T> M1(1, 1);
+            T detM1 = random<T>();
+            M1 << detM1;
 
-            Matrix<T> M1(2, 2);
-            m1.fillmat(M1);
+            EXPECT_TRUE(type_numeric_eq(detM1, det(M1)));
+        END
 
-            Matrix<T> M2(3, 3);
-            m2.fillmat(M2);
+        TEST("Determinant 2x2", "Determinant")
+            TestArray<T, 4> m;
+            Matrix<T> M2(2, 2);
+            m.fillmat(M2);
 
-            T detM1 = M1(0, 0) * M1(1, 1) - M1(0, 1) * M1(1, 0);
-            /** Sarrus szabály */
-            T detM2 = M2(0, 0) * M2(1, 1) * M2(2, 2) + 
-                      M2(0, 1) * M2(1, 2) * M2(2, 0) + 
-                      M2(0, 2) * M2(1, 0) * M2(2, 1) - 
-                      M2(0, 2) * M2(1, 1) * M2(2, 0) - 
-                      M2(0, 0) * M2(1, 2) * M2(2, 1) - 
-                      M2(0, 1) * M2(1, 0) * M2(2, 2);
-            EXPECT_TRUE(std::abs(detM1 - M1.determinant()) < 1e-12); // kicsit engedünk a pontosságon, a Gauss-elimiáció osztásai miatt
-            EXPECT_TRUE(std::abs(detM2 - M2.determinant()) < 1e-12);
+            T detM2 = M2(0, 0) * M2(1, 1) - M2(0, 1) * M2(1, 0);
+
+            EXPECT_TRUE(type_numeric_eq(detM2, det(M2)));
+        END
+
+        TEST("Determinant 3x3", "Determinant")
+            TestArray<T, 9> m;
+            Matrix<T> M3(3, 3);
+            m.fillmat(M3);
+
+            // Sarrus szabály
+            T detM3 = M3(0, 0) * M3(1, 1) * M3(2, 2) + 
+                      M3(0, 1) * M3(1, 2) * M3(2, 0) + 
+                      M3(0, 2) * M3(1, 0) * M3(2, 1) - 
+                      M3(0, 2) * M3(1, 1) * M3(2, 0) - 
+                      M3(0, 0) * M3(1, 2) * M3(2, 1) - 
+                      M3(0, 1) * M3(1, 0) * M3(2, 2);
+
+            // kicsit engedünk a pontosságon, a Gauss-elimiáció osztásai miatt, a compiler epsilon túl szigorú nekünk
+            EXPECT_TRUE(type_numeric_eq<T>(detM3, det(M3), relaxed_epsilon<T>()));
+        END
+        
+        TEST("Determinant 4x4", "Determinant")
+            TestArray<T, 16> m;
+            Matrix<T> M4(4, 4);
+            m.fillmat(M4);
+
+            // ilyen sem lesz többet, innen felfele megbízhatunk az értékekben
+            double detM4 = M4(0,0)*M4(1,1)*M4(2,2)*M4(3,3) + M4(0,0)*M4(1,2)*M4(2,3)*M4(3,1) + M4(0,0)*M4(1,3)*M4(2,1)*M4(3,2) + 
+                           M4(0,1)*M4(1,0)*M4(2,3)*M4(3,2) + M4(0,1)*M4(1,2)*M4(2,0)*M4(3,3) + M4(0,1)*M4(1,3)*M4(2,2)*M4(3,0) +
+                           M4(0,2)*M4(1,0)*M4(2,1)*M4(3,3) + M4(0,2)*M4(1,1)*M4(2,3)*M4(3,0) + M4(0,2)*M4(1,3)*M4(2,0)*M4(3,1) + 
+                           M4(0,3)*M4(1,0)*M4(2,2)*M4(3,1) + M4(0,3)*M4(1,1)*M4(2,0)*M4(3,2) + M4(0,3)*M4(1,2)*M4(2,1)*M4(3,0) - 
+                           M4(0,0)*M4(1,1)*M4(2,3)*M4(3,2) - M4(0,0)*M4(1,2)*M4(2,1)*M4(3,3) - M4(0,0)*M4(1,3)*M4(2,2)*M4(3,1) - 
+                           M4(0,1)*M4(1,0)*M4(2,2)*M4(3,3) - M4(0,1)*M4(1,2)*M4(2,3)*M4(3,0) - M4(0,1)*M4(1,3)*M4(2,0)*M4(3,2) - 
+                           M4(0,2)*M4(1,0)*M4(2,3)*M4(3,1) - M4(0,2)*M4(1,1)*M4(2,0)*M4(3,3) - M4(0,2)*M4(1,3)*M4(2,1)*M4(3,0) - 
+                           M4(0,3)*M4(1,0)*M4(2,1)*M4(3,2) - M4(0,3)*M4(1,1)*M4(2,2)*M4(3,0) - M4(0,3)*M4(1,2)*M4(2,0)*M4(3,1);
+
+            // kicsit engedünk a pontosságon, a Gauss-elimiáció osztásai miatt, a compiler epsilon túl szigorú nekünk
+            EXPECT_TRUE(type_numeric_eq<T>(detM4, det(M4), relaxed_epsilon<T>()));
+        END
+
+        TEST("Singular matrix", "Determinant")
+            Matrix<T> MS(3, 3);
+            MS << 0, 0, 0, 0, 0, 0, 0, 0, 0;
+
+            EXPECT_TRUE(type_numeric_eq((T)0, det(MS)));
         END
 
         TEST("No determinant", "Determinant")
-            TestArray<T, 6> m1;
-            Matrix<T> M1(2, 3);
-            m1.fillmat(M1);
+            TestArray<T, 6> mn;
+            Matrix<T> MN(2, 3);
+            mn.fillmat(MN);
 
-            EXPECT_THROW(M1.determinant(), const char*);
+            EXPECT_THROW(det(MN), const char*);
         END
     }
 

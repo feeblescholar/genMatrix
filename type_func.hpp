@@ -6,16 +6,22 @@
 #include <cmath>
 #include <type_traits> /* típus kategória vizsgálathoz */
 
-template<typename T> bool type_numeric_eq(const T& a, const T& b) {
+/**
+ * Ez alapján: https://libeigen.gitlab.io/eigen/docs-5.0/classEigen_1_1DenseBase.html#ae8443357b808cd393be1b51974213f9c
+ */
+template<typename T> bool type_numeric_eq(const T& a, const T& b, T eps = std::numeric_limits<T>::epsilon()) {
     if constexpr (std::is_integral_v<T>) return a == b;
     else {
         if (a == b) return true;
         
-        T eps = std::numeric_limits<T>::epsilon();
         T diff = std::abs(a - b);
-        T norm = std::min(std::abs(a) + std::abs(b), std::numeric_limits<T>::max());
+        T norm = std::numeric_limits<T>::min();
 
-        return diff < std::max(eps, eps * norm);
+        if (std::abs(a) < norm && std::abs(b) < norm) {
+            return diff < (eps * norm);
+        }
+
+        return diff <= eps * std::max(std::abs(a), std::abs(b));
     }
 }
 
