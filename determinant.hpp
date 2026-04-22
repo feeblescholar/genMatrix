@@ -50,7 +50,7 @@ namespace genMatrix {
                 }
             }
 
-            if (max < std::numeric_limits<long double>::epsilon()) return T(0);
+            if (type_numeric_eq<T>(max, T(0.0))) return T(0.0);
 
             if (pivotR != i) {
                 tmp.swapRow(pivotR, i);
