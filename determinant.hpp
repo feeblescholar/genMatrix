@@ -2,6 +2,7 @@
 #define GENMATRIX_DET
 
 #include "genMatrix.hpp"
+#include "matrix_error.hpp"
 
 namespace genMatrix {
     /**
@@ -15,10 +16,10 @@ namespace genMatrix {
     * @warning A mátrix mérete (\c n) erősen befolyásolja a futási időt.
     */
     template<typename T> T det(const Matrix<T>& mtx) {
-        if (mtx.getRows() != mtx.getCols()) throw "nem negyzetes";
+        if (mtx.getRows() != mtx.getCols()) throw Matrix_Error("[det]", "Must be a square matrix with size of (n x n)");
         
         /** Innentől elég csak n-t vagy m-t vizsgálni (mert négyzetes) */
-        if (mtx.getRows() == 0) throw "ures a matrix";
+        if (mtx.getRows() == 0) throw Matrix_Error("[det]", "Matrix is empty.");
 
         /* 1x1-es mátrix determinánsa maga az elem */
         if (mtx.getRows() == 1) return mtx(0, 0);

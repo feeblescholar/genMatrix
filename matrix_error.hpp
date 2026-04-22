@@ -1,5 +1,5 @@
-#ifndef MATRIX_ERROR
-#define MATRIX_ERROR
+#ifndef MATRIX_ERROR_H
+#define MATRIX_ERROR_H
 
 #include <exception>
 #include <string>

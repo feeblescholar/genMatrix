@@ -5,6 +5,7 @@
 
 #include "genMatrix.hpp"
 #include "determinant.hpp"
+#include "matrix_error.hpp"
 #include "memtrace_gtest/gtest_lite.h"
 #include "memtrace_gtest/memtrace.h"
 
@@ -99,13 +100,13 @@ namespace genMatrix::genMatrixTest {
         TEST("Eigen <size", "Eigen fill")
             TestArray<T, 4> t;
             Matrix<T> M(3, 3);
-            EXPECT_THROW((M << t[0], t[1], t[2], t[3]), const char*);
+            EXPECT_THROW((M << t[0], t[1], t[2], t[3]), const genMatrix::Matrix_Error);
         END
 
         TEST("Eigen >size", "Eigen fill")
             TestArray<T, 4> t;
             Matrix<T> M(2, 2);
-            EXPECT_THROW((M << t[0], t[1], t[2], t[3], t[0]), const char*);
+            EXPECT_THROW((M << t[0], t[1], t[2], t[3], t[0]), const genMatrix::Matrix_Error);
         END
     }
 
@@ -124,12 +125,12 @@ namespace genMatrix::genMatrixTest {
         END
 
         TEST("Invalid indexing", "Indexing")
-            EXPECT_THROW(M(-1, 0), const char*);
-            EXPECT_THROW(M(0, 4), const char*);
-            EXPECT_THROW(M(0, -1), const char*);
-            EXPECT_THROW(M(0, 76), const char*);
-            EXPECT_THROW(M(-1, -1), const char*);
-            EXPECT_THROW(M(76, 84), const char*);
+            EXPECT_THROW(M(-1, 0), const genMatrix::Matrix_Error);
+            EXPECT_THROW(M(0, 4), const genMatrix::Matrix_Error);
+            EXPECT_THROW(M(0, -1), const genMatrix::Matrix_Error);
+            EXPECT_THROW(M(0, 76), const genMatrix::Matrix_Error);
+            EXPECT_THROW(M(-1, -1), const genMatrix::Matrix_Error);
+            EXPECT_THROW(M(76, 84), const genMatrix::Matrix_Error);
         END
     }
 
@@ -253,7 +254,7 @@ namespace genMatrix::genMatrixTest {
             M1.swapRow(0, 1);
             EXPECT_TRUE(M1 == M3) << "valtozott valami sorcsere kozben";
 
-            EXPECT_THROW(M1.swapRow(-1, 62), const char*);
+            EXPECT_THROW(M1.swapRow(-1, 62), const genMatrix::Matrix_Error);
 
             M2.swapCol(0, 2);
             EXPECT_TRUE(M2 == M4);
@@ -261,7 +262,7 @@ namespace genMatrix::genMatrixTest {
             M2.swapCol(0, 2);
             EXPECT_TRUE(M2 == M5) << "valtozott valami sorcsere kozben";
 
-            EXPECT_THROW(M2.swapCol(19, -62), const char*);
+            EXPECT_THROW(M2.swapCol(19, -62), const genMatrix::Matrix_Error);
 
             M1.swapRow(0, 2).swapCol(0, 2);
             EXPECT_TRUE(M1 == M6);
@@ -342,9 +343,9 @@ namespace genMatrix::genMatrixTest {
             Matrix<T> M2(6, 4);
             m2.fillmat(M2);
 
-            EXPECT_THROW((M1 + M2), const char*);
-            EXPECT_THROW((M2 - M1), const char*);
-            EXPECT_THROW((M1 * M2), const char*);
+            EXPECT_THROW((M1 + M2), const genMatrix::Matrix_Error);
+            EXPECT_THROW((M2 - M1), const genMatrix::Matrix_Error);
+            EXPECT_THROW((M1 * M2), const genMatrix::Matrix_Error);
         END
     }
 
@@ -456,7 +457,7 @@ namespace genMatrix::genMatrixTest {
             Matrix<T> MN(2, 3);
             mn.fillmat(MN);
 
-            EXPECT_THROW(det(MN), const char*);
+            EXPECT_THROW(det(MN), const genMatrix::Matrix_Error);
         END
     }
 

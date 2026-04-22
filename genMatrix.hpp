@@ -15,6 +15,7 @@
 #include <iostream>
 
 #include "type_func.hpp"
+#include "matrix_error.hpp"
 
 
 namespace genMatrix {
@@ -60,7 +61,7 @@ namespace genMatrix {
                 data = new T[this->size()](); /** forceoljuk a default constructort elemi típusokra is */
             }
             catch (const std::bad_alloc&) {
-                throw "hibaosztaly ide";
+                throw Matrix_Error("[Constructor]", "Memory allocation failure.", true);
             }
         }
 
@@ -110,7 +111,9 @@ namespace genMatrix {
          * @note Dinamikus mátrix esetében ez nem használható.
          */
         CommaInit operator<<(const T& val) {
-            if (isDynamic) throw "csak statikus mereture hivhato";
+            if (isDynamic) 
+                throw Matrix_Error("[operator<<]", "This assignment can only be used on known-size matrices.");
+
             return CommaInit(*this, val);
         }
 
@@ -142,8 +145,12 @@ namespace genMatrix {
          * @note A visszaadott elem nem módosítható.
          */
         const T& operator()(const size_t row, const size_t col) const {
-            if (!n && !m) throw "ures mtx";
-            if (row < 0 || row >= n || col < 0 || col >= m) throw "tulindexeles";
+            if (!n && !m) 
+                throw Matrix_Error("[operator()]", "The matrix is empty.");
+
+            if (row < 0 || row >= n || col < 0 || col >= m) 
+                throw Matrix_Error("[operator()]", "Out of index");
+
             return data[row * m + col];
         }
 
@@ -154,8 +161,12 @@ namespace genMatrix {
          * @throws Matrix_Error kivétel túlindexelés esetén.
          */
         T& operator()(const size_t row, const size_t col) {
-            if (!n && !m) throw "ures mtx";
-            if (row < 0 || row >= n || col < 0 || col >= m) throw "tulindexeles";
+            if (!n && !m) 
+                throw Matrix_Error("[operator()]", "The matrix is empty.");
+
+            if (row < 0 || row >= n || col < 0 || col >= m) 
+                throw Matrix_Error("[operator()]", "Out of index");
+
             return data[row * m + col];
         }
 
@@ -232,7 +243,9 @@ namespace genMatrix {
          * @throws Matrix_Error kivétel, ha az összeadás nem értelmezett.
          */
         Matrix& operator+=(const Matrix<T>& rhs_mtx) {
-            if (!exact_size(*this, rhs_mtx)) throw "nem egy meret";
+            if (!exact_size(*this, rhs_mtx)) 
+                throw Matrix_Error("[operator+=]", "Two matrices must have the same size (n * m).");
+
             for (size_t i = 0; i < this->size(); i++)
                 data[i] = data[i] + rhs_mtx.data[i];
 
@@ -300,12 +313,15 @@ namespace genMatrix {
          * @throws Matrix_Error kivétel, ha a szorzás nem értelmezett.
          */
         Matrix operator*(const Matrix<T>& rhs_mtx) const {
-            if (m != rhs_mtx.n) throw "nem jok a meretek";
+            if (m != rhs_mtx.n) 
+                throw Matrix_Error("[operator*]", "Columns of this and rows of other must be equal.");
+
             Matrix<T> rval(n, rhs_mtx.m);
             for (size_t i = 0; i < n; i++)
                 for (size_t k = 0; k < m; k++)
                     for (size_t j = 0; j < rhs_mtx.m; j++)
                         rval(i, j) += this->operator()(i, k) * rhs_mtx(k, j);
+                        
             return rval;
         }
 
@@ -416,13 +432,16 @@ namespace genMatrix {
         * @return Önmaga referenciája, így lehet láncban hívni.
         */
         CommaInit& operator,(const T& rhs_val) {
-            if (nextidx == mtx.size()) throw "tul sok parameter";
+            if (nextidx == mtx.size()) 
+                throw Matrix_Error("[CommaInit]", "Too many parameters.", true);
+
             mtx.data[nextidx++] = rhs_val;
             return *this;
         }
 
         ~CommaInit() noexcept(false) {
-            if (nextidx != mtx.size()) throw "tul keves parameter";
+            if (nextidx != mtx.size()) 
+                throw Matrix_Error("[CommaInit]", "Not enough parameters.", true);
         }
     };
 
