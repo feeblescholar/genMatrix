@@ -12,6 +12,7 @@
 #include <exception> /* std::exeption örökléséhez */
 #include <cstddef>   
 #include <iterator>
+#include <iostream>
 
 #include "type_func.hpp"
 
@@ -26,9 +27,9 @@ namespace genMatrix {
          * Megcseréli a és b-t.
          */
         void swap(T* a, T* b) {
-            T* tmp = a;
-            a = b;
-            b = tmp;
+            T tmp = *a;
+            *a = *b;
+            *b = tmp;
         }
 
         /**
@@ -364,40 +365,39 @@ namespace genMatrix {
          * @return A mátrix determinánsa a mátrix típusának megfelelően.
          * @throw Matrix_Error kivétel, ha nem létezik.
          */
-        T determinant() {
+        T determinant() const {
             if (n != m) throw "nem negyzetes";
+            if (n == 1) return data[0];
 
-            Matrix<T> tmp = *this;
-            T det(1);
+            Matrix<double> tmp = *this;
+            double det(1.0);
 
             for (size_t i = 0; i < tmp.n; i++) {
                 size_t pivot = i;
 
                 for (size_t j = i + 1; j < tmp.n; j++) {
-                    if (std::abs(tmp(i, j)) > std::abs(tmp(pivot, i)))
+                    if (std::abs(tmp(j, i)) > std::abs(tmp(pivot, i)))
                         pivot = j;
                 }
 
-                if (type_numeric_eq<T>(tmp(pivot, i), T())) return T();
-
                 if (pivot != i) {
                     tmp.swapRow(pivot, i);
-                    det = det * -1;
+                    det *= -1.0;
                 }
+
+                if (std::abs(tmp(i, i)) < 1e-12) return T(0);
 
                 for (size_t j = i + 1; j < tmp.n; j++) {
-                    T div = tmp(j, i) / tmp(i, i);
-                    for (size_t k = i; k < tmp.n; k++) {
-                        tmp(j, k) = tmp(j, k) - tmp(i, k) * div;
+                    double div = tmp(j, i) / tmp(i, i);
+                    for (size_t k = i + 1; k < tmp.n; k++) {
+                        tmp(j, k) -= tmp(i, k) * div;
                     }
                 }
+
+                det *= tmp(i, i);
             }
 
-            for (size_t i = 0; i < n; i++) {
-                det = det * tmp(i, i);
-            }
-
-            return det;
+            return static_cast<T>(det);
         }
 
         ~Matrix() {

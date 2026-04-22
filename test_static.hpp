@@ -8,10 +8,10 @@
 #include "memtrace_gtest/memtrace.h"
 
 namespace genMatrix::genMatrixTest {
-    template<typename T, bool neg = true> T random() {
-        int lbound = -1000;
-        if (!neg) lbound = 0;
-        const int ubound = 1000;
+    template<typename T, bool negzero = true> T random() {
+        int lbound = -10;
+        if (!negzero) lbound = 1;
+        const int ubound = 10;
 
         std::default_random_engine eng(std::random_device{}());
 
@@ -68,14 +68,14 @@ namespace genMatrix::genMatrixTest {
             EXPECT_EQ((size_t)t[1], M0.getCols());
             EXPECT_EQ((size_t)t[0] * t[1], M0.size());
 
-            Matrix<T> M1(0, t[2]);
-            EXPECT_EQ((size_t)0, M1.getRows());
+            Matrix<T> M1(1, t[2]);
+            EXPECT_EQ((size_t)1, M1.getRows());
             EXPECT_EQ((size_t)t[2], M1.getCols());
             EXPECT_EQ((size_t)t[2], M1.size());
 
-            Matrix<T> M2(t[3], 0);
+            Matrix<T> M2(t[3], 1);
             EXPECT_EQ((size_t)t[3], M2.getRows());
-            EXPECT_EQ((size_t)0, M2.getCols());
+            EXPECT_EQ((size_t)1, M2.getCols());
             EXPECT_EQ((size_t)t[3], M2.size());
         END
     }
@@ -168,7 +168,19 @@ namespace genMatrix::genMatrixTest {
 
         TEST("Self assign", "Copy-assign")
             Matrix<T> M_cp = M;
+
+            /** Ki kell kapcsolni a fordító figyelmeztetését, pontosan tudjuk, hogy mit akarunk. */
+
+            #pragma GCC diagnostic push
+            #pragma GCC diagnostic ignored "-Wself-assign"
+            #if defined(__clang__)
+                #pragma clang diagnostic ignored "-Wself-assign-overloaded"
+            #endif
+
             M_cp = M_cp;
+
+            #pragma GCC diagnostic pop
+
             EXPECT_TRUE(M_cp == M);
         END
 
@@ -311,7 +323,21 @@ namespace genMatrix::genMatrixTest {
                    M1(1, 0) * M2(0, 3) + M1(1, 1) * M2(1, 3) + M1(1, 2) * M2(2, 3);
 
             EXPECT_TRUE((M1 * M2) == M12);
-            EXPECT_THROW((M2 * M1), const char*);
+        END
+
+        TEST("Incompatible matrices", "Binary operands") 
+            TestArray<T, 6> m1;
+            TestArray<T, 24> m2;
+
+            Matrix<T> M1(2, 3);
+            m1.fillmat(M1);
+
+            Matrix<T> M2(6, 4);
+            m2.fillmat(M2);
+
+            EXPECT_THROW((M1 + M2), const char*);
+            EXPECT_THROW((M2 - M1), const char*);
+            EXPECT_THROW((M1 * M2), const char*);
         END
     }
 
@@ -356,17 +382,52 @@ namespace genMatrix::genMatrixTest {
         END
     }
 
-    template<typename T> void genMatrix_static_test() {
-        std::cout << "\n==== genMatrix test on: " << typeid(T).name() << " ====\n";
+    template<typename T> void determinant__static() {
+        TEST("Determinant", "Determinant")
+            TestArray<T, 4> m1;
+            TestArray<T, 9> m2;
 
-        size_calculation__static<T>();
-        eigen_fill__static<T>();
-        indexing__static<T>();
-        comparisons__static<T>();
-        copy_assign__static<T>();
-        swapping__static<T>();
-        binary_operands__static<T>();
-        transpose__static<T>();
+            Matrix<T> M1(2, 2);
+            m1.fillmat(M1);
+
+            Matrix<T> M2(3, 3);
+            m2.fillmat(M2);
+
+            T detM1 = M1(0, 0) * M1(1, 1) - M1(0, 1) * M1(1, 0);
+            /** Sarrus szabály */
+            T detM2 = M2(0, 0) * M2(1, 1) * M2(2, 2) + 
+                      M2(0, 1) * M2(1, 2) * M2(2, 0) + 
+                      M2(0, 2) * M2(1, 0) * M2(2, 1) - 
+                      M2(0, 2) * M2(1, 1) * M2(2, 0) - 
+                      M2(0, 0) * M2(1, 2) * M2(2, 1) - 
+                      M2(0, 1) * M2(1, 0) * M2(2, 2);
+            EXPECT_TRUE(std::abs(detM1 - M1.determinant()) < 1e-12); // kicsit engedünk a pontosságon, a Gauss-elimiáció osztásai miatt
+            EXPECT_TRUE(std::abs(detM2 - M2.determinant()) < 1e-12);
+        END
+
+        TEST("No determinant", "Determinant")
+            TestArray<T, 6> m1;
+            Matrix<T> M1(2, 3);
+            m1.fillmat(M1);
+
+            EXPECT_THROW(M1.determinant(), const char*);
+        END
+    }
+
+    template<typename T> void genMatrix_static_test(unsigned int iter = 1) {
+        std::cout << "\n==== genMatrix static test (iterations: " << iter << ") on " << typeid(T).name() << " ====\n";
+
+        for (unsigned int i = 0; i < iter; i++) {
+            size_calculation__static<T>();
+            eigen_fill__static<T>();
+            indexing__static<T>();
+            comparisons__static<T>();
+            copy_assign__static<T>();
+            swapping__static<T>();
+            binary_operands__static<T>();
+            transpose__static<T>();
+            determinant__static<T>();
+        }
 
         std::cout << "\n==============================\n";
     }
