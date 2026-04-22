@@ -5,7 +5,7 @@ CCXFLAGS = -g -O0 -std=c++17 -Wall
 SRCS = main.cpp memtrace_gtest/memtrace.cpp
 OBJ  = $(SRCS:.cpp=.o)
 
-TARGET = build/genMatrix_test_int
+TARGET = build/genMatrix_test
 
 all: $(TARGET)
 
