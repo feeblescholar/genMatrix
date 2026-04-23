@@ -1,3 +1,3 @@
-[submodule "memtrace_gtest"]
-	path = memtrace_gtest
-	url = https://git.iit.bme.hu/prog2/seged/memtrace_gtest
+[submodule "lib/memtrace_gtest"]
+	path = lib/memtrace_gtest
+	url = https://git.iit.bme.hu/prog2/seged/memtrace_gtest.git

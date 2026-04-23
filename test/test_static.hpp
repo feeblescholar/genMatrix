@@ -4,8 +4,8 @@
 #include <random>
 
 #include "../src/include/genMatrix.hpp"
-#include "../memtrace_gtest/gtest_lite.h"
-#include "../memtrace_gtest/memtrace.h"
+#include "../lib/memtrace_gtest/gtest_lite.h"
+#include "../lib/memtrace_gtest/memtrace.h"
 
 namespace genMatrix::genMatrixTest {
     template<typename T, bool negzero = true> T random() {
