@@ -2,7 +2,7 @@
 #define MATRIX_ERROR_H
 
 #include <exception>
-#include <string>
+#include <cstring>
 
 namespace genMatrix {
     /**

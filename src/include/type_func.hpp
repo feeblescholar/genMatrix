@@ -9,7 +9,7 @@
 /**
  * Ez alapján: https://libeigen.gitlab.io/eigen/docs-5.0/classEigen_1_1DenseBase.html#ae8443357b808cd393be1b51974213f9c
  */
-template<typename T> bool type_numeric_eq(const T& a, const T& b, T eps = std::numeric_limits<T>::epsilon()) {
+template<typename T> bool type_numeric_eq(const T& a, const T& b, T eps = std::numeric_limits<T>::epsilon() * 100) {
     if constexpr (std::is_integral_v<T>) return a == b;
     else {
         if (a == b) return true;

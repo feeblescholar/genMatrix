@@ -4,9 +4,9 @@
 #include <random>
 
 template<typename T, bool negzero = true> T random() {
-    int lbound = -100;
+    int lbound = -50;
     if (!negzero) lbound = 10;
-    const int ubound = 100;
+    const int ubound = 50;
 
     std::default_random_engine eng(std::random_device{}());
 

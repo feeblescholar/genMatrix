@@ -20,5 +20,8 @@ jobs:
       - name : Dependencies
         run  : "sudo apt-get update && sudo apt-get install -y cmake g++ make"
 
-      - name : Build -> Run
+      - name : Build
         run  : make test_build
+
+      - name : Run
+        run  : ./build/genMatrix_gtest --gtest_color=yes

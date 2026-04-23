@@ -22,22 +22,25 @@ TYPED_TEST(MatrixTest, ConstantTimesMatrix) {
 TYPED_TEST(MatrixTest, AdditionSubtraction) {
     using namespace genMatrix;
 
-    TestArray<TypeParam, 16> m;
-    Matrix<TypeParam> M(4, 4);
+    TestArray<TypeParam, 12> m;
+    Matrix<TypeParam> M(4, 3);
     m.fillmat(M);
 
     Matrix<TypeParam> M1 = M, M2 = M1 + 1, M3 = M1 + 9, M4 = M1, M5 = M1, M6 = M2 + M3, M7 = M - M1;
     M4 += 9;
     M5 -= 1;
 
-    for (size_t i = 0; i < M1.getCols(); i++) {
-        for (size_t k = 0; k < M1.getRows(); k++) {
+    for (size_t i = 0; i < M1.getRows(); i++) {
+        for (size_t k = 0; k < M1.getCols(); k++) {
             EXPECT_EQ(M1(i, k) + 1, M2(i, k));
             EXPECT_EQ(M1(i, k) + 9, M3(i, k));
             EXPECT_EQ(M2(i, k) + M3(i, k), M6(i, k));
+            EXPECT_EQ(M1(i, k) - 1, M5(i, k));
             EXPECT_EQ((TypeParam)0, M7(i, k));
         }
     }
+
+    M2 -= 2;
 
     EXPECT_TRUE(M4 == M3);
     EXPECT_TRUE(M5 == M2);    

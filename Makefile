@@ -37,7 +37,6 @@ all: prod_build test_build
 
 prod_build: $(TARGET)
 test_build: $(TESTTARGET)
-				./$(TESTTARGET)
 
 $(TARGET): $(OBJ)
 	mkdir -p build

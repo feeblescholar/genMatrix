@@ -22,15 +22,21 @@ TYPED_TEST(MatrixTest, SelfAssign) {
 
     /** Ki kell kapcsolni a fordító figyelmeztetését, pontosan tudjuk, hogy mit akarunk. */ 
 
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wself-assign"
-    #if defined(__clang__)
-        #pragma clang diagnostic ignored "-Wself-assign-overloaded"
+    #ifdef __clang__
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wself-assign"
+    #elif defined(__GNUC__)
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wself-move"
     #endif
 
-    M_cp = M_cp;
+    M_cp = M_cp; 
 
-    #pragma GCC diagnostic pop
+    #ifdef __clang__
+        #pragma clang diagnostic pop
+    #elif defined(__GNUC__)
+        #pragma GCC diagnostic pop
+    #endif
 
     EXPECT_TRUE(M_cp == M);
 }

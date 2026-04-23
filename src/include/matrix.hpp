@@ -56,6 +56,9 @@ namespace genMatrix {
 
             if (n <= 5 && m <= 5)  {
                 data = staticBuf;
+
+                for (size_t i = 0; i < this->size(); i++) data[i] = T();
+
                 return;
             }
 
@@ -155,7 +158,7 @@ namespace genMatrix {
             if (!n && !m) 
                 throw Matrix_Error("[operator()]", "The matrix is empty.");
 
-            if (row < 0 || row >= n || col < 0 || col >= m) 
+            if (row >= n || col >= m) 
                 throw Matrix_Error("[operator()]", "Out of index");
 
             return data[row * m + col];
@@ -171,7 +174,7 @@ namespace genMatrix {
             if (!n && !m) 
                 throw Matrix_Error("[operator()]", "The matrix is empty.");
 
-            if (row < 0 || row >= n || col < 0 || col >= m) 
+            if (row >= n || col >= m) 
                 throw Matrix_Error("[operator()]", "Out of index");
 
             return data[row * m + col];
@@ -182,8 +185,8 @@ namespace genMatrix {
          */
         bool operator==(const Matrix<T>& other) {
             if (this == &other) return true;
-            if (n != other.n || m != other.m || !(dataLocation == other.dataLocation)) return false;
-            if (n == other.n == m == other.m == 0) return true;
+            if (n != other.n || m != other.m) return false;
+            if (n == 0 && m == 0) return true;
 
             for (size_t i = 0; i < this->size(); i++)
                 if (!type_numeric_eq<T>(data[i], other.data[i])) return false;
