@@ -9,10 +9,17 @@
 #include "matrix_error.hpp"
 
 namespace genMatrix {
+        enum __MatrixState {
+            FixedStack,     /** A mátrix fix méretű, adatai a stacken vannak. (ez a default konstruktor érték is) */
+            FixedHeap,      /** A mátrix fix méretű, de túl nagy a stackhez.  */
+            DynamicHeap     /** A mátrix dinamikus méretű, adatai a heapen vannak. */
+        };
+
         template<typename T> class Matrix {
-        T* data;        /** A mátrix elemei. */
-        size_t n, m;    /** A mátrix méretei (n sor, m oszlop). */
-        bool isDynamic; /** Eltárolja, hogy a mátrix dinamikus-e. */
+        T staticBuf[5 * 5];             /** Kis (max. 5x5), fix méretű mátrixoknak.  */
+        T* data;                        /** A mátrix elemei. */
+        size_t n, m;                    /** A mátrix méretei (n sor, m oszlop). */
+        __MatrixState dataLocation;     /** Eltárolja a mátrix adatainak helyét (heap vagy stack pointeren vannak az adatok). */
 
         /**
          * Megcseréli a és b-t.
@@ -41,14 +48,20 @@ namespace genMatrix {
          * @param _n Sorok száma
          * @param _m Oszlopok száma
          */
-        Matrix(size_t _n = 0, size_t _m = 0) : data(nullptr), n(_n), m(_m), isDynamic(false) {
+        Matrix(size_t _n = 0, size_t _m = 0) : data(nullptr), n(_n), m(_m), dataLocation(FixedStack) {
             if (!n && !m) {
-                isDynamic = true;
+                dataLocation = DynamicHeap;
+                return;
+            }
+
+            if (n <= 5 && m <= 5)  {
+                data = staticBuf;
                 return;
             }
 
             try {
                 data = new T[this->size()](); /** forceoljuk a default constructort elemi típusokra is */
+                dataLocation = FixedHeap;
             }
             catch (const std::bad_alloc&) {
                 throw Matrix_Error("[Constructor]", "Memory allocation failure.", true);
@@ -79,13 +92,17 @@ namespace genMatrix {
          * Generikus értékadó operátor
          */
         template<typename S> Matrix& operator=(const Matrix<S>& other) {
-            delete[] data;
+            if (dataLocation != FixedStack) delete[] data;
 
-            isDynamic = other.getDynamic();
+            dataLocation = other.getDataLocation();
             n = other.getRows();
             m = other.getCols();
 
-            data = new T[this->size()]();
+            if (dataLocation == FixedStack) 
+                data = staticBuf;
+            else 
+                data = new T[this->size()]();
+
             for (size_t i = 0; i < this->getRows(); i++) {
                 for (size_t j = 0; j < this->getCols(); j++) {
                     this->operator()(i,j) = static_cast<T>(other(i,j));
@@ -101,7 +118,7 @@ namespace genMatrix {
          * @note Dinamikus mátrix esetében ez nem használható.
          */
         CommaInit operator<<(const T& val) {
-            if (isDynamic) 
+            if (dataLocation == DynamicHeap) 
                 throw Matrix_Error("[operator<<]", "This assignment can only be used on known-size matrices.");
 
             return CommaInit(*this, val);
@@ -126,7 +143,7 @@ namespace genMatrix {
             return n * m;
         }
 
-        bool getDynamic() const { return isDynamic; }
+        __MatrixState getDataLocation() const { return dataLocation; }
 
         /**
          * @param row Sorindex
@@ -165,7 +182,7 @@ namespace genMatrix {
          */
         bool operator==(const Matrix<T>& other) {
             if (this == &other) return true;
-            if (n != other.n || m != other.m || !(isDynamic == other.isDynamic)) return false;
+            if (n != other.n || m != other.m || !(dataLocation == other.dataLocation)) return false;
             if (n == other.n == m == other.m == 0) return true;
 
             for (size_t i = 0; i < this->size(); i++)
@@ -382,7 +399,8 @@ namespace genMatrix {
         };
 
         ~Matrix() {
-            delete[] data;
+            if (dataLocation != FixedStack)
+                delete[] data;
             data = nullptr; /* double delete ellen */
             n = m = 0;
         };
