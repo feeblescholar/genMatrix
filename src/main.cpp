@@ -1,12 +1,4 @@
-#include "../test/test_static.hpp"
-
-int main(int argc, char **argv) {
-    using namespace genMatrix;
-
-    genMatrixTest::genMatrix_static_test<int>();
-    genMatrixTest::genMatrix_static_test<double>();
-    genMatrixTest::genMatrix_static_test<float>();
-    genMatrixTest::genMatrix_static_test<long>();
-
+int main(void) {
+    /* ui mainloop ide egyszer */
     return 0;
 }

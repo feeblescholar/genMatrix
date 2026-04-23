@@ -1,3 +1,6 @@
 [submodule "lib/memtrace_gtest"]
 	path = lib/memtrace_gtest
 	url = https://git.iit.bme.hu/prog2/seged/memtrace_gtest.git
+[submodule "lib/googletest"]
+	path = lib/googletest
+	url = https://github.com/google/googletest.git
