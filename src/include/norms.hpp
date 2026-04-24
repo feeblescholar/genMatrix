@@ -49,8 +49,9 @@ namespace genMatrix {
      * @param mtx - A normált mátrix referenciája.
      * @return A mátrix Frobenius normája.
      */
-    template<typename T> T norm_frobenius(const Matrix<T>& mtx) {
-        T norm = T(0);
+    template<typename T> auto norm_frobenius(const Matrix<T>& mtx) {
+        using ReturnType = decltype(T(0) + float(0));
+        ReturnType norm = 0.0;
 
         for (size_t i = 0; i < mtx.getRows(); i++) {
             for (size_t j = 0; j < mtx.getCols(); j++) {
