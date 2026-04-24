@@ -16,8 +16,8 @@ TYPED_TEST(MatrixTest, TransposeSquaredMatrix) {
     TN << n[0], n[2], 
             n[1], n[3];
 
-    EXPECT_TRUE(TN == L);
-    EXPECT_TRUE(TN == U);
+    EXPECT_TRUE(mtx_cmp_test(TN, L));
+    EXPECT_TRUE(mtx_cmp_test(TN, U));
 }
 
 TYPED_TEST(MatrixTest, TransposeGeneral) {
@@ -37,6 +37,6 @@ TYPED_TEST(MatrixTest, TransposeGeneral) {
             n[1], n[4],
             n[2], n[5];
     
-    EXPECT_TRUE(TN == L);
-    EXPECT_TRUE(TN == U);
+    EXPECT_TRUE(mtx_cmp_test(TN, L));
+    EXPECT_TRUE(mtx_cmp_test(TN, U));
 }

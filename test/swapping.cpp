@@ -28,18 +28,18 @@ TYPED_TEST(MatrixTest, Swapping) {
             M1(3, 2), M1(3, 1), M3(3, 0);
 
     M1.swapRow(0, 1);
-    EXPECT_TRUE(M1 == M2);
+    EXPECT_TRUE(mtx_cmp_test(M1, M2));
 
     M1.swapRow(0, 1);
-    EXPECT_TRUE(M1 == M3) << "valtozott valami sorcsere kozben";
+    EXPECT_TRUE(mtx_cmp_test(M1, M3)) << "valtozott valami sorcsere kozben";
 
     EXPECT_THROW(M1.swapRow(-1, 62), genMatrix::Matrix_Error);
 
     M2.swapCol(0, 2);
-    EXPECT_TRUE(M2 == M4);
+    EXPECT_TRUE(mtx_cmp_test(M2, M4));
 
     M2.swapCol(0, 2);
-    EXPECT_TRUE(M2 == M5) << "valtozott valami sorcsere kozben";
+    EXPECT_TRUE(mtx_cmp_test(M2, M5)) << "valtozott valami sorcsere kozben";
 
     EXPECT_THROW(M2.swapCol(19, -62), genMatrix::Matrix_Error);
 

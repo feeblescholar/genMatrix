@@ -19,9 +19,9 @@ TYPED_TEST(MatrixTest, Comparisons) {
     Matrix<TypeParam> A(3, 2);
     t2.fillmat(A);
 
-    EXPECT_TRUE(A == A);
-    EXPECT_TRUE(M == M_cp);
+    EXPECT_EQ(mtx_cmp_test(A, A), A == A);
+    EXPECT_EQ(mtx_cmp_test(M, M_cp), M == M_cp);
 
-    EXPECT_FALSE(M_cp == L);
-    EXPECT_FALSE(L == A);
+    EXPECT_EQ(mtx_cmp_test(M_cp, L), M_cp == L);
+    EXPECT_EQ(mtx_cmp_test(L, A), L == A);
 }

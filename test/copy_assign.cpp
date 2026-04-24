@@ -7,8 +7,8 @@ TYPED_TEST(MatrixTest, CopyConstructor) {
     Matrix<TypeParam> M(4, 6);
     m.fillmat(M);
 
-    Matrix<TypeParam> M_cp = M;
-    EXPECT_TRUE(M_cp == M);
+    Matrix<TypeParam> MC = M;
+    EXPECT_TRUE(mtx_cmp_test(MC, M));
 }
 
 TYPED_TEST(MatrixTest, SelfAssign) {
@@ -18,7 +18,7 @@ TYPED_TEST(MatrixTest, SelfAssign) {
     Matrix<TypeParam> M(4, 6);
     m.fillmat(M);
 
-    Matrix<TypeParam> M_cp = M;
+    Matrix<TypeParam> MC = M;
 
     /** Ki kell kapcsolni a fordító figyelmeztetését, pontosan tudjuk, hogy mit akarunk. */ 
 
@@ -30,7 +30,7 @@ TYPED_TEST(MatrixTest, SelfAssign) {
         #pragma GCC diagnostic ignored "-Wself-move"
     #endif
 
-    M_cp = M_cp; 
+    MC = MC; 
 
     #ifdef __clang__
         #pragma clang diagnostic pop
@@ -38,7 +38,7 @@ TYPED_TEST(MatrixTest, SelfAssign) {
         #pragma GCC diagnostic pop
     #endif
 
-    EXPECT_TRUE(M_cp == M);
+    EXPECT_TRUE(mtx_cmp_test(M, MC));
 }
 
 TYPED_TEST(MatrixTest, MultiAssign) {
@@ -63,13 +63,13 @@ TYPED_TEST(MatrixTest, MultiAssign) {
     a.fillmat(A);
 
     M1 = L;
-    EXPECT_TRUE(M1 == L);
+    EXPECT_TRUE(mtx_cmp_test(M1, L));
 
     M1 = U;
-    EXPECT_TRUE(M1 == U);
+    EXPECT_TRUE(mtx_cmp_test(M1, U));
 
     M1 = A = L;
-    EXPECT_TRUE(M1 == A);
-    EXPECT_TRUE(M1 == L);
-    EXPECT_TRUE(A == L);
+    EXPECT_TRUE(mtx_cmp_test(M1, A));
+    EXPECT_TRUE(mtx_cmp_test(M1, L));
+    EXPECT_TRUE(mtx_cmp_test(A, L));
 }
