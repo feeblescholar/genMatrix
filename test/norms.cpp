@@ -1,0 +1,41 @@
+#include "test_main.hpp"
+
+using namespace genMatrix;
+
+TYPED_TEST(MatrixTest, Norm1) {
+    using std::abs;
+
+    TestArray<TypeParam, 6> m;
+    Matrix<TypeParam> M(2, 3); 
+    m.fillmat(M);
+
+    TypeParam col1 = abs(M(0, 0)) + abs(M(1, 0));
+    TypeParam col2 = abs(M(0, 1)) + abs(M(1, 1));
+    TypeParam col3 = abs(M(0, 2)) + abs(M(1, 2));
+    TypeParam norm = std::max(col1, std::max(col2, col3));
+    EXPECT_TRUE(type_numeric_eq(norm, norm_1(M)));
+}
+
+TYPED_TEST(MatrixTest, NormInf) {
+    using std::abs;
+
+    TestArray<TypeParam, 6> m;
+    Matrix<TypeParam> M(2, 3); 
+    m.fillmat(M);
+
+    TypeParam row1 = (abs(M(0, 0)) + abs(M(0, 1)) + abs(M(0, 2)));
+    TypeParam row2 = (abs(M(1, 0)) + abs(M(1, 1)) + abs(M(1, 2)));
+    TypeParam norm = std::max(row1, row2);
+    EXPECT_TRUE(type_numeric_eq(norm, norm_inf(M)));
+}
+
+TYPED_TEST(MatrixTest, NormFrobenius) {
+    using std::abs;
+
+    TestArray<TypeParam, 6> m;
+    Matrix<TypeParam> M(2, 3); 
+    m.fillmat(M);
+
+    TypeParam norm = std::hypot(abs(M(0, 0)), abs(M(0, 1)), abs(M(0, 2))) + std::hypot(abs(M(1, 0)), abs(M(1, 1)), abs(M(1, 2)));
+    EXPECT_TRUE(type_numeric_eq(norm, norm_frobenius(M)));
+}
