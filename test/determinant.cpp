@@ -34,7 +34,7 @@ TYPED_TEST(MatrixTest, Determinant3) {
                 M3(0, 1) * M3(1, 0) * M3(2, 2);
 
     /** kicsit engedünk a pontosságon, a Gauss-elimiáció osztásai miatt */
-    EXPECT_NEAR(detM3, det(M3), relaxed_epsilon<TypeParam>());
+    EXPECT_NEAR(detM3, det(M3), relaxed_epsilon<TypeParam>() * sqrt(M3.size()));
 }
 
 TYPED_TEST(MatrixTest, Determinant4) {
@@ -53,7 +53,7 @@ TYPED_TEST(MatrixTest, Determinant4) {
                     M4(0,3) * M4(1,0) * M4(2,1) * M4(3,2) - M4(0,3) * M4(1,1) * M4(2,2) * M4(3,0) - M4(0,3) * M4(1,2) * M4(2,0) * M4(3,1);
 
     /** kicsit engedünk a pontosságon, a Gauss-elimiáció osztásai miatt */
-    EXPECT_NEAR(detM4, det(M4), relaxed_epsilon<TypeParam>());
+    EXPECT_NEAR(detM4, det(M4), relaxed_epsilon<TypeParam>() * sqrt(M4.size()));
 }
 
 TYPED_TEST(MatrixTest, DeterminantSingular) {

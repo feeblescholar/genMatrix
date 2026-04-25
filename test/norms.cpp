@@ -47,5 +47,7 @@ TYPED_TEST(MatrixTest, NormFrobenius) {
         }
     }
 
-    EXPECT_NEAR(sqrt(sum), norm_frobenius(M), std::numeric_limits<ResultType>::epsilon() * 1e3);
+    /** A hibaarány sqrt(n * m) ezzel megszorozzuk epsilont. */
+    EXPECT_NEAR(sqrt(sum), norm_frobenius(M), 
+        std::numeric_limits<ResultType>::epsilon() * 1e3 * sqrt(M.size()));
 }
