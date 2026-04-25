@@ -2,10 +2,7 @@
  * @file genMatrix.hpp
  * @author Kovács Botond
  * @brief Main header file a genMatrixhoz.
- * @note A C++ sablonokat inline kell megvalósítani. Mivel ez a kód jelentős része, az egyszerűség kedvéért az a pár kiszervezhető
- *       függvény is inline.
  */
-
 #ifndef GENMATRIX
 #define GENMATRIX
 

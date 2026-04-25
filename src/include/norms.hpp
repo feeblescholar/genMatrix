@@ -1,3 +1,8 @@
+/**
+ * @file norms.hpp
+ * @author Kovács Botond
+ * @brief Mátrixok normáinak kiszámítása.
+ */
 #ifndef NORMS_H
 #define NORMS_H
 
@@ -5,62 +10,66 @@
 
 namespace genMatrix {
 
-    /**
-     * @param mtx - A normált mátrix referenciája.
-     * @return A mátrix 1-normája.
-     */
-    template<typename T> T norm_1(const Matrix<T>& mtx) {
-        T norm = T(0);
+/**
+ * @param mtx - A normált mátrix referenciája.
+ * @return A mátrix 1-normája.
+ */
+template<typename T>
+T norm_1(const Matrix<T>& mtx) {
+    T norm = T(0);
 
-        for (size_t i = 0; i < mtx.getCols(); i++) {
-            T sum = T(0);
+    for (size_t i = 0; i < mtx.getCols(); i++) {
+        T sum = T(0);
 
-            for (size_t j = 0; j < mtx.getRows(); j++) {
-                sum += std::abs(mtx(j, i));
-            }
-
-            if (sum > norm) norm = sum;
+        for (size_t j = 0; j < mtx.getRows(); j++) {
+            sum += std::abs(mtx(j, i));
         }
 
-        return norm;
+        if (sum > norm) norm = sum;
     }
 
-    /**
-     * @param mtx - A normált mátrix referenciája.
-     * @return A mátrix végtelen (maximum) normája.
-     */
-    template<typename T> T norm_inf(const Matrix<T>& mtx) {
-        T norm = T(0);
+    return norm;
+}
 
-        for (size_t i = 0; i < mtx.getRows(); i++) {
-            T sum = T(0);
+/**
+ * @param mtx - A normált mátrix referenciája.
+ * @return A mátrix végtelen (maximum) normája.
+ */
+template<typename T>
+T norm_inf(const Matrix<T>& mtx) {
+    T norm = T(0);
 
-            for (size_t j = 0; j < mtx.getCols(); j++) {
-                sum += std::abs(mtx(i, j));
-            }
+    for (size_t i = 0; i < mtx.getRows(); i++) {
+        T sum = T(0);
 
-            if (sum > norm) norm = sum;
+        for (size_t j = 0; j < mtx.getCols(); j++) {
+            sum += std::abs(mtx(i, j));
         }
 
-        return norm;
+        if (sum > norm) norm = sum;
     }
 
-    /**
-     * @param mtx - A normált mátrix referenciája.
-     * @return A mátrix Frobenius normája.
-     */
-    template<typename T> auto norm_frobenius(const Matrix<T>& mtx) {
-        using ReturnType = decltype(T(0) + float(0));
-        ReturnType norm = 0.0;
+    return norm;
+}
 
-        for (size_t i = 0; i < mtx.getRows(); i++) {
-            for (size_t j = 0; j < mtx.getCols(); j++) {
-                norm = std::hypot(norm, mtx(i, j));
-            }
+/**
+ * @param mtx - A normált mátrix referenciája.
+ * @return A mátrix Frobenius normája.
+ * @note Minimum floatra lépteti elő az eredményt.
+ */
+template<typename T>
+auto norm_frobenius(const Matrix<T>& mtx) {
+    using ReturnType = decltype(T(0) + float(0));
+    ReturnType norm = 0.0;
+
+    for (size_t i = 0; i < mtx.getRows(); i++) {
+        for (size_t j = 0; j < mtx.getCols(); j++) {
+            norm = std::hypot(norm, mtx(i, j));
         }
-        
-        return norm;
     }
+    
+    return norm;
+}
 }
 
 #endif

@@ -1,8 +1,14 @@
+/**
+ * @file matrix_error.cpp
+ * @author Kovács Botond
+ * @brief A mátrix hibaosztályának definiciói.
+ */
 #include "include/matrix_error.hpp"
 
 using namespace genMatrix;
 
-Matrix_Error::Matrix_Error(const char *_src, const char *_msg, bool fatal) : isFatal(fatal), src_func(nullptr), msg(nullptr) {
+Matrix_Error::Matrix_Error(const char *_src, const char *_msg, bool fatal) : 
+    isFatal(fatal), src_func(nullptr), msg(nullptr) {
     src_func = new char[std::strlen(_src) + 1];
     msg = new char[std::strlen(_msg) + 1];
 
@@ -10,10 +16,10 @@ Matrix_Error::Matrix_Error(const char *_src, const char *_msg, bool fatal) : isF
     std::strcpy(src_func, _src);
 }
 
-Matrix_Error::Matrix_Error(const Matrix_Error& other) : isFatal(false), src_func(nullptr), msg(nullptr) {
+Matrix_Error::Matrix_Error(const Matrix_Error& other) : isFatal(other.isFatal), src_func(nullptr), 
+    msg(nullptr) {
     src_func = new char[std::strlen(other.src_func) + 1];
     msg = new char[std::strlen(other.msg) + 1];
-    isFatal = other.isFatal;
 
     std::strcpy(msg, other.msg);
     std::strcpy(src_func, other.src_func);
