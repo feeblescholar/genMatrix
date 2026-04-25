@@ -9,7 +9,7 @@ template<typename T, bool negzero = true> T random() {
     if (!negzero) lbound = 10;
     const int ubound = 10;
 
-    std::default_random_engine eng(std::random_device{}());
+    static std::default_random_engine eng(std::random_device{}());
 
     if constexpr (std::is_integral_v<T>) {
         std::uniform_int_distribution<T> d(lbound, ubound);

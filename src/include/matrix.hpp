@@ -401,6 +401,13 @@ namespace genMatrix {
             return tmp;
         };
 
+        /**
+         * @brief Kiszámítja a mátrix inverzét.
+         * @return Az inverz mátrix.
+         * @warning Az inverz mátrix nem feltétlenül azonos típusú az eredeti mátrixéval.
+         */
+        auto inverse() const;
+
         ~Matrix() {
             if (dataLocation != FixedStack)
                 delete[] data;
@@ -409,5 +416,7 @@ namespace genMatrix {
         };
     };
 }
+
+#include "matrix_inverse.ipp"
 
 #endif

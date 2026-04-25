@@ -27,7 +27,7 @@ TESTOBJ = $(patsubst %.cpp, build/testobj/%.o, $(TESTSRCS))
 TESTTARGET = build/genMatrix_gtest
 
 TESTCPPFLAGS = -DMEMTRACE -I$(GTEST_DIR)/include
-TESTCCXFLAGS = -g -O0 -std=c++17 -Wall -Wextra -pthread
+TESTCCXFLAGS = -g -O1 -std=c++17 -Wall -Wextra -pthread
 
 ######################################
 
