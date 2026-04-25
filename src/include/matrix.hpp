@@ -5,6 +5,7 @@
 #include <cstddef>   
 #include <iterator>
 #include <iostream>
+#include <utility>
 
 #include "matrix_error.hpp"
 
@@ -111,6 +112,39 @@ namespace genMatrix {
                     this->operator()(i,j) = static_cast<T>(other(i,j));
                 }
             }
+
+            return *this;
+        }
+
+        Matrix(Matrix&& other) : data(nullptr), n(0), m(0) {
+            if (other.dataLocation != FixedStack)
+                data = std::exchange(other.data, nullptr);
+            else {
+                data = staticBuf;
+                for (size_t i = 0; i < other.size(); i++)
+                    data[i] = other.data[i];
+            }
+            
+            n = std::exchange(other.n, 0);
+            m = std::exchange(other.m, 0);
+            dataLocation = other.dataLocation;
+        }
+
+        Matrix& operator=(Matrix&& other) {
+            if (dataLocation != FixedStack)
+                delete[] data;
+
+            if (other.dataLocation != FixedStack)
+                data = std::exchange(other.data, nullptr);
+            else {
+                data = staticBuf;
+                for (size_t i = 0; i < other.size(); i++)
+                    data[i] = other.data[i];
+            }
+            
+            n = std::exchange(other.n, 0);
+            m = std::exchange(other.m, 0);
+            dataLocation = other.dataLocation;
 
             return *this;
         }
