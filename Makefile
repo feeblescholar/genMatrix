@@ -1,8 +1,7 @@
-
 # Memtrace helye (mindkét build használja)
 MEMTRACE = lib/memtrace_gtest/memtrace.cpp
 
-CCX = g++
+CXX = g++
 
 ########### Végleges build ###########
 
@@ -11,7 +10,7 @@ OBJ  = $(patsubst %.cpp, build/obj/%.o, $(SRCS))
 TARGET = build/genMatrix
 
 CPPFLAGS = -DMEMTRACE # A MEMTRACE makró kell hogy működjön
-CCXFLAGS = -std=c++17 -Wall -Werror -Wextra -pedantic # nem engedünk minden csodát lefordítani
+CCXFLAGS = -std=c++17 -O3 -Wall -Werror -Wextra -pedantic # nem engedünk minden csodát lefordítani
 
 ######################################
 
@@ -27,7 +26,21 @@ TESTOBJ = $(patsubst %.cpp, build/testobj/%.o, $(TESTSRCS))
 TESTTARGET = build/genMatrix_gtest
 
 TESTCPPFLAGS = -DMEMTRACE -I$(GTEST_DIR)/include
-TESTCCXFLAGS = -g -O1 -std=c++17 -Wall -Wextra -pthread
+TESTCXXFLAGS = -g -O2 -std=c++17 -Wall -Wextra -pthread
+
+######################################
+
+####### OS, arch vektorizálás ########
+
+ifeq ($(shell uname -s),Darwin)
+    ifeq ($(shell uname -m),arm64)
+        CXXFLAGS += -mcpu=native
+		TESTCXXFLAGS += -mcpu=native
+    endif
+else
+    CXXFLAGS += -mavx2 -mfma
+	TESTCXXFLAGS += -mavx2 -mfma
+endif
 
 ######################################
 
@@ -40,7 +53,7 @@ test_build: $(TESTTARGET)
 
 $(TARGET): $(OBJ)
 	mkdir -p build
-	$(CCX) $(OBJ) -o $(TARGET) $(CCXFLAGS) $(CPPFLAGS)
+	$(CXX) $(OBJ) -o $(TARGET) $(CXXFLAGS) $(CPPFLAGS)
 
 $(GTEST_ARCHIVE):
 		mkdir -p lib/googletest/build; \
@@ -48,16 +61,16 @@ $(GTEST_ARCHIVE):
 
 $(TESTTARGET): $(TESTOBJ) $(GTEST_ARCHIVE)
 	mkdir -p build
-	$(CCX) $(TESTOBJ) -o $(TESTTARGET) $(TESTCCXFLAGS) $(TESTCPPFLAGS) $(GTEST_ARCHIVE) $(GTEST_BUILD_DIR)/libgtest_main.a
+	$(CXX) $(TESTOBJ) -o $(TESTTARGET) $(TESTCXXFLAGS) $(TESTCPPFLAGS) $(GTEST_ARCHIVE) $(GTEST_BUILD_DIR)/libgtest_main.a
 
 
 build/obj/%.o: %.cpp
 	@mkdir -p $(dir $@)
-	$(CCX) -c $< -o $@ $(CCXFLAGS) $(CPPFLAGS)
+	$(CXX) -c $< -o $@ $(CXXFLAGS) $(CPPFLAGS)
 
 build/testobj/%.o: %.cpp
 	@mkdir -p $(dir $@)
-	$(CCX) -c $< -o $@ $(TESTCCXFLAGS) $(TESTCPPFLAGS)
+	$(CXX) -c $< -o $@ $(TESTCXXFLAGS) $(TESTCPPFLAGS)
 
 clean:
 	rm -rf build
