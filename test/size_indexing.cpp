@@ -1,8 +1,8 @@
 #include "test_main.hpp"
 
-TYPED_TEST(MatrixTest, SizeCalculation) {
-    using namespace genMatrix;
+using namespace genMatrix;
 
+TYPED_TEST(MatrixTest, SizeCalculation) {
     TestArray<size_t, 4, false> t;
 
     Matrix<TypeParam> M0(t[0], t[1]);
@@ -22,11 +22,9 @@ TYPED_TEST(MatrixTest, SizeCalculation) {
 }
 
 TYPED_TEST(MatrixTest, IndexingCorrect) {
-    using namespace genMatrix;
-
     TestArray<TypeParam, 12> t;
     genMatrix::Matrix<TypeParam> M(3, 4);
-    t.fillmat(M);
+    t.mtx_fill(M);
 
     EXPECT_NO_THROW(EXPECT_EQ((TypeParam)t[0], M(0, 0)));
     EXPECT_NO_THROW(EXPECT_EQ((TypeParam)t[11], M(2, 3)));
@@ -35,11 +33,9 @@ TYPED_TEST(MatrixTest, IndexingCorrect) {
 }
 
 TYPED_TEST(MatrixTest, IndexingIncorrect) {
-    using namespace genMatrix;
-
     TestArray<TypeParam, 12> t;
     genMatrix::Matrix<TypeParam> M(3, 4);
-    t.fillmat(M);
+    t.mtx_fill(M);
 
     EXPECT_THROW(M(-1, 0), genMatrix::Matrix_Error);
     EXPECT_THROW(M(0, 4), genMatrix::Matrix_Error);

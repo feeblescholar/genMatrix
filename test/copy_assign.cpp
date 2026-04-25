@@ -1,26 +1,24 @@
 #include "test_main.hpp"
 
-TYPED_TEST(MatrixTest, CopyConstructor) {
-    using namespace genMatrix;
+using namespace genMatrix;
 
-    TestArray<TypeParam, 24> m;
-    Matrix<TypeParam> M(4, 6);
-    m.fillmat(M);
+TYPED_TEST(MatrixTest, CopyConstructor) {
+    TestArray<TypeParam, 650> m;
+    Matrix<TypeParam> M(25, 26);
+    m.mtx_fill(M);
 
     Matrix<TypeParam> MC = M;
     EXPECT_TRUE(mtx_cmp_test(MC, M));
 }
 
 TYPED_TEST(MatrixTest, SelfAssign) {
-    using namespace genMatrix;
-
-    TestArray<TypeParam, 24> m;
-    Matrix<TypeParam> M(4, 6);
-    m.fillmat(M);
+    TestArray<TypeParam, 650> m;
+    Matrix<TypeParam> M(25, 26);
+    m.mtx_fill(M);
 
     Matrix<TypeParam> MC = M;
 
-    /** Ki kell kapcsolni a fordító figyelmeztetését, pontosan tudjuk, hogy mit akarunk. */ 
+    /** Ki kell kapcsolni a fordító figyelmeztetését */ 
 
     #ifdef __clang__
         #pragma clang diagnostic push
@@ -42,25 +40,23 @@ TYPED_TEST(MatrixTest, SelfAssign) {
 }
 
 TYPED_TEST(MatrixTest, MultiAssign) {
-    using namespace genMatrix;
-
-    TestArray<TypeParam, 24> m;
-    Matrix<TypeParam> M(4, 6);
-    m.fillmat(M);
+    TestArray<TypeParam, 650> m;
+    Matrix<TypeParam> M(25, 26);
+    m.mtx_fill(M);
 
     Matrix<TypeParam> M1 = M;
 
-    TestArray<TypeParam, 4> l;
-    Matrix<TypeParam> L(2, 2);
-    l.fillmat(L);
+    TestArray<TypeParam, 49> l;
+    Matrix<TypeParam> L(7, 7);
+    l.mtx_fill(L);
     
-    TestArray<TypeParam, 2> u;
-    Matrix<TypeParam> U(1, 2);
-    u.fillmat(U);
+    TestArray<TypeParam, 62> u;
+    Matrix<TypeParam> U(1, 62);
+    u.mtx_fill(U);
 
-    TestArray<TypeParam, 6> a;
-    Matrix<TypeParam> A(3, 2);
-    a.fillmat(A);
+    TestArray<TypeParam, 252> a;
+    Matrix<TypeParam> A(21, 12);
+    a.mtx_fill(A);
 
     M1 = L;
     EXPECT_TRUE(mtx_cmp_test(M1, L));

@@ -4,7 +4,11 @@
 #include <random>
 #include <gtest/gtest.h>
 
-template<typename T, bool negzero = true> T random() {
+/**
+ * Típusfüggő RNG (Random Number Generator).
+ */
+template<typename T, bool negzero = true>
+T random() {
     int lbound = -10;
     if (!negzero) lbound = 10;
     const int ubound = 10;
@@ -21,15 +25,25 @@ template<typename T, bool negzero = true> T random() {
     }
 }
 
-template<typename T> T relaxed_epsilon() {
+/**
+ * @brief Típusfüggő lazább epsilon értéket ad vissza.
+ * @details Egyes számítások nem tudnak olyan pontosak lenni FPU aritmetikai
+ *          korlátok miatt. Ezért ez a fv. ad egy lazább epsilont vissza.
+ * @note A használat csak elemi típusokra értelmezett.
+ */
+template<typename T>
+T relaxed_epsilon() {
     if constexpr (std::is_integral_v<T>) return T(0);
     else if (std::is_same_v<T, double>) return 1e-10;
     else return 1e-3;
 } 
 
 /**
- * Egy fix tömb, random számokkal.
- * Kizárólag teszteléshez van, sok mindent nem ellenőriz.
+ * @class TestArray<T>
+ * @brief Egy fix méretű (de dinamikusan foglalt) tömb, random számokkal.
+ * @note Azért nem egy random mátrix, mert így a generált értékekhez, utólag is 
+ *       hozzá lehet férni.
+ * @warning Kizárólag teszteléshez van, sok mindent nem ellenőriz.
  */
 template<typename T, size_t n = 1, bool neg = true> 
 struct TestArray {
@@ -52,7 +66,13 @@ struct TestArray {
         return arr[idx]; 
     }
 
-    void fillmat(genMatrix::Matrix<T>& mtx) const {
+    /**
+     * Feltölt egy mátrixot a tömb (arr) tartalmával.
+     * @param mtx A feltöltendő mátrix referenciája
+     * @warning Nincs bounds checking, a mátrix méretének meg kell egyeznie a 
+     *          TestArray méretével.
+     */
+    void mtx_fill(genMatrix::Matrix<T>& mtx) const {
         if (s > mtx.size()) throw "nem fer bele";
         for (size_t k = 0; k < mtx.size(); k++) {
             size_t i = k / mtx.getCols();
@@ -66,15 +86,26 @@ struct TestArray {
     }
 };
 
-template<typename T> 
-bool mtx_cmp_test(const genMatrix::Matrix<T>& a, const genMatrix::Matrix<T>& b, const T epsilon = std::numeric_limits<T>::epsilon() * 1e3) {
-    if (&a == &b) return true; 
-    if ((a.getRows() != b.getRows()) || (a.getCols() != b.getCols())) return false;
-    if (a.getRows() == 0 && a.getCols() == 0) return true;
+/**
+ * Tesztelésnél használt komparátor.
+ * Minden értéket ellenőriz az EXPECT_NEAR makróval.
+ */
+template<typename T>
+bool mtx_cmp_test(const genMatrix::Matrix<T>& a, const genMatrix::Matrix<T>& b, 
+        const T epsilon = std::numeric_limits<T>::epsilon() * 1e3) {
+    if (&a == &b) 
+        return true; 
+
+    if ((a.getRows() != b.getRows()) || (a.getCols() != b.getCols())) 
+        return false;
+        
+    if (a.getRows() == 0 && a.getCols() == 0) 
+        return true;
 
     for (size_t i = 0; i < a.getRows(); i++) {
         for (size_t j = 0; j < a.getCols(); j++) {
-            EXPECT_NEAR(a(i, j), b(i, j), epsilon); /** itt úgyis fail, ha nem stimmel, nem kell false return */
+            /** itt úgyis fail, ha nem stimmel, nem kell false return */
+            EXPECT_NEAR(a(i, j), b(i, j), epsilon); 
         }
     }
 

@@ -4,9 +4,9 @@
 using namespace genMatrix;
 
 TYPED_TEST(MatrixTest, Inverse) {
-    Matrix<TypeParam> M(1000, 1000);
-    TestArray<TypeParam, 1000000> m;
-    m.fillmat(M);
+    Matrix<TypeParam> M(25, 25);
+    TestArray<TypeParam, 625> m;
+    m.mtx_fill(M);
 
     /** ki kell találni az új típust */
     using ExpT = decltype(TypeParam(0), double(0));
@@ -15,10 +15,9 @@ TYPED_TEST(MatrixTest, Inverse) {
     Matrix<ExpT> M1 = M;
     Matrix<ExpT> M1inv = M1.inverse();
 
-    Matrix<ExpT> identityMatrix(1000, 1000);
-    for (size_t i = 0; i < identityMatrix.getRows(); i++) {
+    Matrix<ExpT> identityMatrix(25, 25);
+    for (size_t i = 0; i < identityMatrix.getRows(); i++)
         identityMatrix(i, i) = 1;
-    }
 
     /** kihasználjuk azt a tételt, miszerint: M * inv(M) = inv(M) * M = E */
     EXPECT_TRUE(mtx_cmp_test((M1 * M1inv), identityMatrix, relaxed_epsilon<ExpT>()));

@@ -7,7 +7,7 @@ TYPED_TEST(MatrixTest, Norm1) {
 
     TestArray<TypeParam, 6> m;
     Matrix<TypeParam> M(2, 3); 
-    m.fillmat(M);
+    m.mtx_fill(M);
 
     TypeParam col1 = abs(M(0, 0)) + abs(M(1, 0));
     TypeParam col2 = abs(M(0, 1)) + abs(M(1, 1));
@@ -22,7 +22,7 @@ TYPED_TEST(MatrixTest, NormInf) {
 
     TestArray<TypeParam, 6> m;
     Matrix<TypeParam> M(2, 3); 
-    m.fillmat(M);
+    m.mtx_fill(M);
 
     TypeParam row1 = (abs(M(0, 0)) + abs(M(0, 1)) + abs(M(0, 2)));
     TypeParam row2 = (abs(M(1, 0)) + abs(M(1, 1)) + abs(M(1, 2)));
@@ -34,9 +34,9 @@ TYPED_TEST(MatrixTest, NormInf) {
 TYPED_TEST(MatrixTest, NormFrobenius) {
     using std::abs;
 
-    TestArray<TypeParam, 6> m;
-    Matrix<TypeParam> M(2, 3); 
-    m.fillmat(M);
+    TestArray<TypeParam, 650> m;
+    Matrix<TypeParam> M(25, 26); 
+    m.mtx_fill(M);
 
     using ResultType = decltype(TypeParam(0) + float(0));
     ResultType sum = 0.0;

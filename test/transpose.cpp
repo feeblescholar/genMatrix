@@ -1,11 +1,11 @@
 #include "test_main.hpp"
 
-TYPED_TEST(MatrixTest, TransposeSquaredMatrix) {
-    using namespace genMatrix;
+using namespace genMatrix;
 
+TYPED_TEST(MatrixTest, TransposeSquaredMatrix) {
     TestArray<TypeParam, 4> n;
     Matrix<TypeParam> N(2, 2);
-    n.fillmat(N);
+    n.mtx_fill(N);
     
     Matrix<TypeParam> L = N.transpose();
 
@@ -21,11 +21,9 @@ TYPED_TEST(MatrixTest, TransposeSquaredMatrix) {
 }
 
 TYPED_TEST(MatrixTest, TransposeGeneral) {
-    using namespace genMatrix;
-
     TestArray<TypeParam, 6> n;
     Matrix<TypeParam> N(2, 3);
-    n.fillmat(N);
+    n.mtx_fill(N);
 
     Matrix<TypeParam> L = N.transpose();
 
