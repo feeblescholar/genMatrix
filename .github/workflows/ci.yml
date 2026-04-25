@@ -8,8 +8,9 @@ on:
     branches: main
 
 jobs:
-  build-test:
-    runs-on: ubuntu-slim
+  linux-build:
+    name: Build and Test (Linux x86)
+    runs-on: ubuntu-latest
 
     steps:
       - name : Checkout
@@ -25,3 +26,49 @@ jobs:
 
       - name : Run
         run  : ./build/genMatrix_gtest --gtest_color=yes
+
+  macos-build:
+    name: Build and Test (macOS arm64)
+    runs-on: macos-latest
+
+    steps:
+      - name : Checkout
+        uses : actions/checkout@v6
+        with : 
+          submodules: recursive
+      
+      - name : Dependencies
+        run  : "brew install cmake make"
+
+      - name : Build
+        run  : make test_build
+
+      - name : Run
+        run  : ./build/genMatrix_gtest --gtest_color=yes
+  
+  windows-build:
+    name: Build and Test (Windows x86)
+    runs-on: windows-latest
+
+    steps:
+      - name : Checkout
+        uses : actions/checkout@v6
+        with : 
+          submodules: recursive
+      
+      - name : MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: >-
+            base-devel
+            mingw-w64-x86_64-toolchain
+            cmake
+
+      - name: Build
+        shell: msys2 {0}
+        run: make test_build TESTCPPFLAGS="-Ilib/googletest/googletest/include"
+      
+      - name: Run
+        shell: msys2 {0}
+        run: ./build/genMatrix_gtest.exe --gtest_color=yes
