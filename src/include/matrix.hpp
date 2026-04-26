@@ -47,7 +47,12 @@ public:
     /* Segédosztályok deklarációi */
 
     class CommaInit;
+
+    template<typename P, typename R>
     class Matrix_Iterator;
+
+    using iterator = Matrix_Iterator<T*, T&>;
+    using const_iterator = Matrix_Iterator<const T*, const T&>;
 
     /**
      * @brief Létrehoz egy n*m-es mátrixot. Ha mind a két érték 0, akkor a mátrix dinamikus.
@@ -149,8 +154,21 @@ public:
     template<typename S>
     bool operator==(const Matrix<S>& other) const;
 
-    Matrix_Iterator begin();
-    Matrix_Iterator end();
+    iterator begin() noexcept {
+        return iterator(data);
+    }
+
+    iterator end() noexcept {
+        return iterator(data + this->size());
+    }
+
+    const_iterator cbegin() const noexcept {
+        return const_iterator(data);
+    }
+
+    const_iterator cend() const noexcept {
+        return const_iterator(data + this->size());
+    }
 
     /**
      * Felcseréli a mátrix két sorát.
@@ -291,6 +309,9 @@ public:
 };
 }
 
+#include "matrix_iterator.hpp"
+
+/** Tagfüggvények definiciói. */
 #include "matrix_constructors.ipp"
 #include "matrix_accessors.ipp"
 #include "matrix_assignment.ipp"
