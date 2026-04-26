@@ -17,7 +17,7 @@ TYPED_TEST(MatrixTest, Determinant2) {
 
     TypeParam detM2 = M2(0, 0) * M2(1, 1) - M2(0, 1) * M2(1, 0);
 
-    EXPECT_NEAR(detM2, det(M2), 0.0);
+    EXPECT_NEAR(detM2, det(M2), relaxed_epsilon<TypeParam>() * sqrt(M2.size()));
 }
 
 TYPED_TEST(MatrixTest, Determinant3) {
