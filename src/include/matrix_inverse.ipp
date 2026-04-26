@@ -14,7 +14,7 @@ namespace genMatrix {
  *          a pontosságot a mátrix elemei és kondíciója is befolyásolják.
  */
 template<typename T> 
-auto Matrix<T>::inverse() const {
+decltype(auto) Matrix<T>::inverse() const {
     if (n != m)
         throw Matrix_Error("[inv]", "Matrix must be square.");
 

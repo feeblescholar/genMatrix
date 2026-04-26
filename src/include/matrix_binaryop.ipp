@@ -7,21 +7,36 @@
 #define MATRIX_BINARYOP_I
 
 #include "matrix.hpp"
+#include "typechecks.hpp"
 
 namespace genMatrix {
 
 template<typename T>
-Matrix<T> Matrix<T>::operator+(const Matrix<T>& rhs_mtx) const {
-    Matrix<T> rval = *this;
-    rval += rhs_mtx;
-    return rval;
+template<typename S>
+decltype(auto) Matrix<T>::operator+(const Matrix<S>& rhs_mtx) const {
+    if constexpr (has_add_v<T, S>) {
+        using ReturnType = decltype(T(0) + S(0));
+
+        Matrix<ReturnType> rval = *this;
+        Matrix<ReturnType> rhs_mtx_c = rhs_mtx;
+
+        rval += rhs_mtx_c;
+        return rval;
+    }
 }
 
 template<typename T>
-Matrix<T> Matrix<T>::operator+(const T& rhs_type) const {
-    Matrix<T> rval = *this;
-    rval += rhs_type;
-    return rval;
+template<typename S>
+decltype(auto) Matrix<T>::operator+(const S& rhs_type) const {
+    if constexpr (has_add_v<T, S>) {
+        using ReturnType = decltype(T(0) + S(0));
+
+        Matrix<ReturnType> rval = *this;
+        ReturnType rhs_type_c = rhs_type;
+
+        rval += rhs_type_c;
+        return rval;
+    }
 };
 
 template<typename T>
@@ -44,14 +59,25 @@ Matrix<T>& Matrix<T>::operator+=(const T& rhs_type) {
 };
 
 template<typename T>
-Matrix<T> Matrix<T>::operator-(const Matrix<T>& rhs_mtx) const {
-    return *this + rhs_mtx * -1;
+template<typename S>
+decltype(auto) Matrix<T>::operator-(const Matrix<S>& rhs_mtx) const {
+    if constexpr (has_add_v<T, S> && has_mul_v<S, int>) {
+        return *this + rhs_mtx * -1;
+    }
 }
 
 template<typename T>
-Matrix<T>& Matrix<T>::operator-(const T& rhs_type) {
-    *this += rhs_type * -1;
-    return *this;
+template<typename S>
+decltype(auto) Matrix<T>::operator-(const S& rhs_type) const {
+    if constexpr (has_add_v<T, S> && has_mul_v<S, int>) {
+        using ReturnType = decltype(T(0) + S(0));
+
+        Matrix<ReturnType> rval = *this;
+        ReturnType rhs_type_c = rhs_type;
+        rval -= rhs_type_c;
+
+        return rval;
+    }
 }
 
 template<typename T>
@@ -67,46 +93,65 @@ Matrix<T>& Matrix<T>::operator-=(const T& rhs_type) {
 }
 
 template<typename T>
-Matrix<T> Matrix<T>::operator*(const Matrix<T>& rhs_mtx) const {
-    if (m != rhs_mtx.n) 
-        throw Matrix_Error("[operator(*/*=)]", "Columns of this and rows of other must be equal.");
+template<typename S>
+decltype(auto) Matrix<T>::operator*(const Matrix<S>& rhs_mtx) const {
+    if constexpr (has_mul_v<T, S>) {
+        if (m != rhs_mtx.n) 
+            throw Matrix_Error("[operator(*/*=)]", "this.m == other.n");
 
-    Matrix<T> rval(n, rhs_mtx.m);
+    using ReturnType = decltype(T(0) * S(0));
+    Matrix<ReturnType> rval(n, rhs_mtx.m);
+
     for (size_t i = 0; i < n; i++)
         for (size_t k = 0; k < m; k++)
             for (size_t j = 0; j < rhs_mtx.m; j++)
                 rval(i, j) += this->operator()(i, k) * rhs_mtx(k, j);
                 
     return rval;
+    }
 }
 
 template<typename T>
-Matrix<T> Matrix<T>::operator*(const T& rhs_type) const {
-    Matrix<T> rval = *this;
-    rval *= rhs_type;
-    return rval;
+template<typename S>
+decltype(auto) Matrix<T>::operator*(const S& rhs_type) const {
+    if constexpr (has_mul_v<T, S>) {
+        using ReturnType = decltype(T(0) * S(0));
+
+        Matrix<ReturnType> rval = *this;
+        ReturnType rhs_type_c = rhs_type;
+
+        rval *= rhs_type_c;
+        return rval;
+    }
 }
 
 template<typename T>
 Matrix<T>& Matrix<T>::operator*=(const Matrix<T>& rhs_mtx) {
-    Matrix<T> tmp = this * rhs_mtx;
-    this = tmp;
+    this = this * rhs_mtx;
     return *this; 
 }
 
 template<typename T>
 Matrix<T>& Matrix<T>::operator*=(const T& rhs_type) {
-    for (size_t i = 0; i < this->size(); i++) {
+    for (size_t i = 0; i < this->size(); i++)
         data[i] = data[i] * rhs_type;
-    }
     return *this;
 }
 
 template<typename T>
-bool Matrix<T>::operator==(const Matrix<T>& other) const {
-        if (this == &other) return true;
-        if (n != other.n || m != other.m) return false;
-        if (n == 0 && m == 0) return true;
+template<typename S>
+bool Matrix<T>::operator==(const Matrix<S>& other) const {
+        if (!std::is_same_v<T, S>)
+            return false;
+
+        if (this == &other) 
+            return true;
+
+        if (n != other.n || m != other.m) 
+            return false;
+
+        if (n == 0 && m == 0) 
+            return true;
 
         for (size_t i = 0; i < this->size(); i++)
             if (!type_numeric_eq<T>(data[i], other.data[i])) return false;

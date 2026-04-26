@@ -143,9 +143,11 @@ public:
     T& operator()(const size_t row, const size_t col);
 
     /**
-     * @return Igaz, ha mátrix minden eleme megegyezik (és ugyanakkorák). 
+     * @return Igaz, ha mátrix minden eleme megegyezik (és ugyanakkorák).
+     * @note Eltérő típus esetén hamis. 
      */
-    bool operator==(const Matrix<T>& other) const;
+    template<typename S>
+    bool operator==(const Matrix<S>& other) const;
 
     Matrix_Iterator begin();
     Matrix_Iterator end();
@@ -172,14 +174,16 @@ public:
      * @return Az új mátrix az eredménnyel.
      * @throws Matrix_Error kivétel, ha az összeadás nem értelmezett.
      */
-    Matrix operator+(const Matrix<T>& rhs_mtx) const;
+    template<typename S>
+    decltype(auto) operator+(const Matrix<S>& rhs_mtx) const;
 
     /**
      * Hozzáadja a kapott paramétert a mátrixhoz.
      * @param rhs_type A másik tag.
      * @return Az új mátrix az eredménnyel.
      */
-    Matrix operator+(const T& rhs_type) const;
+    template<typename S>
+    decltype(auto) operator+(const S& rhs_type) const;
 
     /**
      * Hozzáadja a mátrixot a kapott paraméterhez.
@@ -202,14 +206,16 @@ public:
      * @return Egy új mátrix az eredménnyel.
      * @throws Matrix_Error kivétel, ha a kivonás nem értelmezett.
      */
-    Matrix operator-(const Matrix<T>& rhs_mtx) const;
+    template<typename S>
+    decltype(auto) operator-(const Matrix<S>& rhs_mtx) const;
 
     /**
      * Kivonja a kapott paramétert a mátrixhoz.
      * @param rhs_type A másik tag.
      * @return A balérték referenciája.
      */
-    Matrix& operator-(const T& rhs_type);
+    template<typename S>
+    decltype(auto) operator-(const S& rhs_type) const;
 
     /**
      * Kivonja a mátrixból a kapott paramétert.
@@ -232,14 +238,16 @@ public:
      * @return Egy új mátrix az eredménnyel.
      * @throws Matrix_Error kivétel, ha a szorzás nem értelmezett.
      */
-    Matrix operator*(const Matrix<T>& rhs_mtx) const;
+    template<typename S>
+    decltype(auto) operator*(const Matrix<S>& rhs_mtx) const;
 
     /**
      * Összeszorozza a kapott paramétert a mátrixszal.
      * @param rhs_type A másik tag.
      * @return Egy új mátrix az eredménnyel.
      */
-    Matrix operator*(const T& rhs_type) const;
+    template<typename S>
+    decltype(auto) operator*(const S& rhs_type) const;
 
     /**
      * Összeszorozza a mátrixszal a kapott paramétert.
@@ -277,7 +285,7 @@ public:
      * @return Az inverz mátrix.
      * @warning Az inverz mátrix nem feltétlenül azonos típusú az eredetivel.
      */
-    auto inverse() const;
+    decltype(auto) inverse() const;
 
     ~Matrix();
 };
