@@ -96,15 +96,15 @@ template<typename T>
 template<typename S>
 decltype(auto) Matrix<T>::operator*(const Matrix<S>& rhs_mtx) const {
     if constexpr (has_mul_v<T, S>) {
-        if (m != rhs_mtx.n) 
+        if (m != rhs_mtx.getRows()) 
             throw Matrix_Error("[operator(*/*=)]", "this.m == other.n");
 
     using ReturnType = decltype(T(0) * S(0));
-    Matrix<ReturnType> rval(n, rhs_mtx.m);
+    Matrix<ReturnType> rval(n, rhs_mtx.getCols());
 
     for (size_t i = 0; i < n; i++)
         for (size_t k = 0; k < m; k++)
-            for (size_t j = 0; j < rhs_mtx.m; j++)
+            for (size_t j = 0; j < rhs_mtx.getCols(); j++)
                 rval(i, j) += this->operator()(i, k) * rhs_mtx(k, j);
                 
     return rval;
