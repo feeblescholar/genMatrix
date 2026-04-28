@@ -10,7 +10,7 @@ OBJ  = $(patsubst %.cpp, build/obj/%.o, $(SRCS))
 TARGET = build/genMatrix
 
 CPPFLAGS = -DMEMTRACE # A MEMTRACE makró kell hogy működjön
-CCXFLAGS = -std=c++17 -O3 -Wall -Werror -Wextra -pedantic # nem engedünk minden csodát lefordítani
+CXXFLAGS = -std=c++17 -O3 -Wall -Werror -Wextra -pedantic # nem engedünk minden csodát lefordítani
 
 ######################################
 
