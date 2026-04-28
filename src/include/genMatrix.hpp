@@ -13,4 +13,6 @@
 #include "determinant.hpp"
 #include "norms.hpp"
 
+#include "vector.hpp"
+
 #endif

@@ -67,10 +67,8 @@ struct TestArray {
     }
 
     /**
-     * Feltölt egy mátrixot a tömb (arr) tartalmával.
+     * @brief Feltölt egy mátrixot a tömb (arr) tartalmával.
      * @param mtx A feltöltendő mátrix referenciája
-     * @warning Nincs bounds checking, a mátrix méretének meg kell egyeznie a 
-     *          TestArray méretével.
      */
     void mtx_fill(genMatrix::Matrix<T>& mtx) const {
         if (s > mtx.size()) throw "nem fer bele";
@@ -78,6 +76,16 @@ struct TestArray {
             size_t i = k / mtx.getCols();
             size_t j = k % mtx.getCols();
             mtx(i, j) = arr[k];
+        }
+    }
+
+    /**
+     * @brief Feltölt egy vektort a tömb (arr) tartalmával.
+     * @param vec A feltöltendő vektor referenciája.
+     */
+    void vec_fill(genMatrix::Vector<T>& vec) const {
+        for (size_t k = 0; k < s; k++) {
+            vec.push_back(arr[k]);
         }
     }
 

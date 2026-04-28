@@ -20,4 +20,9 @@ template<typename T> class MatrixTest : public ::testing::Test {};
 typedef ::testing::Types<int, double, float, long> TestTypes;
 TYPED_TEST_SUITE(MatrixTest, TestTypes);
 
+template<typename T> class VectorTest : public ::testing::Test {};
+
+typedef ::testing::Types<int, double, float, long> TestTypes1;
+TYPED_TEST_SUITE(VectorTest, TestTypes1);
+
 #endif
