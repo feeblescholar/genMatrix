@@ -41,7 +41,7 @@ decltype(auto) Matrix<T>::inverse() const {
             inv.swapRow(pivotR, i);
         }
 
-        if (type_numeric_eq<T>(std::abs(tmp(i, i)), T(0.0)))
+        if (type_numeric_eq<ReturnType>(std::abs(tmp(i, i)), T(0.0)))
             throw Matrix_Error("[inv]", "Singular matrix.");
 
         ReturnType pivotVal = tmp(i, i);

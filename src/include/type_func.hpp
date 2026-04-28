@@ -4,6 +4,7 @@
 #include <limits>
 #include <cmath>
 #include <type_traits>
+#include <algorithm>
 
 /**
  * @brief Megállapítja, hogy két típus epsilon hibával egyenlőnek mondható-e.
