@@ -34,7 +34,6 @@ Vector<T>& Vector<T>::operator=(const Vector<S>& other) {
 
     return *this;
 }
-
 }
 
 #endif

@@ -38,6 +38,6 @@ TYPED_TEST(VectorTest, IndexingCorrect) {
 
 TYPED_TEST(VectorTest, IndexingIncorrect) {
     Vector<TypeParam> V(2);
-    EXPECT_THROW(V[5], const char*);
-    EXPECT_THROW(V[7], const char*);
+    EXPECT_THROW(V[5], Vector_Error);
+    EXPECT_THROW(V[7], Vector_Error);
 }

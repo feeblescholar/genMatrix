@@ -1,10 +1,10 @@
 /**
  * @file matrix_error.hpp
  * @author Kovács Botond
- * @brief A mátrix hibaosztályának deklarációja.
+ * @brief A vektor hibaosztályának deklarációja.
  */
-#ifndef MATRIX_ERROR_H
-#define MATRIX_ERROR_H
+#ifndef VECTOR_ERROR_H
+#define VECTOR_ERROR_H
 
 #include <cstring>
 
@@ -13,11 +13,10 @@
 namespace genMatrix {
 /**
  * @class Matrix_Error
- * @brief A Matrix osztály hibaosztálya.
- * @note Mivel a Matrix osztály egy template, a fordítási idő csökkentése 
- *       érdekében nem az "eredeti" osztály része.
+ * @brief A vektor osztály hibaosztálya.
+ * @note A clean hierarchia érdekében nem a Matrix_Error hibaosztály gyereke.
  */
-class Matrix_Error : public genMatrix_Error {
+class Vector_Error : public genMatrix_Error {
     bool isFatal;   /** Kritikus hiba-e? */
     char *src_func; /** Függvény neve, ahol a hiba történt */
     char *msg;      /** Hibaüzenet */
@@ -28,12 +27,12 @@ public:
      * @param _msg A hibaüzenet
      * @param fatal Kritikus-e a hiba? (ki kell-e lépni), alapból hamis
      */
-    Matrix_Error(const char *_src, const char *_msg, bool fatal = false);
+    Vector_Error(const char *_src, const char *_msg, bool fatal = false);
 
     /**
      * @note A C++ szabvány megköveteli a copy konstruktort.
      */
-    Matrix_Error(const Matrix_Error& other);
+    Vector_Error(const Vector_Error& other);
 
     /**
      * @return A függvény neve, ahol a hiba történt (0-val lezárt C string).
@@ -45,7 +44,7 @@ public:
      */
     const char* what() const noexcept override;
 
-    ~Matrix_Error();
+    ~Vector_Error();
 };
 }
 

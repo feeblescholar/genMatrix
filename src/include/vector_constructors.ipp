@@ -14,7 +14,7 @@ namespace genMatrix {
 template<typename T>
 Vector<T>::Vector(size_t n) : data(nullptr), _size(0), _capacity(n) {
     if (n == 0)
-        throw "hibaosztaly ide";
+        throw Vector_Error("[Constructor]", "Initial capacity must be >=1");
     data = new T[n];
 }
 

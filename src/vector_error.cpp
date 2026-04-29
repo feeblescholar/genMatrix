@@ -1,13 +1,13 @@
 /**
- * @file matrix_error.cpp
+ * @file vector_error.cpp
  * @author Kovács Botond
- * @brief A mátrix hibaosztályának definiciói.
+ * @brief A vektor hibaosztályának definiciói.
  */
-#include "include/matrix_error.hpp"
+#include "include/vector_error.hpp"
 
 using namespace genMatrix;
 
-Matrix_Error::Matrix_Error(const char *_src, const char *_msg, bool fatal) : 
+Vector_Error::Vector_Error(const char *_src, const char *_msg, bool fatal) : 
     isFatal(fatal), 
     src_func(nullptr), 
     msg(nullptr) {
@@ -19,7 +19,7 @@ Matrix_Error::Matrix_Error(const char *_src, const char *_msg, bool fatal) :
     std::strcpy(src_func, _src);
 }
 
-Matrix_Error::Matrix_Error(const Matrix_Error& other) 
+Vector_Error::Vector_Error(const Vector_Error& other) 
     : isFatal(other.isFatal), 
       src_func(nullptr), 
       msg(nullptr) {
@@ -32,15 +32,15 @@ Matrix_Error::Matrix_Error(const Matrix_Error& other)
 }
 
 
-const char* Matrix_Error::src() const noexcept {
+const char* Vector_Error::src() const noexcept {
     return src_func;
 }
 
-const char* Matrix_Error::what() const noexcept {
+const char* Vector_Error::what() const noexcept {
     return msg;
 }
 
-Matrix_Error::~Matrix_Error() {
+Vector_Error::~Vector_Error() {
     delete[] src_func;
     delete[] msg;
 

@@ -2,6 +2,7 @@
 #define VECTOR_H
 
 #include "matrix.hpp"
+#include "vector_error.hpp"
 
 namespace genMatrix {
 
