@@ -7,11 +7,14 @@
 #define GENMATRIX
 
 #include "type_func.hpp"
+
 #include "matrix.hpp"
 #include "matrix_commaInit.hpp"
 #include "matrix_error.hpp"
+
 #include "determinant.hpp"
 #include "norms.hpp"
+#include "fhandler.hpp"
 
 #include "vector.hpp"
 

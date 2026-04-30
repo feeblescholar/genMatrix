@@ -187,6 +187,16 @@ public:
     Matrix& swapCol(size_t m1, size_t m2);
 
     /**
+     * @brief Újraméretezi a dinamikus mátrixot.
+     * @param _n Az új sorméret
+     * @param _m Az új oszlopméret
+     * @throws Matrix_Error kivétel, ha a mátrix nem dinamikus.
+     * @warning Ha az új méret kisebb, mint a meglévő, adatvesztés történhet.
+     * @note Ha valamelyik paraméter 0, a mátrix törli a tartalmát.
+     */
+    void resize(size_t _n, size_t _m);
+
+    /**
      * Hozzáadja a mátrixot a kapott paraméterhez.
      * @param rhs_mtx A másik tag.
      * @return Az új mátrix az eredménnyel.
@@ -316,6 +326,7 @@ public:
 #include "matrix_accessors.ipp"
 #include "matrix_assignment.ipp"
 #include "matrix_swap.ipp"
+#include "matrix_sizemanip.ipp"
 #include "matrix_binaryop.ipp"
 #include "matrix_transpose.ipp"
 #include "matrix_inverse.ipp"

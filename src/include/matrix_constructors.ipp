@@ -13,9 +13,12 @@
 
 namespace genMatrix {
 template<typename T>
-Matrix<T>::Matrix(size_t _n, size_t _m) : data(nullptr), n(_n), m(_m), 
-    dataLocation(FixedStack) {
-
+Matrix<T>::Matrix(size_t _n, size_t _m) 
+    : data(nullptr), 
+      n(_n), 
+      m(_m), 
+      dataLocation(FixedStack) 
+{
     if (!n && !m) {
         dataLocation = DynamicHeap;
         return;
