@@ -1,3 +1,8 @@
+/**
+ * @file vector.hpp
+ * @author Kovács Botond
+ * @brief Generikus vektor deklaráció.
+ */
 #ifndef VECTOR_H
 #define VECTOR_H
 
@@ -102,6 +107,76 @@ public:
      */
     void shrink();
 
+    /**
+     * @brief Kiszámítja a vektor (Euklideszi) normáját.
+     * @return A vektor hossza.
+     */
+    T length() const {
+        T sum = 0;
+
+        for (size_t i = 0; i < _size; i++)
+            sum = std::hypot(sum, data[i]);
+        
+        return sum;
+    }
+
+    /**
+     * @brief Generikus komparátor. Igaz, ha két vektor mérete, típusa és 
+     *        tartalma igaz.
+     */
+    template<typename S>
+    bool operator==(const Vector<S>& rhs_vec) const;
+
+    /**
+     * @brief Hozzáadja a kapott paramétert a Vektorhoz.
+     * @param rhs_vec A másik tag referenciája.
+     * @return Egy új vektor az eredménnyel.
+     * @throws Vector_Error kivétel, ha a két vektor nem azonos méretű.
+     * @warning Type promotion lehetséges, ha T != S.
+     */
+    template<typename S>
+    decltype(auto) operator+(const Vector<S>& rhs_vec) const;
+
+    /**
+     * @brief Hozzáadja a kapott paramétert a balértékhez (in-place).
+     * @return A balérték referenciája.
+     * @throws Vector_Error kivétel, ha a két vektor nem azonos méretű.
+     */
+    Vector& operator+=(const Vector& rhs_vec);
+
+    /**
+     * @brief Kivonja a kapott paramétert a Vektorból.
+     * @param rhs_vec A másik tag referenciája.
+     * @return Egy új vektor az eredménnyel.
+     * @throws Vector_Error kivétel, ha a két vektor nem azonos méretű.
+     * @warning Type promotion lehetséges, ha T != S.
+     */
+    template<typename S>
+    decltype(auto) operator-(const Vector<S>& rhs_vec) const;
+
+    /**
+     * @brief Kivonja a kapott paramétert a balértékből (in-place).
+     * @throws Vector_Error kivétel, ha a két vektor nem azonos méretű.
+     * @return A balérték referenciája.
+     */
+    Vector& operator-=(const Vector& rhs_vec);
+
+    /**
+     * @brief Skalárisan összeszorozza this-t a kapott paraméterrel.
+     * @throws Vector_Error kivétel, ha a két vektor nem azonos méretű.
+     * @return Skalár, melynek a típusa, this és a paraméter szorzatából képzett.
+     */
+    template<typename S>
+    decltype(auto) operator*(const Vector<S>& rhs_vec) const;
+
+    /**
+     * @brief Megszorozza a vektort egy konstanssal.
+     * @return Egy új vektor az eredménnyel.
+     * @warning Type promotion lehetséges, ha T != S.
+     */
+    template<typename S>
+    decltype(auto) operator*(const S& rhs_type) const;
+
     ~Vector();
 
 };
@@ -111,5 +186,6 @@ public:
 #include "vector_assignment.ipp"
 #include "vector_accessors.ipp"
 #include "vector_sizemanip.ipp"
+#include "vector_binaryop.ipp"
 
 #endif
