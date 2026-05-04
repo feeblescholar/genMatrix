@@ -59,7 +59,7 @@ decltype(auto) Vector<T>::operator-(const Vector<S>& rhs_vec) const {
 
 template<typename T>
 Vector<T>& Vector<T>::operator-=(const Vector<T>& rhs_vec) {
-    if constexpr (has_add_v<T, T> && has_mul<T, int>)
+    if constexpr (has_add_v<T, T> && has_mul_v<T, int>)
         *this += rhs_vec * -1;
     else
         throw Vector_Error("[operator-=]", "Required operators are undefined.");
@@ -70,7 +70,7 @@ Vector<T>& Vector<T>::operator-=(const Vector<T>& rhs_vec) {
 template<typename T>
 template<typename S>
 decltype(auto) Vector<T>::operator*(const Vector<S>& rhs_vec) const {
-    if constexpr (has_add_v<T, S>, has_mul_v<T, S>) {
+    if constexpr (has_add_v<T, S> && has_mul_v<T, S>) {
         if (_size != rhs_vec._size())
             throw Vector_Error("[operator*]", "Must be the same size.");
 
@@ -108,14 +108,14 @@ decltype(auto) Vector<T>::operator*(const S& rhs_type) const {
 template<typename T>
 template<typename S>
 bool Vector<T>::operator==(const Vector<S>& rhs_vec) const {
-    if (!std::is_same<T, S>)
+    if (!std::is_same_v<T, S>)
         return false;
 
-    if (_size != vec._size())
+    if (_size != rhs_vec._size())
         return false;
     
     for (size_t i = 0; i < _size; i++) 
-        if (data[i] != vec[i])
+        if (data[i] != rhs_vec[i])
             return false;
     
     return true;
