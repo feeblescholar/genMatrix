@@ -120,4 +120,23 @@ bool mtx_cmp_test(const genMatrix::Matrix<T>& a, const genMatrix::Matrix<T>& b,
     return true;
 }
 
+/**
+ * Tesztelésnél használt komparátor.
+ * Minden értéket ellenőriz az EXPECT_NEAR makróval.
+ */
+template<typename T>
+bool vec_cmp_test(const genMatrix::Vector<T>& a, const genMatrix::Vector<T>& b, 
+        const T epsilon = std::numeric_limits<T>::epsilon() * 1e3) {
+    if (&a == &b) 
+        return true; 
+
+    if (a.size() != b.size()) 
+        return false;
+
+    for (size_t i = 0; i < a.size(); i++)
+            EXPECT_NEAR(a[i], b[i], epsilon); 
+
+    return true;
+}
+
 #endif
