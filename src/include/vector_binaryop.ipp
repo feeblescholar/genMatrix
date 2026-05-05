@@ -47,8 +47,8 @@ decltype(auto) Vector<T>::operator-(const Vector<S>& rhs_vec) const {
     if constexpr (has_add_v<T, S> && has_mul_v<S, int>) {
         using ReturnType = decltype(T(0) + S(0));
         
-        Matrix<ReturnType> rval = *this;
-        Matrix<ReturnType> tmp = rhs_vec;
+        Vector<ReturnType> rval = *this;
+        Vector<ReturnType> tmp = rhs_vec;
 
         rval += rhs_vec * -1;
         return rval;
@@ -71,7 +71,7 @@ template<typename T>
 template<typename S>
 decltype(auto) Vector<T>::operator*(const Vector<S>& rhs_vec) const {
     if constexpr (has_add_v<T, S> && has_mul_v<T, S>) {
-        if (_size != rhs_vec._size())
+        if (_size != rhs_vec.size())
             throw Vector_Error("[operator*]", "Must be the same size.");
 
         using ReturnType = decltype(T(0) * S(0));
@@ -96,7 +96,7 @@ decltype(auto) Vector<T>::operator*(const S& rhs_type) const {
         ReturnType rhs_type_c = rhs_type;
 
         for (size_t i = 0; i < _size; i++) {
-            rval[i] *= rhs_type;
+            rval[i] *= rhs_type_c;
         }
 
         return rval;

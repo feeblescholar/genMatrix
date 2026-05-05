@@ -68,12 +68,12 @@ public:
     /**
      * @return Az elemek száma.
      */
-    size_t size() { return _size; };
+    size_t size() const { return _size; };
 
     /**
      * @return A vektor maximális kapacitása.
      */
-    size_t capacity() { return _capacity; }
+    size_t capacity() const { return _capacity; }
 
     /**
      * @brief Konstans indexelő operátor.
