@@ -20,27 +20,41 @@ T random() {
         std::uniform_int_distribution<T> d(lbound, ubound);
         return d(eng);
     }
+    else if constexpr (std::is_same_v<T, genMatrix::Complex>) {
+        std::uniform_real_distribution<double> d(lbound, ubound);
+        return genMatrix::Complex(d(eng), d(eng));
+    }
     else {
         std::uniform_real_distribution<T> d(lbound, ubound);
         return d(eng);
     }
 }
 
+template<typename T, bool negzero = true>
+T rng = random<T, negzero>();
+
 /**
  * @brief Típusfüggő lazább epsilon értéket ad vissza.
  * @details Egyes számítások nem tudnak olyan pontosak lenni FPU aritmetikai
  *          korlátok miatt. Ezért ez a fv. ad egy lazább epsilont vissza.
- * @note A használat csak elemi típusokra értelmezett.
  */
 template<typename T>
-T relaxed_epsilon() {
+constexpr T relaxed_epsilon() {
     if constexpr (std::is_integral_v<T>) 
-        return T(0);
-    else if (std::is_same_v<T, double>) 
+        return 0;
+    else if constexpr (std::is_same_v<T, double> || std::is_same_v<T, genMatrix::Complex>) 
         return 1e-10;
     else 
         return 1e-3;
 } 
+
+/**
+ * @brief Típusfüggő lazább epsilon értéket ad vissza.
+ * @details Egyes számítások nem tudnak olyan pontosak lenni FPU aritmetikai
+ *          korlátok miatt. Ezért ez a fv. ad egy lazább epsilont vissza.
+ */
+template<typename T>
+constexpr T eps_l = relaxed_epsilon<T>();
 
 /**
  * @class TestArray<T>
