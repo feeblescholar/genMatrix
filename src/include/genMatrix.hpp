@@ -18,6 +18,7 @@
     #include "fhandler.hpp"
 
     #include "vector.hpp"
+    #include "complex.hpp"
 #else
     #error "This library requires C++17 or never";
 #endif

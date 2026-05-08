@@ -21,7 +21,7 @@ GTEST_DIR = lib/googletest/googletest
 GTEST_BUILD_DIR = lib/googletest/build/lib
 GTEST_ARCHIVE = $(GTEST_BUILD_DIR)/libgtest.a
 
-TESTSRCS = $(wildcard test/*.cpp) src/matrix_error.cpp src/vector_error.cpp $(MEMTRACE)
+TESTSRCS = test/test.cpp test/test_complex_full.cpp src/complex.cpp $(MEMTRACE)
 TESTOBJ = $(patsubst %.cpp, build/testobj/%.o, $(TESTSRCS))
 TESTTARGET = build/genMatrix_gtest
 

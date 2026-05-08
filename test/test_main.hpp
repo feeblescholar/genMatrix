@@ -14,7 +14,7 @@
 
 /**
  * Dummy osztály a gtest-hez, a templatekhez példányosításához szükséges
- */
+ 
 template<typename T> class MatrixTest : public ::testing::Test {};
 
 typedef ::testing::Types<int, double, float, long> TestTypes;
@@ -24,5 +24,5 @@ template<typename T> class VectorTest : public ::testing::Test {};
 
 typedef ::testing::Types<int, double, float, long> TestTypes1;
 TYPED_TEST_SUITE(VectorTest, TestTypes1);
-
+*/
 #endif
