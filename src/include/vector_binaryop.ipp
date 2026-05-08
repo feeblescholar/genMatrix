@@ -93,7 +93,7 @@ decltype(auto) Vector<T>::operator*(const S& rhs_type) const {
         using ReturnType = decltype(T(0) * S(0));
 
         Vector<ReturnType> rval = *this;
-        ReturnType rhs_type_c = rhs_type;
+        ReturnType rhs_type_c = static_cast<ReturnType>(rhs_type);
 
         for (size_t i = 0; i < _size; i++) {
             rval[i] *= rhs_type_c;

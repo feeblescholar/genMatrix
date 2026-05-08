@@ -5,12 +5,13 @@
 #include <gtest/gtest.h>
 
 /**
- * Típusfüggő RNG (Random Number Generator).
+ * @brief Típusfüggő RNG (Random Number Generator).
+ * @tparam negzero Negatív számok és nulla engedélyezése.
  */
 template<typename T, bool negzero = true>
 T random() {
     int lbound = -10;
-    if (!negzero) lbound = 10;
+    if (!negzero) lbound = 1;
     const int ubound = 10;
 
     static std::default_random_engine eng(std::random_device{}());
@@ -33,14 +34,20 @@ T random() {
  */
 template<typename T>
 T relaxed_epsilon() {
-    if constexpr (std::is_integral_v<T>) return T(0);
-    else if (std::is_same_v<T, double>) return 1e-10;
-    else return 1e-3;
+    if constexpr (std::is_integral_v<T>) 
+        return T(0);
+    else if (std::is_same_v<T, double>) 
+        return 1e-10;
+    else 
+        return 1e-3;
 } 
 
 /**
  * @class TestArray<T>
  * @brief Egy fix méretű (de dinamikusan foglalt) tömb, random számokkal.
+ * @tparam T A tömb típusa
+ * @tparam n A tömb mérete
+ * @tparam neg Nem pozitív számok generálásának engedése.
  * @note Azért nem egy random mátrix, mert így a generált értékekhez, utólag is 
  *       hozzá lehet férni.
  * @warning Kizárólag teszteléshez van, sok mindent nem ellenőriz.
@@ -109,13 +116,10 @@ bool mtx_cmp_test(const genMatrix::Matrix<T>& a, const genMatrix::Matrix<T>& b,
         
     if (a.getRows() == 0 && a.getCols() == 0) 
         return true;
-
-    for (size_t i = 0; i < a.getRows(); i++) {
-        for (size_t j = 0; j < a.getCols(); j++) {
-            /** itt úgyis fail, ha nem stimmel, nem kell false return */
-            EXPECT_NEAR(a(i, j), b(i, j), epsilon); 
-        }
-    }
+    
+    for (size_t i = 0; i < a.getRows(); i++)
+        for (size_t j = 0; j < a.getCols(); j++)
+            EXPECT_NEAR(a(i, j), b(i, j), epsilon);
 
     return true;
 }

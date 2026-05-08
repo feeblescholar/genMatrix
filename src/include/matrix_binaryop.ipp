@@ -34,7 +34,7 @@ decltype(auto) Matrix<T>::operator+(const S& rhs_type) const {
         using ReturnType = decltype(T(0) + S(0));
 
         Matrix<ReturnType> rval = *this;
-        ReturnType rhs_type_c = rhs_type;
+        ReturnType rhs_type_c = static_cast<ReturnType>(rhs_type);
 
         rval += rhs_type_c;
         return rval;
@@ -86,7 +86,7 @@ decltype(auto) Matrix<T>::operator-(const S& rhs_type) const {
         using ReturnType = decltype(T(0) + S(0));
 
         Matrix<ReturnType> rval = *this;
-        ReturnType rhs_type_c = rhs_type;
+        ReturnType rhs_type_c = static_cast<ReturnType>(rhs_type);
         rval -= rhs_type_c;
 
         return rval;
@@ -143,7 +143,7 @@ decltype(auto) Matrix<T>::operator*(const S& rhs_type) const {
         using ReturnType = decltype(T(0) * S(0));
 
         Matrix<ReturnType> rval = *this;
-        ReturnType rhs_type_c = rhs_type;
+        ReturnType rhs_type_c = (ReturnType)rhs_type;
 
         rval *= rhs_type_c;
         return rval;
@@ -155,7 +155,8 @@ decltype(auto) Matrix<T>::operator*(const S& rhs_type) const {
 template<typename T>
 Matrix<T>& Matrix<T>::operator*=(const Matrix<T>& rhs_mtx) {
     if constexpr (has_mul_v<T, T>) {
-        this = this * rhs_mtx;
+        Matrix<T> res = *this * rhs_mtx;
+        *this = std::move(res);
     }
     else
         throw Matrix_Error("[operator*=]", "Multiplication is undefined.");

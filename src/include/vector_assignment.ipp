@@ -29,7 +29,7 @@ Vector<T>& Vector<T>::operator=(const Vector<S>& other) {
     _size = other.size();
 
     for (size_t i = 0; i < _size; i++) {
-        data[i] = other[i];
+        data[i] = static_cast<T>(other[i]);
     }
 
     return *this;
