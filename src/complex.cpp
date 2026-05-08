@@ -11,7 +11,7 @@
 using namespace genMatrix;
 
 bool Complex::operator==(const Complex& rhs_c) const {
-	return (re == rhs_c.re && im == rhs_c.im);
+	return type_numeric_eq(re, rhs_c.re) && type_numeric_eq(im, rhs_c.im);
 }
 
 bool Complex::operator!=(const Complex& rhs_c) const {
@@ -26,11 +26,6 @@ Complex Complex::operator+(const Complex& rhs_c) const {
 	return Complex(re + rhs_c.re, im + rhs_c.im);
 }
 
-template<typename T>
-Complex Complex::operator+(const T& rhs_type) const {
-	return Complex(re + rhs_type, im);
-}
-
 Complex& Complex::operator+=(const Complex& rhs_c) {
 	re += rhs_c.re;
 	im += rhs_c.im;
@@ -38,20 +33,8 @@ Complex& Complex::operator+=(const Complex& rhs_c) {
 	return *this;
 }
 
-template<typename T>
-Complex& Complex::operator+=(const T& rhs_type) {
-    re += rhs_type;
-
-    return *this;
-}
-
 Complex Complex::operator-(const Complex& rhs_c) const {
 	return Complex(re - rhs_c.re, im - rhs_c.im);
-}
-
-template<typename T>
-Complex Complex::operator-(const T& rhs_type) const {
-	return Complex(re - rhs_type, im);
 }
 
 Complex& Complex::operator-=(const Complex& rhs_c) {
@@ -61,23 +44,11 @@ Complex& Complex::operator-=(const Complex& rhs_c) {
 	return *this;
 }
 
-template<typename T>
-Complex& Complex::operator-=(const T& rhs_type) {
-    re -= rhs_type;
-
-    return *this;
-}
-
 Complex Complex::operator*(const Complex& rhs_c) const {
 	double nRe = re * rhs_c.re - im * rhs_c.im;
 	double nIm = re * rhs_c.im + im * rhs_c.re;
 
 	return Complex(nRe, nIm);
-}
-
-template<typename T>
-Complex Complex::operator*(const T& rhs_type) const {
-	return Complex(rhs_type * re, rhs_type * im);
 }
 
 Complex& Complex::operator*=(const Complex& rhs_c) {
@@ -89,16 +60,8 @@ Complex& Complex::operator*=(const Complex& rhs_c) {
 	return *this;
 }
 
-template<typename T>
-Complex& Complex::operator*=(const T& rhs_type) {
-	re *= rhs_type;
-	im *= rhs_type;
-
-	return *this;
-}
-
 Complex Complex::operator/(const Complex& rhs_c) const {
-	if (rhs_c.re == 0 && rhs_c.im == 0)
+	if (type_numeric_eq(rhs_c.re, 0.0) && type_numeric_eq(rhs_c.im, 0.0))
 		throw std::domain_error("Division by zero.");
 
 	double div = rhs_c.re * rhs_c.re + rhs_c.im * rhs_c.im;

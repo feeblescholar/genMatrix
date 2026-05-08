@@ -8,6 +8,8 @@
 
 #include <cmath>
 
+#include "type_func.hpp"
+
 namespace genMatrix {
     
 class Complex {
@@ -44,7 +46,7 @@ public:
     /**
      * @return A komplex szám abszolútértéke.
      */
-    double abs() const { return sqrt(re*re + im*im); }
+    double abs() const { return sqrt(re * re + im * im); }
 
     /**
      * @brief Beállítja a valós részt.
@@ -89,7 +91,9 @@ public:
      * @note A paraméter a valós részhez adódik hozzá.
      */
     template<typename T>
-    Complex operator+(const T& rhs_type) const;
+    Complex operator+(const T& rhs_type) const {
+        return Complex(re + rhs_type, im);
+    }
 
     /**
      * @brief Hozzáadja a kapott komplex paramétert a balértékhez.
@@ -105,7 +109,11 @@ public:
      * @note A paraméter a valós részhez adódik hozzá.
      */
     template<typename T>
-    Complex& operator+=(const T& rhs_type);
+    Complex& operator+=(const T& rhs_type) {
+        re += rhs_type;
+
+        return *this;
+    }
 
     /**
      * @brief Kivonja a komplex számból a kapott komplex paramétert.
@@ -121,7 +129,9 @@ public:
      * @note A paraméter a valós részhez adódik hozzá.
      */
     template<typename T>
-    Complex operator-(const T& rhs_type) const;
+    Complex operator-(const T& rhs_type) const {
+        return Complex(re - rhs_type, im);
+    }
 
     /**
      * @brief Kivnja a balértékből a kapott komplex paramétert.
@@ -137,7 +147,11 @@ public:
      * @note A paraméter a valós részhez adódik hozzá.
      */
     template<typename T>
-    Complex& operator-=(const T& rhs_type);
+    Complex& operator-=(const T& rhs_type) {
+        re -= rhs_type;
+
+        return *this;
+    }
 
     /**
      * @brief Kiszámítja a komplex szám és a kapott paraméter szorzatát.
@@ -153,7 +167,9 @@ public:
      * @return Egy új komplex szám az eredménnyel.
      */
     template<typename T>
-    Complex operator*(const T& rhs_type) const;
+    Complex operator*(const T& rhs_type) const {
+        return Complex(rhs_type * re, rhs_type * im);
+    }
 
     /**
      * @brief Kiszámítja a komplex szám és a paraméter szorzatát a balértékbe.
@@ -168,7 +184,12 @@ public:
      * @return A balérték referenciája.
      */
     template<typename T>
-    Complex& operator*=(const T& rhs_type);
+    Complex& operator*=(const T& rhs_type) {
+        re *= rhs_type;
+        im *= rhs_type;
+
+        return *this;
+    }
 
     /**
      * @brief Leosztja a komplex számot a kapott paraméterrel.
@@ -178,11 +199,35 @@ public:
     Complex operator/(const Complex& rhs_c) const;
 
     /**
+     * @brief Leosztja a komplex számot a kapott paraméterrel.
+     * @param rhs_type Az osztó referenciája.
+     * @return Egy új komplex szám az eredménnyel.
+     */
+    template<typename T>
+    Complex operator/(const T& rhs_type) const {
+        if (type_numeric_eq<T>(rhs_type, 0.0))
+            throw std::domain_error("Division by zero.");
+
+        return Complex(re / rhs_type, im / rhs_type);
+    }
+
+    /**
      * @brief Leosztja a balértéket a kapott paraméterrel.
      * @param rhs_c Az osztó referenciája.
      * @return Egy új komplex szám az eredménnyel.
      */
     Complex& operator/=(const Complex& rhs_c);
+
+    /**
+     * @brief Leosztja a balértéket a kapott paraméterrel.
+     * @param rhs_type Az osztó referenciája.
+     * @return Egy új komplex szám az eredménnyel.
+     */
+    template<typename T>
+    Complex& operator/=(const T& rhs_type) {
+        *this = *this / rhs_type;
+        return *this;
+    }
 };
 
 template<typename T>

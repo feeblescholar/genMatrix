@@ -52,11 +52,52 @@ TEST(ComplexTest, Comparisons) {
 }
 
 TEST(ComplexTest, Conjugate) {
-    genMatrix::Complex z = random<genMatrix::Complex>();
+    genMatrix::Complex z = rng<genMatrix::Complex>;
     
     genMatrix::Complex exp(z.getRe(), -1 * z.getIm());
     genMatrix::Complex act = ~z;
 
     EXPECT_NEAR(exp.getRe(), act.getRe(), eps_l<double>);
     EXPECT_NEAR(exp.getIm(), act.getIm(), eps_l<double>);
+}
+
+TEST(ComplexTest, Operators) {
+    genMatrix::Complex a = rng<genMatrix::Complex>;
+    genMatrix::Complex b = rng<genMatrix::Complex>;
+
+    genMatrix::Complex aC = a - b;
+    aC += b;
+    aC = a + b;
+    aC -= b;
+
+    genMatrix::Complex bC = b * a;
+    bC /= a;
+    bC = b / a;
+    bC *= a;
+
+    EXPECT_TRUE(a == aC);
+    EXPECT_TRUE(b == bC);
+
+    double r1 = rng<double>;
+    double r2 = rng<double>;
+
+    aC = a - r1;
+    aC += r1;
+    aC = a + r2;
+    aC -= r2;
+
+    bC = b * r1;
+    bC /= r1;
+    bC = b / r2;
+    bC *= r2;
+
+    EXPECT_TRUE(a == aC);
+    EXPECT_TRUE(b == bC);
+}
+
+TEST(ComplexTest, DivByZero) {
+    genMatrix::Complex z = rng<genMatrix::Complex>;
+
+    EXPECT_THROW(z / 0, std::domain_error);
+    EXPECT_THROW(z /= 0, std::domain_error);
 }
