@@ -2,10 +2,14 @@ name : genMatrix CI
 
 on:
   push:
-    branches: main
+    branches: 
+      - main
+      - feature_complex
     
   pull_request:
-    branches: main
+    branches: 
+      - main 
+      - feature_complex
 
 jobs:
   linux-build:
