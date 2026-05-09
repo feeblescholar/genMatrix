@@ -226,7 +226,8 @@ public:
      * @param rhs_type A másik tag.
      * @return A balérték referenciája.
      */
-    Matrix& operator+=(const T& rhs_type);
+    template<typename S>
+    Matrix& operator+=(const S& rhs_type);
 
     /**
      * Kivonja a mátrixból a kapott paramétert.
@@ -258,7 +259,8 @@ public:
      * @param rhs_type A másik tag.
      * @return A balérték referenciája.
      */
-    Matrix& operator-=(const T& rhs_type);
+    template<typename S>
+    Matrix& operator-=(const S& rhs_type);
 
     /**
      * Összeszorozza a mátrixszal a kapott paramétert.
@@ -290,7 +292,8 @@ public:
      * @param rhs_type A másik tag.
      * @return A balérték referenciája.
      */
-    Matrix& operator*=(const T& rhs_type);
+    template<typename S>
+    Matrix& operator*=(const S& rhs_type);
 
     /**
      * @brief Transzponálja a mátrixot helyben.

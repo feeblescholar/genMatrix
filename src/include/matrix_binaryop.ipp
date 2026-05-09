@@ -59,10 +59,11 @@ Matrix<T>& Matrix<T>::operator+=(const Matrix<T>& rhs_mtx) {
 };
 
 template<typename T>
-Matrix<T>& Matrix<T>::operator+=(const T& rhs_type) {
+template<typename S>
+Matrix<T>& Matrix<T>::operator+=(const S& rhs_type) {
     if constexpr (has_add_v<T, T>) {
         for (size_t i = 0; i < this->size(); i++)
-            data[i] = data[i] + rhs_type;
+            data[i] = data[i] + static_cast<T>(rhs_type);
     }
     else
         throw Matrix_Error("[operator+=]", "Addition is not defined.");
@@ -106,9 +107,10 @@ Matrix<T>& Matrix<T>::operator-=(const Matrix<T>& rhs_mtx) {
 }
 
 template<typename T>
-Matrix<T>& Matrix<T>::operator-=(const T& rhs_type) {
+template<typename S>
+Matrix<T>& Matrix<T>::operator-=(const S& rhs_type) {
     if constexpr (has_add_v<T, T> && has_mul_v<T, int>)
-        *this += rhs_type * -1;
+        *this += static_cast<T>(rhs_type) * -1;
     else
         throw Matrix_Error("[operator-=]", "Required operators are undefined.");
     
@@ -165,10 +167,11 @@ Matrix<T>& Matrix<T>::operator*=(const Matrix<T>& rhs_mtx) {
 }
 
 template<typename T>
-Matrix<T>& Matrix<T>::operator*=(const T& rhs_type) {
+template<typename S>
+Matrix<T>& Matrix<T>::operator*=(const S& rhs_type) {
     if constexpr (has_mul_v<T, T>) {
         for (size_t i = 0; i < this->size(); i++)
-            data[i] = data[i] * rhs_type;
+            data[i] = data[i] * static_cast<T>(rhs_type);
     }
     else
         throw Matrix_Error("[operator*=]", "Multiplication is undefined.");
