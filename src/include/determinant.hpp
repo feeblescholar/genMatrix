@@ -11,7 +11,6 @@
 #define GENMATRIX_DET
 
 #include "genMatrix.hpp"
-#include "matrix_error.hpp"
 
 namespace genMatrix {
 /**
@@ -88,6 +87,67 @@ det(const Matrix<T>& mtx) {
         det *= tmp(i, i);
 
     return static_cast<T>(det * sign);
+}
+
+template<typename T> typename std::enable_if_t<is_dual_number<T>, T> 
+det(const Matrix<T>& mtx) {
+    if (mtx.getRows() != mtx.getCols()) 
+        throw Matrix_Error("[det]", "Must be a square matrix.");
+    
+    /** Innentől elég csak n-t vagy m-t vizsgálni (négyzetesség) */
+    if (mtx.getRows() == 0) 
+        throw Matrix_Error("[det]", "Matrix is empty.");
+
+    /* 1x1-es mátrix determinánsa maga az elem */
+    if (mtx.getRows() == 1) 
+        return mtx(0, 0);
+
+    /* 2x2-es mátrix determinánsa ad - bc */
+    if (mtx.getRows() == 2) 
+        return mtx(0, 0) * mtx(1, 1) - mtx(0, 1) * mtx(1, 0);
+
+    Matrix<T> tmp = mtx;
+    T det(1.0, 0.0);
+    int sign = 1;
+
+    for (size_t i = 0; i < tmp.getRows(); i++) {
+        size_t pivotR = i;
+        size_t pivotC = i;
+        double max = -1;
+
+        for (size_t j = i; j < tmp.getRows(); j++) {
+            for (size_t k = i; k < tmp.getCols(); k++) {
+                if (tmp(j, k).abs() > max) {
+                    max = tmp(j, k).abs();
+                    pivotC = i;
+                    pivotR = j;
+                }
+            }
+        }
+
+        //if (type_numeric_eq(max, 0.0)) return T();
+
+        if (pivotR != i) {
+            tmp.swapRow(pivotR, i);
+            sign *= -1.0;
+        }
+
+        if (pivotC != i) {
+            tmp.swapCol(pivotC, i);
+            sign *= -1.0;
+        }
+
+        for (size_t j = i + 1; j < tmp.getRows(); j++) {
+            T div = tmp(j, i) / tmp(i, i);
+            for (size_t k = i + 1; k < tmp.getRows(); k++)
+                tmp(j, k) = div * (-1) * tmp(i, k) + tmp(j, k);
+        }
+    }
+
+    for (size_t i = 0; i < tmp.getRows(); i++)
+        det *= tmp(i, i);
+
+    return det * sign;
 }
 
 /**

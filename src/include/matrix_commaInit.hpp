@@ -29,8 +29,9 @@ public:
     * @param _mtx A feltöltendő mátrix referenciája.
     * @param init Az első érték.
     */
-    CommaInit(Matrix<T>& _mtx, const T& init) : mtx(_mtx), nextidx(0) {
-        mtx.data[nextidx++] = init;
+    template<typename S>
+    CommaInit(Matrix<T>& _mtx, const S& init) : mtx(_mtx), nextidx(0) {
+        mtx.data[nextidx++] = static_cast<T>(init);
     }
 
     /**
@@ -39,11 +40,12 @@ public:
     * @return Önmaga referenciája, így lehet láncban hívni.
     * @throws Matrix_Error hiba, ha nem lehet az értéket a mátrixba tenni.
     */
-    CommaInit& operator,(const T& rhs_val) {
+   template<typename S>
+    CommaInit& operator,(const S& rhs_val) {
         if (nextidx == mtx.size()) 
             throw Matrix_Error("[CommaInit]", "Too many parameters.", true);
 
-        mtx.data[nextidx++] = rhs_val;
+        mtx.data[nextidx++] = static_cast<T>(rhs_val);
         return *this;
     }
 
@@ -58,7 +60,8 @@ public:
 };
 
 template<typename T>
-typename Matrix<T>::CommaInit Matrix<T>::operator<<(const T& val) {
+template<typename S>
+typename Matrix<T>::CommaInit Matrix<T>::operator<<(const S& val) {
     if (dataLocation == DynamicHeap) 
         throw Matrix_Error("[operator<<]", "Can only be used on static matrices.");
 

@@ -208,7 +208,7 @@ public:
         if (type_numeric_eq<T>(rhs_type, 0.0))
             throw std::domain_error("Division by zero.");
 
-        return Complex(re / rhs_type, im / rhs_type);
+        return Complex(re / static_cast<double>(rhs_type), im / static_cast<double>(rhs_type));
     }
 
     /**

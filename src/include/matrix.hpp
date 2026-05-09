@@ -102,7 +102,8 @@ public:
      * @param val A mátrix első értéke.
      * @note Dinamikus mátrix esetében ez nem használható.
      */
-    CommaInit operator<<(const T& val);
+    template<typename S>
+    CommaInit operator<<(const S& val);
 
     /**
      * @return A sorok száma.
