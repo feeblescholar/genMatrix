@@ -8,23 +8,6 @@
 
 #include <type_traits>
 #include <utility>
-#include "complex.hpp"
-
-template<typename T>
-constexpr bool __is_fp_compatible() {
-    return std::is_floating_point_v<T> || std::is_same_v<T, genMatrix::Complex>;
-}
-
-template<typename T>
-constexpr bool is_fp_compatible = __is_fp_compatible<T>();
-
-template<typename T>
-constexpr bool __is_dual_number() {
-    return std::is_same_v<T, genMatrix::Complex>;
-}
-
-template<typename T>
-constexpr bool is_dual_number = __is_dual_number<T>();
 
 /** Típusok összeadását ellenőrző sablon */
 template <typename T, typename S, typename = void>

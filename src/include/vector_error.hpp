@@ -16,7 +16,7 @@ namespace genMatrix {
  * @brief A vektor osztály hibaosztálya.
  * @note A clean hierarchia érdekében nem a Matrix_Error hibaosztály gyereke.
  */
-class Vector_Error : public genMatrix_Error {
+class Vector_Error : public internal::types::genMatrix_Error {
     bool isFatal;   /** Kritikus hiba-e? */
     char *src_func; /** Függvény neve, ahol a hiba történt */
     char *msg;      /** Hibaüzenet */

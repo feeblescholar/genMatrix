@@ -9,37 +9,18 @@
 #include <cmath>
 
 #include "type_func.hpp"
+#include "hypercomplex_base.hpp"
 
 namespace genMatrix {
     
-class Complex {
-    double re; /** Valós rész. */
-    double im; /** Képzetes rész. */
-
+class Complex : public internal::types::Hypercomplex2D {
 public:
     /**
      * @param _re A komplex szám valós része.
      * @param _im A komplex szám képzetes része.
-     * @note Az alapértelmezett érték: (0 + 0i).
-     * @note Az implicit konverzió az osztálysablonok saját operátorai miatt le
-     *       van tiltva, ugyanis a compiler nem tudja, hogy mi legyen.
+     * @note Az alapértelmezett érték (0 + 0i).
      */
-    explicit Complex(double _re, double _im) : re(_re), im(_im) {}
-
-    /**
-     * @param _re A komplex szám valós része.
-     * @note Az alapértelmezett érték: (0 + 0i).
-     * @note Az implicit konverzió az osztálysablonok saját operátorai miatt le
-     *       van tiltva, ugyanis a compiler nem tudja, hogy mi legyen.
-     */
-    explicit Complex(double _re) :  re(_re), im(0) {}
-
-    /**
-     * @note Az alapértelmezett érték: (0 + 0i).
-     * @note Az implicit konverzió az osztálysablonok saját operátorai miatt le
-     *       van tiltva, ugyanis a compiler nem tudja, hogy mi legyen.
-     */
-    explicit Complex() : re(0), im(0) {}
+    Complex(double _re = 0, double _im = 0) : Hypercomplex2D(_re, _im) {}
 
     /**
      * @return A komplex szám valós része.
@@ -52,9 +33,14 @@ public:
     double getIm() const { return im; };
 
     /**
+     * @return Visszaadja a képzetes egység négyzetét (-1).
+     */
+    double unit_sq() const override { return -1.0; }
+
+    /**
      * @return A komplex szám abszolútértéke.
      */
-    double abs() const { return sqrt(re * re + im * im); }
+    double abs() const override { return sqrt(re * re + im * im); }
 
     /**
      * @brief Beállítja a valós részt.
@@ -213,7 +199,7 @@ public:
      */
     template<typename T>
     Complex operator/(const T& rhs_type) const {
-        if (type_numeric_eq<T>(rhs_type, 0.0))
+        if (utils::eq<T>(rhs_type, 0.0))
             throw std::domain_error("Division by zero.");
 
         return Complex(re / static_cast<double>(rhs_type), im / static_cast<double>(rhs_type));
@@ -239,10 +225,19 @@ public:
 };
 
 template<typename T>
-Complex operator+(const T& lhs_type, const Complex& rhs_c);
+Complex operator+(const T& lhs_type, const Complex& rhs_c) {
+	return Complex(rhs_c).operator+=(lhs_type);
+}
 
 template<typename T>
-Complex operator*(const T& lhs_type, const Complex& rhs_c);
+Complex operator-(const T& lhs_type, const Complex& rhs_c) {
+    return Complex(lhs_type - rhs_c.getRe(), rhs_c.getIm());
+}
+
+template<typename T>
+Complex operator*(const T& lhs_type, const Complex& rhs_c) {
+	return Complex(rhs_c).operator*=(lhs_type);
+}
 
 /**
  * @brief Kiírja a paraméterként kapott komplex számot a megadott output streamre.

@@ -11,6 +11,7 @@
 #define GENMATRIX_DET
 
 #include "genMatrix.hpp"
+#include "custom_type_traits.hpp"
 
 namespace genMatrix {
 /**
@@ -64,7 +65,7 @@ det(const Matrix<T>& mtx) {
             }
         }
 
-        if (type_numeric_eq<T>(max, T(0.0))) return T(0.0);
+        if (utils::eq<T>(max, T(0.0))) return T(0.0);
 
         if (pivotR != i) {
             tmp.swapRow(pivotR, i);
@@ -102,7 +103,7 @@ det(const Matrix<T>& mtx) {
 * @throw Matrix_Error kivétel, ha nem létezik.
 * @warning A mátrix mérete (n) erősen befolyásolja a futási időt.
 */
-template<typename T> typename std::enable_if_t<is_dual_number<T>, T> 
+template<typename T> typename std::enable_if_t<internal::type_traits::is_hypercomplex2<T>, T> 
 det(const Matrix<T>& mtx) {
     if (mtx.getRows() != mtx.getCols()) 
         throw Matrix_Error("[det]", "Must be a square matrix.");
@@ -138,7 +139,7 @@ det(const Matrix<T>& mtx) {
             }
         }
 
-        if (type_numeric_eq(max, 0.0)) return T();
+        if (utils::eq(max, 0.0)) return T();
 
         if (pivotR != i) {
             tmp.swapRow(pivotR, i);

@@ -11,7 +11,7 @@
 using namespace genMatrix;
 
 bool Complex::operator==(const Complex& rhs_c) const {
-	return type_numeric_eq(re, rhs_c.re) && type_numeric_eq(im, rhs_c.im);
+	return utils::eq(re, rhs_c.re) && utils::eq(im, rhs_c.im);
 }
 
 bool Complex::operator!=(const Complex& rhs_c) const {
@@ -61,7 +61,7 @@ Complex& Complex::operator*=(const Complex& rhs_c) {
 }
 
 Complex Complex::operator/(const Complex& rhs_c) const {
-	if (type_numeric_eq(rhs_c.re, 0.0) && type_numeric_eq(rhs_c.im, 0.0))
+	if (utils::eq(rhs_c.re, 0.0) && utils::eq(rhs_c.im, 0.0))
 		throw std::domain_error("Division by zero.");
 
 	double div = rhs_c.re * rhs_c.re + rhs_c.im * rhs_c.im;
@@ -74,16 +74,6 @@ Complex Complex::operator/(const Complex& rhs_c) const {
 Complex& Complex::operator/=(const Complex& rhs_c) {
 	*this = *this / rhs_c;
 	return *this;
-}
-
-template<typename T>
-Complex genMatrix::operator+(const T& lhs_type, const Complex& rhs_c) {
-	return Complex(rhs_c).operator+=(lhs_type);
-}
-
-template<typename T>
-Complex genMatrix::operator*(const T& lhs_type, const Complex& rhs_c) {
-	return Complex(rhs_c).operator*=(lhs_type);
 }
 
 std::ostream& genMatrix::operator<<(std::ostream& os, const Complex& rhs_c) {

@@ -77,7 +77,7 @@ decltype(auto) Matrix<T>::operator-(const Matrix<S>& rhs_mtx) const {
     if constexpr (has_add_v<T, S> && has_mul_v<S, int>)
         return *this + rhs_mtx * -1;
     else
-        throw Matrix_Error("[operator-]", "Required operators are undefined.");
+        throw Matrix_Error("[operator-]", "Rutils::equired operators are undefined.");
 }
 
 template<typename T>
@@ -93,7 +93,7 @@ decltype(auto) Matrix<T>::operator-(const S& rhs_type) const {
         return rval;
     }
     else
-        throw Matrix_Error("[operator-]", "Required operators are undefined.");
+        throw Matrix_Error("[operator-]", "Rutils::equired operators are undefined.");
 }
 
 template<typename T>
@@ -101,7 +101,7 @@ Matrix<T>& Matrix<T>::operator-=(const Matrix<T>& rhs_mtx) {
     if constexpr (has_add_v<T, T> && has_mul_v<T, int>)
         *this += rhs_mtx * -1;
     else
-        throw Matrix_Error("[operator-=]", "Required operators are undefined.");
+        throw Matrix_Error("[operator-=]", "Rutils::equired operators are undefined.");
     
     return *this;
 }
@@ -112,7 +112,7 @@ Matrix<T>& Matrix<T>::operator-=(const S& rhs_type) {
     if constexpr (has_add_v<T, T> && has_mul_v<T, int>)
         *this += static_cast<T>(rhs_type) * -1;
     else
-        throw Matrix_Error("[operator-=]", "Required operators are undefined.");
+        throw Matrix_Error("[operator-=]", "Rutils::equired operators are undefined.");
     
     return *this;
 }
@@ -194,7 +194,7 @@ bool Matrix<T>::operator==(const Matrix<S>& other) const {
         return true;
 
     for (size_t i = 0; i < this->size(); i++)
-        if (!type_numeric_eq<T>(data[i], other.data[i])) return false;
+        if (!utils::eq<T>(data[i], other.data[i])) return false;
 
     return true;
 }

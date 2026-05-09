@@ -17,7 +17,7 @@ namespace genMatrix {
  * @note Mivel a Matrix osztály egy template, a fordítási idő csökkentése 
  *       érdekében nem az "eredeti" osztály része.
  */
-class Matrix_Error : public genMatrix_Error {
+class Matrix_Error : public internal::types::genMatrix_Error {
     bool isFatal;   /** Kritikus hiba-e? */
     char *src_func; /** Függvény neve, ahol a hiba történt */
     char *msg;      /** Hibaüzenet */
