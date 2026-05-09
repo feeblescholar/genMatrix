@@ -58,7 +58,7 @@ det(const Matrix<T>& mtx) {
             for (size_t k = i; k < tmp.getCols(); k++) {
                 if (std::abs(tmp(j, k)) > max) {
                     max = std::abs(tmp(j, k));
-                    pivotC = i;
+                    pivotC = k;
                     pivotR = j;
                 }
             }
@@ -89,6 +89,19 @@ det(const Matrix<T>& mtx) {
     return static_cast<T>(det * sign);
 }
 
+/**
+* @brief Kiszámítja a mátrix determinánsát duális számrendszeren.
+* @details Kiszámítja a mátrix determinánsát Gauss-eliminációval. Full pivotingot 
+*          alkalmazunk, így nagy számokkal osztunk le, megtartva (a lehető legjobban) 
+*          a pontosságot. A megoldás pontosságát a mátrix mérete és a tárolt értékei 
+*          is befolyásolják, rosszul kondícionált ("majdnem szinguláris") mátrix 
+*          esetében az eredmény jelentősen eltérhet a valóságtól (1 - 2 tizedesjegyel 
+*          az epsilon felett). Kondícionált mátrixok esetében ez nem okoz nagy 
+*          eltérést.
+* @return A mátrix determinánsa a mátrix típusának megfelelően.
+* @throw Matrix_Error kivétel, ha nem létezik.
+* @warning A mátrix mérete (n) erősen befolyásolja a futási időt.
+*/
 template<typename T> typename std::enable_if_t<is_dual_number<T>, T> 
 det(const Matrix<T>& mtx) {
     if (mtx.getRows() != mtx.getCols()) 
@@ -119,22 +132,22 @@ det(const Matrix<T>& mtx) {
             for (size_t k = i; k < tmp.getCols(); k++) {
                 if (tmp(j, k).abs() > max) {
                     max = tmp(j, k).abs();
-                    pivotC = i;
+                    pivotC = k;
                     pivotR = j;
                 }
             }
         }
 
-        //if (type_numeric_eq(max, 0.0)) return T();
+        if (type_numeric_eq(max, 0.0)) return T();
 
         if (pivotR != i) {
             tmp.swapRow(pivotR, i);
-            sign *= -1.0;
+            sign *= -1;
         }
 
         if (pivotC != i) {
             tmp.swapCol(pivotC, i);
-            sign *= -1.0;
+            sign *= -1;
         }
 
         for (size_t j = i + 1; j < tmp.getRows(); j++) {

@@ -16,9 +16,6 @@ class Complex {
     double re; /** Valós rész. */
     double im; /** Képzetes rész. */
 
-    /** Megtiljuk az implicit double konverziót. */
-    operator double() const { return 0.0; }
-
 public:
     /**
      * @param _re A komplex szám valós része.
@@ -29,8 +26,19 @@ public:
      */
     explicit Complex(double _re, double _im) : re(_re), im(_im) {}
 
+    /**
+     * @param _re A komplex szám valós része.
+     * @note Az alapértelmezett érték: (0 + 0i).
+     * @note Az implicit konverzió az osztálysablonok saját operátorai miatt le
+     *       van tiltva, ugyanis a compiler nem tudja, hogy mi legyen.
+     */
     explicit Complex(double _re) :  re(_re), im(0) {}
 
+    /**
+     * @note Az alapértelmezett érték: (0 + 0i).
+     * @note Az implicit konverzió az osztálysablonok saját operátorai miatt le
+     *       van tiltva, ugyanis a compiler nem tudja, hogy mi legyen.
+     */
     explicit Complex() : re(0), im(0) {}
 
     /**
