@@ -8,8 +8,6 @@
 #define MATRIX_I
 
 #include <utility>
-
-#include "typechecks.hpp"
 #include "custom_type_traits.hpp"
 
 namespace genMatrix {
@@ -210,6 +208,9 @@ void Matrix<T>::resize(size_t _n, size_t _m) {
     n = _n;
     m = _m;
 }
+
+using internal::type_traits::has_add_v;
+using internal::type_traits::has_mul_v;
 
 template<typename T>
 template<typename S>
