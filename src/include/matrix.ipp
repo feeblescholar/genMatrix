@@ -150,17 +150,16 @@ bool Matrix<T>::operator==(const Matrix<S>& other) const {
     if (!std::is_same_v<T, S>)
         return false;
 
-    if (this == &other) 
-        return true;
-
-    if (n != other.n || m != other.m) 
+    if (n != other.getRows() || m != other.getCols()) 
         return false;
 
     if (n == 0 && m == 0) 
         return true;
 
-    for (size_t i = 0; i < this->size(); i++)
-        if (!utils::eq<T>(data[i], other.data[i])) return false;
+    for (size_t i = 0; i < n; i++)
+        for (size_t j = 0; j < m; j++)
+            if (!utils::eq<T>(this->operator()(i, j), other(i, j))) 
+                return false;
 
     return true;
 }
@@ -445,8 +444,8 @@ decltype(auto) Matrix<T>::inverse() const {
                 ReturnType factor = tmp(j, i);
                 for (size_t k = 0; k < n; k++) {
                     /** fma: (ld. determinant.hpp) */
-                    tmp(j, k) = utils::fma(-factor, tmp(i, k), tmp(j, k));
-                    ret(j, k) = utils::fma(-factor, ret(i, k), ret(j, k));
+                    tmp(j, k) = utils::fma(factor * -1, tmp(i, k), tmp(j, k));
+                    ret(j, k) = utils::fma(factor * -1, ret(i, k), ret(j, k));
                 }
             }     
         }

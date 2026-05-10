@@ -7,6 +7,7 @@
 #define COMPLEX_H
 
 #include <cmath>
+#include <iostream>
 
 #include "hypercomplex_base.hpp"
 
@@ -200,19 +201,13 @@ public:
 };
 
 template<typename T>
-Complex operator+(const T& lhs_type, const Complex& rhs_c) {
-	return Complex(rhs_c).operator+=(lhs_type);
-}
+Complex operator+(const T& lhs_type, const Complex& rhs_c);
 
 template<typename T>
-Complex operator-(const T& lhs_type, const Complex& rhs_c) {
-    return Complex(lhs_type - rhs_c.getRe(), rhs_c.getIm());
-}
+Complex operator-(const T& lhs_type, const Complex& rhs_c);
 
 template<typename T>
-Complex operator*(const T& lhs_type, const Complex& rhs_c) {
-	return Complex(rhs_c).operator*=(lhs_type);
-}
+Complex operator*(const T& lhs_type, const Complex& rhs_c);
 
 /**
  * @brief Kiírja a paraméterként kapott komplex számot a megadott output streamre.

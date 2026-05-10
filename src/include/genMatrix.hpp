@@ -4,7 +4,7 @@
  * @brief Main header file a genMatrixhoz.
  */
 #ifndef GENMATRIX
-#if __cplusplus >= 201703L
+#if 1
     #define GENMATRIX
 
     #include "utils.hpp"
