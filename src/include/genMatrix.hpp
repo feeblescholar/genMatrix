@@ -7,7 +7,7 @@
 #if __cplusplus >= 201703L
     #define GENMATRIX
 
-    #include "type_func.hpp"
+    #include "utils.hpp"
 
     #include "matrix.hpp"
     #include "matrix_commaInit.hpp"

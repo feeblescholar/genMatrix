@@ -29,117 +29,46 @@ namespace genMatrix {
 * @throw Matrix_Error kivétel, ha nem létezik.
 * @warning A mátrix mérete (n) erősen befolyásolja a futási időt.
 */
-template<typename T> typename std::enable_if_t<std::is_floating_point_v<T>, T> 
+template<typename T> 
+typename std::enable_if_t<internal::type_traits::has_double_precision<T>, T> 
 det(const Matrix<T>& mtx) {
     if (mtx.getRows() != mtx.getCols()) 
         throw Matrix_Error("[det]", "Must be a square matrix.");
+
+    size_t n = mtx.getRows();
     
     /** Innentől elég csak n-t vagy m-t vizsgálni (négyzetesség) */
-    if (mtx.getRows() == 0) 
+    if (n == 0) 
         throw Matrix_Error("[det]", "Matrix is empty.");
 
     /* 1x1-es mátrix determinánsa maga az elem */
-    if (mtx.getRows() == 1) 
+    if (n == 1) 
         return mtx(0, 0);
 
     /* 2x2-es mátrix determinánsa ad - bc */
-    if (mtx.getRows() == 2) 
-        return mtx(0, 0) * mtx(1, 1) - mtx(0, 1) * mtx(1, 0);
-
-    Matrix<long double> tmp = mtx;
-    long double det(1.0);
-    int sign = 1;
-
-    for (size_t i = 0; i < tmp.getRows(); i++) {
-        size_t pivotR = i;
-        size_t pivotC = i;
-        long double max = -1;
-
-        for (size_t j = i; j < tmp.getRows(); j++) {
-            for (size_t k = i; k < tmp.getCols(); k++) {
-                if (std::abs(tmp(j, k)) > max) {
-                    max = std::abs(tmp(j, k));
-                    pivotC = k;
-                    pivotR = j;
-                }
-            }
-        }
-
-        if (utils::eq<T>(max, T(0.0))) return T(0.0);
-
-        if (pivotR != i) {
-            tmp.swapRow(pivotR, i);
-            sign *= -1.0;
-        }
-
-        if (pivotC != i) {
-            tmp.swapCol(pivotC, i);
-            sign *= -1.0;
-        }
-
-        for (size_t j = i + 1; j < tmp.getRows(); j++) {
-            long double div = tmp(j, i) / tmp(i, i);
-            for (size_t k = i + 1; k < tmp.getRows(); k++)
-                tmp(j, k) = std::fma(-div, tmp(i, k), tmp(j, k));
-        }
-    }
-
-    for (size_t i = 0; i < tmp.getRows(); i++)
-        det *= tmp(i, i);
-
-    return static_cast<T>(det * sign);
-}
-
-/**
-* @brief Kiszámítja a mátrix determinánsát duális számrendszeren.
-* @details Kiszámítja a mátrix determinánsát Gauss-eliminációval. Full pivotingot 
-*          alkalmazunk, így nagy számokkal osztunk le, megtartva (a lehető legjobban) 
-*          a pontosságot. A megoldás pontosságát a mátrix mérete és a tárolt értékei 
-*          is befolyásolják, rosszul kondícionált ("majdnem szinguláris") mátrix 
-*          esetében az eredmény jelentősen eltérhet a valóságtól (1 - 2 tizedesjegyel 
-*          az epsilon felett). Kondícionált mátrixok esetében ez nem okoz nagy 
-*          eltérést.
-* @return A mátrix determinánsa a mátrix típusának megfelelően.
-* @throw Matrix_Error kivétel, ha nem létezik.
-* @warning A mátrix mérete (n) erősen befolyásolja a futási időt.
-*/
-template<typename T> typename std::enable_if_t<internal::type_traits::is_hypercomplex2<T>, T> 
-det(const Matrix<T>& mtx) {
-    if (mtx.getRows() != mtx.getCols()) 
-        throw Matrix_Error("[det]", "Must be a square matrix.");
-    
-    /** Innentől elég csak n-t vagy m-t vizsgálni (négyzetesség) */
-    if (mtx.getRows() == 0) 
-        throw Matrix_Error("[det]", "Matrix is empty.");
-
-    /* 1x1-es mátrix determinánsa maga az elem */
-    if (mtx.getRows() == 1) 
-        return mtx(0, 0);
-
-    /* 2x2-es mátrix determinánsa ad - bc */
-    if (mtx.getRows() == 2) 
+    if (n == 2) 
         return mtx(0, 0) * mtx(1, 1) - mtx(0, 1) * mtx(1, 0);
 
     Matrix<T> tmp = mtx;
-    T det(1.0, 0.0);
+    T det(1.0);
     int sign = 1;
 
-    for (size_t i = 0; i < tmp.getRows(); i++) {
+    for (size_t i = 0; i < n; i++) {
         size_t pivotR = i;
         size_t pivotC = i;
         double max = -1;
 
-        for (size_t j = i; j < tmp.getRows(); j++) {
-            for (size_t k = i; k < tmp.getCols(); k++) {
-                if (tmp(j, k).abs() > max) {
-                    max = tmp(j, k).abs();
+        for (size_t j = i; j < n; j++) {
+            for (size_t k = i; k < n; k++) {
+                if (utils::abs(tmp(j, k)) > max) {
+                    max = utils::abs(tmp(j, k));
                     pivotC = k;
                     pivotR = j;
                 }
             }
         }
 
-        if (utils::eq(max, 0.0)) return T();
+        if (utils::eq<T>(max, T())) return T(0.0);
 
         if (pivotR != i) {
             tmp.swapRow(pivotR, i);
@@ -151,17 +80,17 @@ det(const Matrix<T>& mtx) {
             sign *= -1;
         }
 
-        for (size_t j = i + 1; j < tmp.getRows(); j++) {
+        for (size_t j = i + 1; j < n; j++) {
             T div = tmp(j, i) / tmp(i, i);
-            for (size_t k = i + 1; k < tmp.getRows(); k++)
-                tmp(j, k) = div * (-1) * tmp(i, k) + tmp(j, k);
+            for (size_t k = i + 1; k < n; k++)
+                tmp(j, k) = utils::fma(-1 * div, tmp(i, k), tmp(j, k));
         }
     }
 
-    for (size_t i = 0; i < tmp.getRows(); i++)
+    for (size_t i = 0; i < n; i++)
         det *= tmp(i, i);
 
-    return det * sign;
+    return static_cast<T>(det * sign);
 }
 
 /**

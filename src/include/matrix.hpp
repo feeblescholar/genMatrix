@@ -313,7 +313,12 @@ public:
     Matrix transpose() const;
 
     /**
-     * @brief Kiszámítja a mátrix inverzét.
+     * @brief Kiszámítja a mátrix inverzét. 
+     * @details Inverz mátrix kiszámítása a Gauss-Jordan eliminációval. Az inverz 
+                mátrix kiszámításához eliminálni kell az (M|E) mátrixot, ahol E az
+                egységmátrix és M az eredeti. Az elmináció végén M redukált lépcsős
+                alakba kerül és E lesz az inverz mátrix. A determinánshoz hasonlóan
+                a pontosságot a mátrix elemei és kondíciója is befolyásolják.
      * @return Az inverz mátrix.
      * @warning Az inverz mátrix nem feltétlenül azonos típusú az eredetivel.
      */
@@ -324,15 +329,6 @@ public:
 }
 
 #include "matrix_iterator.hpp"
-
-/** Tagfüggvények definiciói. */
-#include "matrix_constructors.ipp"
-#include "matrix_accessors.ipp"
-#include "matrix_assignment.ipp"
-#include "matrix_swap.ipp"
-#include "matrix_sizemanip.ipp"
-#include "matrix_binaryop.ipp"
-#include "matrix_transpose.ipp"
-#include "matrix_inverse.ipp"
+#include "matrix.ipp"
 
 #endif

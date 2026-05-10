@@ -8,11 +8,13 @@
 
 #include <cmath>
 
-#include "type_func.hpp"
 #include "hypercomplex_base.hpp"
 
 namespace genMatrix {
-    
+/**
+ * @class Complex
+ * @brief Komplex számot megvalósító osztály.
+ */
 class Complex : public internal::types::Hypercomplex2D {
 public:
     /**
@@ -85,9 +87,7 @@ public:
      * @note A paraméter a valós részhez adódik hozzá.
      */
     template<typename T>
-    Complex operator+(const T& rhs_type) const {
-        return Complex(re + rhs_type, im);
-    }
+    Complex operator+(const T& rhs_type) const;
 
     /**
      * @brief Hozzáadja a kapott komplex paramétert a balértékhez.
@@ -103,11 +103,7 @@ public:
      * @note A paraméter a valós részhez adódik hozzá.
      */
     template<typename T>
-    Complex& operator+=(const T& rhs_type) {
-        re += rhs_type;
-
-        return *this;
-    }
+    Complex& operator+=(const T& rhs_type);
 
     /**
      * @brief Kivonja a komplex számból a kapott komplex paramétert.
@@ -123,9 +119,7 @@ public:
      * @note A paraméter a valós részhez adódik hozzá.
      */
     template<typename T>
-    Complex operator-(const T& rhs_type) const {
-        return Complex(re - rhs_type, im);
-    }
+    Complex operator-(const T& rhs_type) const;
 
     /**
      * @brief Kivnja a balértékből a kapott komplex paramétert.
@@ -141,11 +135,7 @@ public:
      * @note A paraméter a valós részhez adódik hozzá.
      */
     template<typename T>
-    Complex& operator-=(const T& rhs_type) {
-        re -= rhs_type;
-
-        return *this;
-    }
+    Complex& operator-=(const T& rhs_type);
 
     /**
      * @brief Kiszámítja a komplex szám és a kapott paraméter szorzatát.
@@ -161,9 +151,7 @@ public:
      * @return Egy új komplex szám az eredménnyel.
      */
     template<typename T>
-    Complex operator*(const T& rhs_type) const {
-        return Complex(rhs_type * re, rhs_type * im);
-    }
+    Complex operator*(const T& rhs_type) const;
 
     /**
      * @brief Kiszámítja a komplex szám és a paraméter szorzatát a balértékbe.
@@ -178,12 +166,7 @@ public:
      * @return A balérték referenciája.
      */
     template<typename T>
-    Complex& operator*=(const T& rhs_type) {
-        re *= rhs_type;
-        im *= rhs_type;
-
-        return *this;
-    }
+    Complex& operator*=(const T& rhs_type);
 
     /**
      * @brief Leosztja a komplex számot a kapott paraméterrel.
@@ -198,12 +181,7 @@ public:
      * @return Egy új komplex szám az eredménnyel.
      */
     template<typename T>
-    Complex operator/(const T& rhs_type) const {
-        if (utils::eq<T>(rhs_type, 0.0))
-            throw std::domain_error("Division by zero.");
-
-        return Complex(re / static_cast<double>(rhs_type), im / static_cast<double>(rhs_type));
-    }
+    Complex operator/(const T& rhs_type) const;
 
     /**
      * @brief Leosztja a balértéket a kapott paraméterrel.
@@ -218,10 +196,7 @@ public:
      * @return Egy új komplex szám az eredménnyel.
      */
     template<typename T>
-    Complex& operator/=(const T& rhs_type) {
-        *this = *this / rhs_type;
-        return *this;
-    }
+    Complex& operator/=(const T& rhs_type);
 };
 
 template<typename T>
@@ -255,5 +230,7 @@ std::ostream& operator<<(std::ostream& os, const Complex& rhs_c);
  */
 std::istream& operator>>(std::istream& is, Complex& rhs_c);
 }
+
+#include "complex.ipp"
 
 #endif

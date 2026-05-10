@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "../src/include/genMatrix.hpp"
+#include "../lib/memtrace_gtest/memtrace.h"
 
 #undef new
 #undef delete

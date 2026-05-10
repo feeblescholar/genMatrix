@@ -182,10 +182,6 @@ public:
 };
 }
 
-#include "vector_constructors.ipp"
-#include "vector_assignment.ipp"
-#include "vector_accessors.ipp"
-#include "vector_sizemanip.ipp"
-#include "vector_binaryop.ipp"
+#include "vector.ipp"
 
 #endif
