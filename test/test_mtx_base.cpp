@@ -84,6 +84,7 @@ TEST(MatrixBase, DiscreteDeterminant) {
     CMP_VAL(exp_detB, act_detB, EPS_L<double>);
 }
 
+/* Inverz számítás ismert értékekkel. */
 TEST(MatrixBase, DiscreteInverse) {
     MTX<double> A(3, 3);
     MTX<CX> B(3, 3);
@@ -91,6 +92,7 @@ TEST(MatrixBase, DiscreteInverse) {
     A << 1, 0, 1,
          2, 1, 0,
          0, 1, 1;
+
     B << CX(1, 0), CX(0, 0), CX(0, 1),
          CX(0, 0), CX(1, 0), CX(0, 0),
          CX(2, 0), CX(0, 0), CX(1, 0);
@@ -98,9 +100,9 @@ TEST(MatrixBase, DiscreteInverse) {
     MTX<double> exp_inv_A(3, 3);
     MTX<CX> exp_inv_B(3, 3);
     
-    exp_inv_A << (1.0/3.0),  (1.0/3.0), (-1.0/3.0),
-                (-2.0/3.0), (1.0/3.0),  (2.0/3.0),
-                (2.0/3.0),  (-1.0/3.0), (1.0/3.0);
+    exp_inv_A << (1.0 / 3.0),  (1.0 / 3.0), (-1.0 / 3.0),
+                 (-2.0 / 3.0), (1.0 / 3.0),  (2.0 / 3.0),
+                 (2.0 / 3.0),  (-1.0 / 3.0), (1.0 / 3.0);
 
     exp_inv_B << CX(0.2, 0.4),   CX(0.0, 0.0), CX(0.4, -0.2),
                  CX(0.0, 0.0),   CX(1.0, 0.0), CX(0.0, 0.0),
@@ -111,4 +113,32 @@ TEST(MatrixBase, DiscreteInverse) {
 
     CMP_MTX(exp_inv_A, act_inv_A, EPS_L<double>);
     CMP_MTX(exp_inv_B, act_inv_B, EPS_L<double>);
+}
+
+TEST(MatrixBase, DiscreteNorm) {
+     MTX<double> A(3, 3);
+     MTX<CX> B(3, 3);
+
+     A << 1, 0, 1,
+          2, 7, 0,
+          0, 1, 1;
+
+     B << CX(1, 0), CX(0, 0), CX(0, 7),
+          CX(0, 0), CX(1, 0), CX(0, 0),
+          CX(2, 0), CX(4, 1), CX(1, 0);
+
+     double exp_A_norm_1 = 8;
+     double exp_A_norm_inf = 9;
+     double exp_A_norm_f = 7.54983443527075;
+
+     double exp_B_norm_1 = 8;
+     double exp_B_norm_inf = 8;
+     double exp_B_norm_f = 8.54400374531753;
+
+     CMP_VAL(exp_A_norm_1, genMatrix::norm_1(A), EPS_L<double>);
+     CMP_VAL(exp_A_norm_inf, genMatrix::norm_inf(A), EPS_L<double>);
+     CMP_VAL(exp_A_norm_f, genMatrix::norm_frobenius(A), EPS_L<double>);
+     CMP_VAL(exp_B_norm_1, genMatrix::norm_1(B), EPS_L<double>);
+     CMP_VAL(exp_B_norm_inf, genMatrix::norm_inf(B), EPS_L<double>);
+     CMP_VAL(exp_B_norm_f, genMatrix::norm_frobenius(B), EPS_L<double>);
 }

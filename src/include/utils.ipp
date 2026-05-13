@@ -58,6 +58,21 @@ abs(const T& a) {
 }
 
 template<typename T>
+inline typename std::enable_if_t<std::is_arithmetic_v<T>, decltype(T(0) + float(0))> 
+sqrt(const T& a) {
+    return std::sqrt(a);
+}
+
+inline genMatrix::Complex sqrt(const genMatrix::Complex a) {
+    double nRe = sqrt((a.abs() + a.getRe()) / 2);
+
+    int sign = (std::signbit(a.getIm())) ? -1 : 1;
+    double nIm = sign * sqrt((a.abs() - a.getRe()) / 2);
+
+    return Complex(nRe, nIm);
+}
+
+template<typename T>
 inline typename std::enable_if_t<std::is_arithmetic_v<T>, T>
 fma(const T& a, const T& b, const T& c) {
     return std::fma(a, b, c);

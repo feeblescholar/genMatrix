@@ -50,6 +50,16 @@ inline typename std::enable_if_t<internal::type_traits::is_hypercomplex2<T>, dou
 abs(const T& a);
 
 template<typename T>
+inline typename std::enable_if_t<std::is_arithmetic_v<T>, decltype(T(0) + float(0))> 
+sqrt(const T& a);
+
+/**
+ * @note Complex négyzetgyök pozitív ágát adja vissza.
+ */
+template<typename T>
+inline genMatrix::Complex sqrt(const genMatrix::Complex a);
+
+template<typename T>
 inline typename std::enable_if_t<std::is_arithmetic_v<T>, T>
 fma(const T& a, const T& b, const T& c);
 

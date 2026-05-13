@@ -15,14 +15,17 @@ namespace genMatrix {
  * @return A mátrix 1-normája.
  */
 template<typename T>
-T norm_1(const Matrix<T>& mtx) {
-    T norm = T(0);
+auto norm_1(const Matrix<T>& mtx) {
+    /** itt ez megoldja azon problémát, hogy a decltype előléptet */
+    using ReturnType = decltype(utils::abs(T(0)));
+
+    ReturnType norm = ReturnType(0);
 
     for (size_t i = 0; i < mtx.getCols(); i++) {
-        T sum = T(0);
+        ReturnType sum = ReturnType(0);
 
         for (size_t j = 0; j < mtx.getRows(); j++) {
-            sum += std::abs(mtx(j, i));
+            sum += utils::abs(mtx(j, i));
         }
 
         if (sum > norm) norm = sum;
@@ -36,14 +39,17 @@ T norm_1(const Matrix<T>& mtx) {
  * @return A mátrix végtelen (maximum) normája.
  */
 template<typename T>
-T norm_inf(const Matrix<T>& mtx) {
-    T norm = T(0);
+auto norm_inf(const Matrix<T>& mtx) {
+    /** itt ez megoldja azon problémát, hogy a decltype előléptet */
+    using ReturnType = decltype(utils::abs(T(0)));
+
+    ReturnType norm = ReturnType(0);
 
     for (size_t i = 0; i < mtx.getRows(); i++) {
-        T sum = T(0);
+        ReturnType sum = ReturnType(0);
 
         for (size_t j = 0; j < mtx.getCols(); j++) {
-            sum += std::abs(mtx(i, j));
+            sum += utils::abs(mtx(i, j));
         }
 
         if (sum > norm) norm = sum;
@@ -59,16 +65,18 @@ T norm_inf(const Matrix<T>& mtx) {
  */
 template<typename T>
 auto norm_frobenius(const Matrix<T>& mtx) {
-    using ReturnType = decltype(T(0) + float(0));
-    ReturnType norm = 0.0;
+    /** itt ez megoldja azon problémát, hogy a decltype előléptet */
+    using ReturnType = decltype(utils::abs(T(0)));
+
+    ReturnType norm = ReturnType(0);
 
     for (size_t i = 0; i < mtx.getRows(); i++) {
         for (size_t j = 0; j < mtx.getCols(); j++) {
-            norm = std::hypot(norm, mtx(i, j));
+            norm += utils::abs(mtx(i, j)) * utils::abs(mtx(i, j));
         }
     }
     
-    return norm;
+    return utils::sqrt(norm);
 }
 }
 
