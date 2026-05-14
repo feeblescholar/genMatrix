@@ -30,7 +30,7 @@ namespace genMatrix {
 * @warning A mátrix mérete (n) erősen befolyásolja a futási időt.
 */
 template<typename T> 
-typename std::enable_if_t<internal::type_traits::has_double_precision<T>, T> 
+typename std::enable_if_t<internal::type_traits::has_precision<T>, T> 
 det(const Matrix<T>& mtx) {
     if (mtx.getRows() != mtx.getCols()) 
         throw Matrix_Error("[det]", "Must be a square matrix.");

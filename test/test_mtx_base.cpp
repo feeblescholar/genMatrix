@@ -53,13 +53,9 @@ TEST(MatrixBase, DiscreteBinaryOperations) {
     exp_A_mul_B << CX(13, -6), CX(7, 4),
                    CX(4, 5),   CX(2, -9);
 
-    MTX<CX> act_A_plus_B = A + B;
-    MTX<CX> act_A_minus_B = A - B;
-    MTX<CX> act_A_mul_B = A * B;
-
-    CMP_MTX(exp_A_plus_B, act_A_plus_B, EPS<double>);
-    CMP_MTX(exp_A_minus_B, act_A_minus_B, EPS<double>);
-    CMP_MTX(exp_A_mul_B, act_A_mul_B, EPS<double>);
+    CMP_MTX(exp_A_plus_B, A + B, EPS<double>);
+    CMP_MTX(exp_A_minus_B, A - B, EPS<double>);
+    CMP_MTX(exp_A_mul_B, A * B, EPS<double>);
 }
 
 /* Determináns számítás ismert értékekkel. */
@@ -75,13 +71,17 @@ TEST(MatrixBase, DiscreteDeterminant) {
          CX(3, 0),  CX(0, 2),  CX(1, -1);
 
     double exp_detA = 10.5;
-    double act_detA = det(A);
-
     CX exp_detB = CX(2, 2);
-    CX act_detB = det(B);
 
-    CMP_VAL(exp_detA, act_detA, EPS<double>);
-    CMP_VAL(exp_detB, act_detB, EPS_L<double>);
+    CMP_VAL(exp_detA, det(A), EPS<double>);
+    CMP_VAL(exp_detB, det(B), EPS_L<double>);
+}
+
+/* 0-ás determináns teszt */
+TEST(MatrixTest, DeterminantSingular) {
+    MTX<double> MS(3, 3);
+    MS << 0, 0, 0, 0, 0, 0, 0, 0, 0;
+    CMP_VAL(0.0, det(MS), 0.0);
 }
 
 /* Inverz számítás ismert értékekkel. */
@@ -108,11 +108,15 @@ TEST(MatrixBase, DiscreteInverse) {
                  CX(0.0, 0.0),   CX(1.0, 0.0), CX(0.0, 0.0),
                  CX(-0.4, -0.8), CX(0.0, 0.0), CX(0.2, 0.4);
 
-    MTX<double> act_inv_A = A.inverse();
-    MTX<CX> act_inv_B = B.inverse();
+    CMP_MTX(exp_inv_A, A.inverse(), EPS_L<double>);
+    CMP_MTX(exp_inv_B, B.inverse(), EPS_L<double>);
+}
 
-    CMP_MTX(exp_inv_A, act_inv_A, EPS_L<double>);
-    CMP_MTX(exp_inv_B, act_inv_B, EPS_L<double>);
+/* Nem négyzetes mátrix determinánsa/inverze nem létezik. */
+TEST(MatrixBase, NoDetInv) {
+    MTX<int> M(2, 3);
+    EXPECT_THROW(det(M), genMatrix::Matrix_Error);
+    EXPECT_THROW(det(M), genMatrix::Matrix_Error);
 }
 
 TEST(MatrixBase, DiscreteNorm) {

@@ -52,6 +52,8 @@ template <typename T>
 constexpr bool __has_no_precision() {
     if constexpr (std::is_integral_v<T>) 
         return true;
+    else
+        return false;
 }
 
 /**
@@ -65,6 +67,8 @@ template <typename T>
 constexpr bool __has_float_precision() {
     if constexpr (std::is_same_v<T, float>) 
         return true;
+    else
+        return false;
 }
 
 /**
@@ -77,6 +81,8 @@ template <typename T>
 constexpr bool __has_double_precision() {
     if constexpr (std::is_same_v<T, double> || is_hypercomplex2<T>) 
         return true;
+    else
+        return false;
 }
 
 /**
@@ -84,6 +90,12 @@ constexpr bool __has_double_precision() {
  */
 template<typename T>
 constexpr bool has_double_precision = __has_double_precision<T>();
+
+/**
+ * @brief Igaz, ha a típus lebegőpontos.
+ */
+template<typename T>
+constexpr bool has_precision = __has_double_precision<T>() || __has_float_precision<T>();
 
 /** ----------------------------------------------------------------------  **/
 /** ----------------- Típusok közti műveletek vizsgálata -----------------  **/
