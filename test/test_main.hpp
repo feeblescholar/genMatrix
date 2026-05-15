@@ -14,10 +14,6 @@
 #include "../src/include/genMatrix.hpp"
 
 template<typename T>
-using MTX = genMatrix::Matrix<T>;
-using CX = genMatrix::Complex;
-
-template<typename T>
 double EPS = std::numeric_limits<T>::epsilon();
 
 template<typename T>

@@ -75,7 +75,7 @@ TYPED_TEST(MatrixTyped, Multiplication) {
     CMP_MTX(AB, (A * B), EPS_L<EpsilonType>);
 
     TypeParam C = RNG<TypeParam>(lbound, ubound);
-    
+
     /** a komplex szereti itt a sajátját is */
     Matrix<TypeParam> CA = A.operator*(C); 
 
