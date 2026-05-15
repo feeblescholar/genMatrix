@@ -58,6 +58,18 @@ TEST(MatrixBase, DiscreteBinaryOperations) {
     CMP_MTX(exp_A_mul_B, A * B, EPS<double>);
 }
 
+TEST(MatrixBase, InvalidBinaryOperations) {
+     MTX<CX> A(2, 3);
+     MTX<CX> B(7, 9);
+
+     EXPECT_THROW(A + B, genMatrix::Matrix_Error);
+     EXPECT_THROW(B + A, genMatrix::Matrix_Error);
+     EXPECT_THROW(A - B, genMatrix::Matrix_Error);
+     EXPECT_THROW(B - A, genMatrix::Matrix_Error);
+     EXPECT_THROW(A * B, genMatrix::Matrix_Error);
+     EXPECT_THROW(B * A, genMatrix::Matrix_Error);
+}
+
 /* Determináns számítás ismert értékekkel. */
 TEST(MatrixBase, DiscreteDeterminant) {
     MTX<double> A(2, 2);
@@ -78,7 +90,7 @@ TEST(MatrixBase, DiscreteDeterminant) {
 }
 
 /* 0-ás determináns teszt */
-TEST(MatrixTest, DeterminantSingular) {
+TEST(MatrixBase, DeterminantSingular) {
     MTX<double> MS(3, 3);
     MS << 0, 0, 0, 0, 0, 0, 0, 0, 0;
     CMP_VAL(0.0, det(MS), 0.0);
@@ -113,7 +125,7 @@ TEST(MatrixBase, DiscreteInverse) {
 }
 
 /* Nem négyzetes mátrix determinánsa/inverze nem létezik. */
-TEST(MatrixBase, NoDetInv) {
+TEST(MatrixBase, InvalidDeterminantInverse) {
     MTX<int> M(2, 3);
     EXPECT_THROW(det(M), genMatrix::Matrix_Error);
     EXPECT_THROW(det(M), genMatrix::Matrix_Error);
