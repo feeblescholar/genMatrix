@@ -1,3 +1,8 @@
+/**
+ * @file utils.hpp
+ * @author Kovács Botond
+ * @brief A genMatrix segédfüggvényeinek implementáció.
+ */
 #ifndef UTILS_H
 #define UTILS_H
 
@@ -41,14 +46,26 @@ eq(const T& a, const T& b, const double eps = std::numeric_limits<double>::epsil
 
 /** std függvények custom típusra való kiterjesztései */
 
+/** 
+ * @param a A szám referenciája.
+ * @return A szám abszolútértéke.
+ */
 template<typename T>
 inline typename std::enable_if_t<std::is_arithmetic_v<T>, T> 
 abs(const T& a);
 
+/** 
+ * @param a A szám referenciája.
+ * @return A szám abszolútértéke.
+ */
 template<typename T>
 inline typename std::enable_if_t<internal::type_traits::is_hypercomplex2<T>, double>
 abs(const T& a);
 
+/** 
+ * @param a A szám referenciája.
+ * @return A szám abszolútértéke.
+ */
 template<typename T>
 inline typename std::enable_if_t<std::is_arithmetic_v<T>, decltype(T(0) + float(0))> 
 sqrt(const T& a);
@@ -59,10 +76,24 @@ sqrt(const T& a);
 template<typename T>
 inline genMatrix::Complex sqrt(const genMatrix::Complex a);
 
+/**
+ * @brief Fuse Multiply-Add elemi típusokra.
+ * @param a Az egyik szorzótényező referenciája.
+ * @param b A másik szorzótényező referenciája.
+ * @param c Azon szám referenciája amit a szorzathoz adunk.
+ * @return A forrástípus, melynek értéke a * b + c
+ */
 template<typename T>
 inline typename std::enable_if_t<std::is_arithmetic_v<T>, T>
 fma(const T& a, const T& b, const T& c);
 
+/**
+ * @brief Fuse Multiply-Add komplexre.
+ * @param a Az egyik szorzótényező referenciája.
+ * @param b A másik szorzótényező referenciája.
+ * @param c Azon szám referenciája amit a szorzathoz adunk.
+ * @return Egy új komplex, melynek értéke a * b + c
+ */
 inline Complex 
 fma(const Complex& a, const Complex& b, const Complex& c);
 }

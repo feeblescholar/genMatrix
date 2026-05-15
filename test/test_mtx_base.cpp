@@ -1,3 +1,9 @@
+/**
+ * @file test_mtx_base.cpp
+ * @author Kovács Botond
+ * @brief Mátrixok tesztesetei ismert értékekkel, valamint egyszerű tesztesetek,
+ *        melyek nem igényelnek típusspecifikus tesztelést.
+ */
 #include "test_main.hpp"
 
 #ifdef new
@@ -7,7 +13,7 @@
 
 using namespace genMatrix;
 
-/** Minimális elvárható működés tesztelése. */
+/** Minimális elvárható működés tesztelése. Itt nem lehet hiba. */
 TEST(MatrixBase, SanityCheck) {
     Matrix<int> M(2, 3);
 
@@ -94,6 +100,7 @@ TEST(MatrixBase, Multiplication) {
     CMP_MTX(exp_A_mul_B, A * B, EPS<double>);
 }
 
+/** Teszteset az érvénytelen műveletekre. */
 TEST(MatrixBase, InvalidBinaryOperations) {
      Matrix<Complex> A(2, 3);
      Matrix<Complex> B(7, 9);
@@ -106,6 +113,7 @@ TEST(MatrixBase, InvalidBinaryOperations) {
      EXPECT_THROW(B * A, Matrix_Error);
 }
 
+/** Transzponálás. */
 TEST(MatrixBase, Transpose) {
      Matrix<double> M(2, 3);
      M << 1, 2, 3, 
@@ -123,7 +131,7 @@ TEST(MatrixBase, Transpose) {
      CMP_MTX(exp, M, EPS_L<double>);
 }
 
-/* Determináns számítás ismert értékekkel. */
+/*÷ Determináns számítás ismert értékekkel. */
 TEST(MatrixBase, Determinant) {
     Matrix<double> A(2, 2);
     Matrix<Complex> B(3, 3);
@@ -142,14 +150,14 @@ TEST(MatrixBase, Determinant) {
     CMP_VAL(exp_detB, det(B), EPS_L<double>);
 }
 
-/* 0-ás determináns teszt */
+/** 0-ás determináns teszt */
 TEST(MatrixBase, DeterminantSingular) {
     Matrix<double> MS(3, 3);
     MS << 0, 0, 0, 0, 0, 0, 0, 0, 0;
     CMP_VAL(0.0, det(MS), 0.0);
 }
 
-/* Inverz számítás ismert értékekkel. */
+/** Inverz számítás ismert értékekkel. */
 TEST(MatrixBase, Inverse) {
     Matrix<double> A(3, 3);
     Matrix<Complex> B(3, 3);
@@ -177,13 +185,14 @@ TEST(MatrixBase, Inverse) {
     CMP_MTX(exp_inv_B, B.inverse(), EPS_L<double>);
 }
 
-/* Nem négyzetes mátrix determinánsa/inverze nem létezik. */
+/** Nem négyzetes mátrix determinánsa/inverze nem létezik. */
 TEST(MatrixBase, InvalidDeterminantInverse) {
     Matrix<int> M(2, 3);
     EXPECT_THROW(det(M), Matrix_Error);
     EXPECT_THROW(M.inverse(), Matrix_Error);
 }
 
+/** Mátrixok normáinak tesztelése. */
 TEST(MatrixBase, DiscreteNorm) {
      Matrix<double> A(3, 3);
      Matrix<Complex> B(3, 3);

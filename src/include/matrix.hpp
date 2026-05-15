@@ -155,18 +155,30 @@ public:
     template<typename S>
     bool operator==(const Matrix<S>& other) const;
 
+    /**
+     * @return Matrix_Iterator, ami mátrix adatainak elejére mutat.
+     */
     iterator begin() noexcept {
         return iterator(data);
     }
 
+    /**
+     * @return Matrix_Iterator, ami mátrix adatainak végére mutat.
+     */
     iterator end() noexcept {
         return iterator(data + this->size());
     }
 
+    /**
+     * @return Matrix_Iterator, ami mátrix adatainak elejére mutat.
+     */
     const_iterator cbegin() const noexcept {
         return const_iterator(data);
     }
 
+    /**
+     * @return Matrix_Iterator, ami mátrix adatainak végére mutat.
+     */
     const_iterator cend() const noexcept {
         return const_iterator(data + this->size());
     }

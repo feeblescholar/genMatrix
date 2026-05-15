@@ -1,3 +1,8 @@
+/**
+ * @file custom_type_traits.hpp
+ * @author Kovács Botond
+ * @brief Sablonok típusok vagy azok tulajdonságainak vizsgálatához.
+ */
 #ifndef CUSTOM_TYPE_TRAITS_H
 #define CUSTOM_TYPE_TRAITS_H
 

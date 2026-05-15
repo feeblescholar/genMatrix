@@ -1,3 +1,8 @@
+/**
+ * @file test_mtx_random.cpp
+ * @author Kovács Botond
+ * @brief Mátrixosztály tesztesetei random értékkel, több típuson.
+ */
 #include "test_main.hpp"
 
 /**

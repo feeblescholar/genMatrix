@@ -38,6 +38,12 @@ void CMP_MTX(const genMatrix::Matrix<T>& a, const genMatrix::Matrix<T>& b, const
     }
 }
 
+/**
+ * @brief Generál egy random értéket típusnak megfelelően.
+ * @param lbound A random érték alsó határa.
+ * @param ubound A random érték felső határa.
+ * @return A random érték.
+ */
 template<typename T>
 T RNG(int lbound, int ubound) {
     static std::default_random_engine eng(std::random_device{}());
@@ -58,6 +64,12 @@ T RNG(int lbound, int ubound) {
     }
 }
 
+/**
+ * @brief Generál egy random értékekkel teli mátrixot típusnak megfelelően.
+ * @param lbound A random értékek alsó határa.
+ * @param ubound A random értékek felső határa.
+ * @return A random mátrix.
+ */
 template<typename T>
 genMatrix::Matrix<T> RNG_MTX(size_t n, size_t m, int lbound, int ubound) {
     genMatrix::Matrix<T> mtx(n, m);
