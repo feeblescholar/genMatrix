@@ -7,6 +7,7 @@
 #define TEST_UTILS_H
 
 #include <gtest/gtest.h>
+#include <random>
 #include "../src/include/genMatrix.hpp"
 
 /**
@@ -51,7 +52,7 @@ T RNG(int lbound, int ubound) {
             return T(dist(eng), dist(eng));
         }
         else {
-            std::uniform_real_distribution<double> dist(lbound, ubound);
+            std::uniform_real_distribution<T> dist(lbound, ubound);
             return T(dist(eng));
         }
     }
