@@ -76,8 +76,7 @@ TYPED_TEST(MatrixTyped, Multiplication) {
 
     TypeParam C = RNG<TypeParam>(lbound, ubound);
 
-    /** a komplex szereti itt a sajátját is */
-    Matrix<TypeParam> CA = A.operator*(C); 
+    Matrix<TypeParam> CA = A * C; 
 
     for (size_t i = 0; i < A.getRows(); i++)
         for (size_t j = 0; j < A.getCols(); j++)

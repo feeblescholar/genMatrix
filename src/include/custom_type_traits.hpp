@@ -108,7 +108,9 @@ template <typename T, typename S>
 struct has_add<T, S, std::void_t<decltype(std::declval<T>() + std::declval<S>())>> 
     : std::true_type {};
 
-/** Igaz, ha a két típust össze lehet adni. */
+/** 
+ * @brief Igaz, ha a két típust össze lehet adni. 
+ */
 template <typename T, typename S>
 constexpr bool has_add_v = has_add<T, S>::value;
 
@@ -121,7 +123,9 @@ template <typename T, typename S>
 struct has_mul<T, S, std::void_t<decltype(std::declval<T>() * std::declval<S>())>> 
     : std::true_type {};
 
-/** Igaz, ha a két típust össze lehet szorzoni. */
+/**
+ * @brief Igaz, ha a két típust össze lehet szorzoni. 
+ */
 template <typename T, typename S>
 constexpr bool has_mul_v = has_mul<T, S>::value;
 

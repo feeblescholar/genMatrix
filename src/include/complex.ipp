@@ -55,17 +55,20 @@ Complex& Complex::operator/=(const T& rhs_type) {
 }
 
 template<typename T>
-Complex operator+(const T& lhs_type, const Complex& rhs_c) {
+typename std::enable_if_t<std::is_arithmetic_v<T>, Complex>
+operator+(const T& lhs_type, const Complex& rhs_c) {
 	return Complex(rhs_c).operator+=(lhs_type);
 }
 
 template<typename T>
-Complex operator-(const T& lhs_type, const Complex& rhs_c) {
+typename std::enable_if_t<std::is_arithmetic_v<T>, Complex>
+operator-(const T& lhs_type, const Complex& rhs_c) {
     return Complex(lhs_type - rhs_c.getRe(), rhs_c.getIm());
 }
 
 template<typename T>
-Complex operator*(const T& lhs_type, const Complex& rhs_c) {
+typename std::enable_if_t<std::is_arithmetic_v<T>, Complex>
+operator*(const T& lhs_type, const Complex& rhs_c) {
 	return Complex(rhs_c).operator*=(lhs_type);
 }
 }

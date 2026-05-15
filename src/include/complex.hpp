@@ -85,7 +85,6 @@ public:
      * @brief Összeadja a komplex számot a paraméterként kapott elemi típussal.
      * @param rhs_type Az elemi típus referenciája.
      * @return Egy új komplex szám az eredménnyel.
-     * @note A paraméter a valós részhez adódik hozzá.
      */
     template<typename T>
     Complex operator+(const T& rhs_type) const;
@@ -101,7 +100,6 @@ public:
      * @brief Hozzáadja a kapott elemi típust a balértékhez.
      * @param rhs_type Az elemi típus referenciája.
      * @return A balérték referenciája
-     * @note A paraméter a valós részhez adódik hozzá.
      */
     template<typename T>
     Complex& operator+=(const T& rhs_type);
@@ -117,7 +115,6 @@ public:
      * @brief Kivonja a komplex számból a paraméterként kapott elemi típust.
      * @param rhs_type Az elemi típus referenciája.
      * @return Egy új komplex szám az eredménnyel.
-     * @note A paraméter a valós részhez adódik hozzá.
      */
     template<typename T>
     Complex operator-(const T& rhs_type) const;
@@ -133,7 +130,6 @@ public:
      * @brief Kivonja a balértékből a kapott elemi típust.
      * @param rhs_type Az elemi típus referenciája.
      * @return A balérték referenciája
-     * @note A paraméter a valós részhez adódik hozzá.
      */
     template<typename T>
     Complex& operator-=(const T& rhs_type);
@@ -200,14 +196,35 @@ public:
     Complex& operator/=(const T& rhs_type);
 };
 
+/**
+ * @brief Összeadja a komplex számot a paraméterként kapott elemi típussal.
+ * @param lhs_type Az elemi típus referenciája.
+ * @param rhs_c A komplex szám referenciája.
+ * @return Egy új komplex szám az eredménnyel.
+ */
 template<typename T>
-Complex operator+(const T& lhs_type, const Complex& rhs_c);
+typename std::enable_if_t<std::is_arithmetic_v<T>, Complex>
+operator+(const T& lhs_type, const Complex& rhs_c);
 
+/**
+ * @brief Kivonja a paraméterként kapott elemi típusból a komplex számot.
+ * @param lhs_type Az elemi típus referenciája.
+ * @param rhs_c A komplex szűm referenciája.
+ * @return Egy új komplex szám az eredménnyel.
+ */
 template<typename T>
-Complex operator-(const T& lhs_type, const Complex& rhs_c);
+typename std::enable_if_t<std::is_arithmetic_v<T>, Complex>
+operator-(const T& lhs_type, const Complex& rhs_c);
 
+/**
+ * @brief Összeszorozza a paraméterként kapott elemi típust a komplex számmal.
+ * @param lhs_type Az elemi típus referenciája.
+ * @param rhs_c A komplex szám referenciája.
+ * @return Egy új komplex szám az eredménnyel.
+ */
 template<typename T>
-Complex operator*(const T& lhs_type, const Complex& rhs_c);
+typename std::enable_if_t<std::is_arithmetic_v<T>, Complex>
+operator*(const T& lhs_type, const Complex& rhs_c);
 
 /**
  * @brief Kiírja a paraméterként kapott komplex számot a megadott output streamre.
