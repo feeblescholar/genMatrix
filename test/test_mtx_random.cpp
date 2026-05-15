@@ -25,7 +25,7 @@ TYPED_TEST(MatrixTest, Determinant2) {
     TypeParam exp_det = M(0, 0) * M(1, 1) - M(0, 1) * M(1, 0);
 
     using epsilonType = decltype(utils::abs(TypeParam()));
-    CMP_VAL(exp_det, det(M), EPS<epsilonType> * M.size());
+    CMP_VAL(exp_det, det(M), EPS_L<epsilonType> * M.size());
 }
 
 TYPED_TEST(MatrixTest, Determinant3) {
