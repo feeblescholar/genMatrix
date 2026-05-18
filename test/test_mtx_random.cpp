@@ -25,6 +25,23 @@ using namespace genMatrix;
 const int lbound = -12;
 const int ubound = 20;
 
+/** Leellenőrizzük egy random mátrixon, hogy az rng tényleg működik-e. */
+TYPED_TEST(MatrixTyped, RNG_SanityCheck) {
+    Matrix<TypeParam> M(RNG_MTX<TypeParam>(5, 5, lbound, ubound));
+    TypeParam randomValue = RNG<TypeParam>(lbound, ubound);
+
+    /** Megjegyzés: 25 + 1 generált elem után nem ér körbe az adott seed. */
+
+    unsigned int match = 0;
+    for (auto& item : M)
+        if(genMatrix::utils::eq<TypeParam>(randomValue, item))
+            match++;
+    
+    /** Ha 5 elem már epszilonon belül van, akkor valami nem jó. */
+    ASSERT_LE(match, (unsigned int)5);
+}
+
+/** Random számokkal összeadás. */
 TYPED_TEST(MatrixTyped, Addition) {
     Matrix<TypeParam> A(RNG_MTX<TypeParam>(5, 5, lbound, ubound));
     Matrix<TypeParam> B(RNG_MTX<TypeParam>(5, 5, lbound, ubound));
@@ -41,6 +58,7 @@ TYPED_TEST(MatrixTyped, Addition) {
             CMP_VAL((A(i, j) + B(i, j)), AB(i, j), EPS_L<EpsilonType>);
 }
 
+/** Random számokkal kivonás. */
 TYPED_TEST(MatrixTyped, Subtraction) {
     Matrix<TypeParam> A(RNG_MTX<TypeParam>(5, 5, lbound, ubound));
     Matrix<TypeParam> B(RNG_MTX<TypeParam>(5, 5, lbound, ubound));
@@ -60,13 +78,14 @@ TYPED_TEST(MatrixTyped, Subtraction) {
     }
 }
 
+/** Random számokkal szorzás. */
 TYPED_TEST(MatrixTyped, Multiplication) {
     Matrix<TypeParam> A(RNG_MTX<TypeParam>(2, 3, lbound, ubound));
     Matrix<TypeParam> B(RNG_MTX<TypeParam>(3, 4, lbound, ubound));
 
 
     Matrix<TypeParam> AB(2, 4);
-    /** egyszer és utoljára végigmásszuk kézzel */
+    /** Egyszer és utoljára végigmásszuk kézzel */
     AB <<  A(0, 0) * B(0, 0) + A(0, 1) * B(1, 0) + A(0, 2) * B(2, 0),
            A(0, 0) * B(0, 1) + A(0, 1) * B(1, 1) + A(0, 2) * B(2, 1),
            A(0, 0) * B(0, 2) + A(0, 1) * B(1, 2) + A(0, 2) * B(2, 2),
@@ -89,6 +108,7 @@ TYPED_TEST(MatrixTyped, Multiplication) {
 
 }
 
+/** Random számokkal 2x2-es determináns számítás. */
 TYPED_TEST(MatrixTyped, Determinant_2x2) {
     Matrix<TypeParam> M(RNG_MTX<TypeParam>(2, 2, lbound, ubound));
     TypeParam exp_det = M(0, 0) * M(1, 1) - M(0, 1) * M(1, 0);
@@ -97,6 +117,7 @@ TYPED_TEST(MatrixTyped, Determinant_2x2) {
     CMP_VAL(exp_det, det(M), EPS_L<EpsilonType> * M.size());
 }
 
+/** Random számokkal 3x3-as determináns számítás. */
 TYPED_TEST(MatrixTyped, Determinant_3x3) {
     Matrix<TypeParam> M(RNG_MTX<TypeParam>(3, 3, lbound, ubound));
 
@@ -110,14 +131,15 @@ TYPED_TEST(MatrixTyped, Determinant_3x3) {
 
     
     using EpsilonType = decltype(utils::abs(TypeParam()));
-    /** kicsit engedünk a pontosságon, a Gauss-elimiáció osztásai miatt */
+    /** Kicsit engedünk a pontosságon, a Gauss-elimiáció osztásai miatt */
     CMP_VAL(exp_det, det(M), EPS_L<EpsilonType> * 1e3);
 }
 
+/** Random számokkal 5x5-ös inverz számítás. */
 TYPED_TEST(MatrixTyped, Inverse_5x5) {
     Matrix<TypeParam> M(RNG_MTX<TypeParam>(5, 5, lbound, ubound));
 
-    /** ki kell találni milyen típust fog az inverz dobni */
+    /** Ki kell találni milyen típust fog az inverz dobni */
     using ReturnType = decltype(TypeParam() + double());
     using EpsilonType = decltype(utils::abs(ReturnType()));
     
@@ -125,6 +147,6 @@ TYPED_TEST(MatrixTyped, Inverse_5x5) {
     for (size_t i = 0; i < I.getRows(); i++)
         I(i, i) = TypeParam(1);
     
-    
+    /** Kihasználjuk, hogy a mátrix és inverzének szorzata az egységmátrix. */
     CMP_MTX(I, (M * M.inverse()), EPS_L<EpsilonType>);
 }
