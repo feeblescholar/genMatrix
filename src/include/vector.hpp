@@ -18,6 +18,8 @@ class Vector {
     size_t _capacity;
 
 public:
+    class CommaInit;
+
     /**
      * @brief Létrehoz egy n magas oszlopvektort.
      * @param n A vektor mérete.
@@ -65,10 +67,18 @@ public:
      */
     Vector& operator=(Vector&& other);
 
+    /** 
+     * @brief Eigen stílusú vektor feltöltés.
+     * @param val A vektor első értéke.
+     * @note A vektort az aktuális kapacitásáig fel kell tölteni.
+     */
+    template<typename S>
+    CommaInit operator<<(const S& val);
+
     /**
      * @return Az elemek száma.
      */
-    size_t size() const { return _size; };
+    size_t size() const { return _size; }
 
     /**
      * @return A vektor maximális kapacitása.

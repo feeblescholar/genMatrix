@@ -17,15 +17,12 @@ template<typename T> class MatrixTyped : public ::testing::Test {};
 typedef ::testing::Types<int, long, float, double, genMatrix::Complex> MatrixTypes;
 TYPED_TEST_SUITE(MatrixTyped, MatrixTypes);
 
-
-#include "test_main.hpp"
-
 using namespace genMatrix;
 
 const int lbound = -12;
 const int ubound = 20;
 
-/** Leellenőrizzük egy random mátrixon, hogy az rng tényleg működik-e. */
+/** Leellenőrizzük, hogy az rng tényleg működik-e és nem csak 1 értéket ad. */
 TYPED_TEST(MatrixTyped, RNG_SanityCheck) {
     Matrix<TypeParam> M(RNG_MTX<TypeParam>(5, 5, lbound, ubound));
     TypeParam randomValue = RNG<TypeParam>(lbound, ubound);

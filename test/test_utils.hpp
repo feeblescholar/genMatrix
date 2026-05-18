@@ -27,15 +27,31 @@ void CMP_VAL(const T& a, const T& b, const double eps) {
  * @brief Összehasonlít két mátrixot az EXPECT_NEAR GoogleTest makróval.
  */
 template<typename T>
-void CMP_MTX(const genMatrix::Matrix<T>& a, const genMatrix::Matrix<T>& b, const double eps) {
-    ASSERT_EQ(a.getRows(), b.getRows());
-    ASSERT_EQ(a.getCols(), b.getCols());
+void CMP_MTX(const genMatrix::Matrix<T>& a, 
+             const genMatrix::Matrix<T>& b, 
+             const double eps) 
+{
+    EXPECT_EQ(a.getRows(), b.getRows());
+    EXPECT_EQ(a.getCols(), b.getCols());
 
-    for (size_t i = 0; i < a.getRows(); ++i) {
-        for (size_t j = 0; j < a.getCols(); ++j) {
+    for (size_t i = 0; i < a.getRows(); i++)
+        for (size_t j = 0; j < a.getCols(); j++)
             CMP_VAL(a(i, j), b(i, j), eps);
-        }
-    }
+
+}
+
+/**
+ * @brief Összehasonlít két vektort az EXPECT_NEAR GoogleTest makróval.
+ */
+template<typename T>
+void CMP_VEC(const genMatrix::Vector<T>& a, 
+             const genMatrix::Vector<T>& b, 
+             const double eps) 
+{
+    EXPECT_EQ(a.size(), b.size());
+
+    for (size_t i = 0; i < a.size(); i++)
+        CMP_VAL(a[i], b[i], eps);
 }
 
 /**
@@ -66,9 +82,13 @@ T RNG(int lbound, int ubound) {
 
 /**
  * @brief Generál egy random értékekkel teli mátrixot típusnak megfelelően.
+ * @param n A mátrix sorainak száma.
+ * @param m A mátrix oszlopainak száma.
  * @param lbound A random értékek alsó határa.
  * @param ubound A random értékek felső határa.
  * @return A random mátrix.
+ * @note A mátrixnak van move konstruktora, így nagy mátrixok esetében sem okoz
+ *       jelentős lassulást.
  */
 template<typename T>
 genMatrix::Matrix<T> RNG_MTX(size_t n, size_t m, int lbound, int ubound) {

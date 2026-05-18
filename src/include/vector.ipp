@@ -155,7 +155,7 @@ bool Vector<T>::operator==(const Vector<S>& rhs_vec) const {
     if (!std::is_same_v<T, S>)
         return false;
 
-    if (_size != rhs_vec._size())
+    if (_size != rhs_vec._size)
         return false;
     
     for (size_t i = 0; i < _size; i++) 
@@ -178,14 +178,14 @@ decltype(auto) Vector<T>::operator+(const Vector<S>& rhs_vec) const {
         return rval;
     }
     else
-        throw Matrix_Error("[operator+]", "Addition is undefined.");
+        throw Vector_Error("[operator+]", "Addition is undefined.");
 }
 
 template<typename T>
 Vector<T>& Vector<T>::operator+=(const Vector<T>& rhs_vec) {
     if constexpr (has_add_v<T, T>) {
         if (_size != rhs_vec._size)
-            throw Vector_Error("[operator+=]", "Must be the same size.");
+            throw Vector_Error("[operator+=/-=]", "Must be the same size.");
         
         for (size_t i = 0; i < _size; i++)
             data[i] += rhs_vec[i];

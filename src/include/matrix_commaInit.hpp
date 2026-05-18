@@ -4,8 +4,8 @@
  * @brief A statikus mátrixok feltöltéséhez használt segédosztály definiciója,
  *        valamint a hozzátartozó mátrix operátoré.
  */
-#ifndef COMMAINIT_H
-#define COMMAINIT_H
+#ifndef MATRIX_COMMAINIT_H
+#define MATRIX_COMMAINIT_H
 
 #include "matrix.hpp"
 

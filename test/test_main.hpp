@@ -27,15 +27,22 @@ template<typename T>
 double EPS_L = EPS<T> * 1e3;
 
 /**
+ * Itt *NEM* kell a teszttípusokat megadni, ez a memtrace makróháborújához kell.
+ */
+typedef ::testing::Types<void> NoType;
+
+/**
  * @class MatrixBase
  * @brief Dummy osztály a gtest-hez, a memtracenek kell.
  */
 template<typename T> class MatrixBase : public ::testing::Test {};
+TYPED_TEST_SUITE(MatrixBase, NoType);
 
 /**
- * Itt *NEM* kell a teszttípusokat megadni, ez a memtrace makróháborújához kell.
+ * @class VectorBase
+ * @brief Dummy osztály a gtest-hez, a memtracenek kell.
  */
-typedef ::testing::Types<void> MatrixDummyType;
-TYPED_TEST_SUITE(MatrixBase, MatrixDummyType);
+template<typename T> class VectorBase : public ::testing::Test {};
+TYPED_TEST_SUITE(VectorBase, NoType);
 
 #endif
