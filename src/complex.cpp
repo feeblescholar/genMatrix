@@ -76,18 +76,21 @@ Complex& Complex::operator/=(const Complex& rhs_c) {
 	return *this;
 }
 
-std::ostream& operator<<(std::ostream& os, const Complex& rhs_c) {
+std::ostream& genMatrix::operator<<(std::ostream& os, const Complex& rhs_c) {
+	std::streamsize prev_pr = os.precision();
+    os << std::setprecision(std::numeric_limits<double>::max_digits10);
+
 	os << rhs_c.getRe();
 
 	if (rhs_c.getIm() >= 0) 
 		os << std::showpos;
 	os << rhs_c.getIm() << "j";
 
-	os << std::noshowpos;
+	os << std::noshowpos << std::setprecision(prev_pr);
 	return os;
 }
 
-std::istream& operator>>(std::istream& is, Complex& rhs_c) {
+std::istream& genMatrix::operator>>(std::istream& is, Complex& rhs_c) {
 	double re = 0;
 	double im = 0;
 	char i;
