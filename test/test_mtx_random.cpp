@@ -18,9 +18,10 @@ typedef ::testing::Types<int, long, float, double, genMatrix::Complex> MatrixTyp
 TYPED_TEST_SUITE(MatrixTyped, MatrixTypes);
 
 using namespace genMatrix;
+namespace fs = std::filesystem;
 
-const int lbound = -12;
-const int ubound = 20;
+const int lbound = -12; /** A tesztértékek alsó határa. */
+const int ubound = 20;  /** A tesztértékek felső határa. */
 
 /** Leellenőrizzük, hogy az rng tényleg működik-e és nem csak 1 értéket ad. */
 TYPED_TEST(MatrixTyped, RNG_SanityCheck) {
@@ -146,4 +147,29 @@ TYPED_TEST(MatrixTyped, Inverse_5x5) {
     
     /** Kihasználjuk, hogy a mátrix és inverzének szorzata az egységmátrix. */
     CMP_MTX(I, (M * M.inverse()), EPS_L<EpsilonType>);
+}
+
+TYPED_TEST(MatrixTyped, IOStream) {
+    Matrix<TypeParam> M(RNG_MTX<TypeParam>(7, 6, lbound, ubound));
+    Matrix<TypeParam> MR; /** Ő lesz ahová olvasunk. */
+    
+    /** Megadjuk hová kellene írni a tesztfájlt. */
+    fs::path p = fs::current_path() / "build/test.txt";
+
+    std::ofstream ofile(p, std::ofstream::out | std::ofstream::trunc);
+    if (ofile.is_open())
+        ofile << M << std::flush;
+    else
+        FAIL() << "nem lehet fajlt nyitni";
+    ofile.close();
+
+    std::ifstream ifile(p, std::ifstream::in);
+    if (ifile.is_open())
+        ifile >> MR;
+    else
+        FAIL() << "nem lehet fajlt nyitni";
+    ifile.close();
+
+    using EpsilonType = decltype(utils::abs(TypeParam()));
+    CMP_MTX(M, MR, EPS_L<EpsilonType>);
 }
