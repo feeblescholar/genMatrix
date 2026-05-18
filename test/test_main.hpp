@@ -26,4 +26,16 @@ double EPS = std::numeric_limits<T>::epsilon();
 template<typename T>
 double EPS_L = EPS<T> * 1e3;
 
+/**
+ * @class MatrixBase
+ * @brief Dummy osztály a gtest-hez, a memtracenek kell.
+ */
+template<typename T> class MatrixBase : public ::testing::Test {};
+
+/**
+ * Itt *NEM* kell a teszttípusokat megadni, ez a memtrace makróháborújához kell.
+ */
+typedef ::testing::Types<void> MatrixDummyType;
+TYPED_TEST_SUITE(MatrixBase, MatrixDummyType);
+
 #endif

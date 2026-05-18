@@ -6,15 +6,10 @@
  */
 #include "test_main.hpp"
 
-#ifdef new
-#undef new
-#undef delete
-#endif
-
 using namespace genMatrix;
 
-/** Minimális elvárható működés tesztelése. Itt nem lehet hiba. */
-TEST(MatrixBase, SanityCheck) {
+/** Minimális elvárható működés tesztelése. A többi teszt ennyit feltételez. */
+TYPED_TEST(MatrixBase, SanityCheck) {
     Matrix<int> M(2, 3);
 
     ASSERT_EQ((size_t) 2, M.getRows());
@@ -46,7 +41,7 @@ TEST(MatrixBase, SanityCheck) {
 }
 
 /** Összeadás ismert értékekkel. */
-TEST(MatrixBase, Addition) {
+TYPED_TEST(MatrixBase, Addition) {
      Matrix<Complex> A(2, 2);
      Matrix<Complex> B(2, 2);
 
@@ -65,7 +60,7 @@ TEST(MatrixBase, Addition) {
 }
 
 /** Kivonás ismert értékekkel. */
-TEST(MatrixBase, Subtraction) {
+TYPED_TEST(MatrixBase, Subtraction) {
     Matrix<Complex> A(2, 2);
     Matrix<Complex> B(2, 2);
     
@@ -83,7 +78,7 @@ TEST(MatrixBase, Subtraction) {
 }
 
 /** Szorzás ismert értékekkel. */
-TEST(MatrixBase, Multiplication) {
+TYPED_TEST(MatrixBase, Multiplication) {
     Matrix<Complex> A(2, 2);
     Matrix<Complex> B(2, 2);
     
@@ -101,7 +96,7 @@ TEST(MatrixBase, Multiplication) {
 }
 
 /** Teszteset az érvénytelen műveletekre. */
-TEST(MatrixBase, InvalidBinaryOperations) {
+TYPED_TEST(MatrixBase, InvalidBinaryOperations) {
      Matrix<Complex> A(2, 3);
      Matrix<Complex> B(7, 9);
 
@@ -114,7 +109,7 @@ TEST(MatrixBase, InvalidBinaryOperations) {
 }
 
 /** Transzponálás. */
-TEST(MatrixBase, Transpose) {
+TYPED_TEST(MatrixBase, Transpose) {
      Matrix<double> M(2, 3);
      M << 1, 2, 3, 
           4, 5, 6;
@@ -132,7 +127,7 @@ TEST(MatrixBase, Transpose) {
 }
 
 /*÷ Determináns számítás ismert értékekkel. */
-TEST(MatrixBase, Determinant) {
+TYPED_TEST(MatrixBase, Determinant) {
     Matrix<double> A(2, 2);
     Matrix<Complex> B(3, 3);
 
@@ -151,14 +146,14 @@ TEST(MatrixBase, Determinant) {
 }
 
 /** 0-ás determináns teszt */
-TEST(MatrixBase, DeterminantSingular) {
+TYPED_TEST(MatrixBase, DeterminantSingular) {
     Matrix<double> MS(3, 3);
     MS << 0, 0, 0, 0, 0, 0, 0, 0, 0;
     CMP_VAL(0.0, det(MS), 0.0);
 }
 
 /** Inverz számítás ismert értékekkel. */
-TEST(MatrixBase, Inverse) {
+TYPED_TEST(MatrixBase, Inverse) {
     Matrix<double> A(3, 3);
     Matrix<Complex> B(3, 3);
 
@@ -186,14 +181,14 @@ TEST(MatrixBase, Inverse) {
 }
 
 /** Nem négyzetes mátrix determinánsa/inverze nem létezik. */
-TEST(MatrixBase, InvalidDeterminantInverse) {
+TYPED_TEST(MatrixBase, InvalidDeterminantInverse) {
     Matrix<int> M(2, 3);
     EXPECT_THROW(det(M), Matrix_Error);
     EXPECT_THROW(M.inverse(), Matrix_Error);
 }
 
 /** Mátrixok normáinak tesztelése. */
-TEST(MatrixBase, DiscreteNorm) {
+TYPED_TEST(MatrixBase, DiscreteNorm) {
      Matrix<double> A(3, 3);
      Matrix<Complex> B(3, 3);
 
