@@ -189,29 +189,82 @@ TYPED_TEST(MatrixBase, InvalidDeterminantInverse) {
 
 /** Mátrixok normáinak tesztelése. */
 TYPED_TEST(MatrixBase, DiscreteNorm) {
-     Matrix<double> A(3, 3);
-     Matrix<Complex> B(3, 3);
+    Matrix<double> A(3, 3);
+    Matrix<Complex> B(3, 3);
 
-     A << 1, 0, 1,
-          2, 7, 0,
-          0, 1, 1;
+    A << 1, 0, 1,
+        2, 7, 0,
+        0, 1, 1;
 
-     B << Complex(1, 0), Complex(0, 0), Complex(0, 7),
-          Complex(0, 0), Complex(1, 0), Complex(0, 0),
-          Complex(2, 0), Complex(4, 1), Complex(1, 0);
+    B << Complex(1, 0), Complex(0, 0), Complex(0, 7),
+        Complex(0, 0), Complex(1, 0), Complex(0, 0),
+        Complex(2, 0), Complex(4, 1), Complex(1, 0);
 
-     double exp_A_norm_1 = 8;
-     double exp_A_norm_inf = 9;
-     double exp_A_norm_f = 7.54983443527075;
+    double exp_A_norm_1 = 8;
+    double exp_A_norm_inf = 9;
+    double exp_A_norm_f = 7.54983443527075;
 
-     double exp_B_norm_1 = 8;
-     double exp_B_norm_inf = 8;
-     double exp_B_norm_f = 8.54400374531753;
+    double exp_B_norm_1 = 8;
+    double exp_B_norm_inf = 8;
+    double exp_B_norm_f = 8.54400374531753;
 
-     CMP_VAL(exp_A_norm_1, genMatrix::norm_1(A), EPS_L<double>);
-     CMP_VAL(exp_A_norm_inf, genMatrix::norm_inf(A), EPS_L<double>);
-     CMP_VAL(exp_A_norm_f, genMatrix::norm_frobenius(A), EPS_L<double>);
-     CMP_VAL(exp_B_norm_1, genMatrix::norm_1(B), EPS_L<double>);
-     CMP_VAL(exp_B_norm_inf, genMatrix::norm_inf(B), EPS_L<double>);
-     CMP_VAL(exp_B_norm_f, genMatrix::norm_frobenius(B), EPS_L<double>);
+    CMP_VAL(exp_A_norm_1, genMatrix::norm_1(A), EPS_L<double>);
+    CMP_VAL(exp_A_norm_inf, genMatrix::norm_inf(A), EPS_L<double>);
+    CMP_VAL(exp_A_norm_f, genMatrix::norm_frobenius(A), EPS_L<double>);
+    CMP_VAL(exp_B_norm_1, genMatrix::norm_1(B), EPS_L<double>);
+    CMP_VAL(exp_B_norm_inf, genMatrix::norm_inf(B), EPS_L<double>);
+    CMP_VAL(exp_B_norm_f, genMatrix::norm_frobenius(B), EPS_L<double>);
+}
+
+TYPED_TEST(MatrixBase, IteratorSanityCheck) {
+    Matrix<long> SRC(2, 4);
+    SRC << 1, 2, 3, 4, 5, 6, 7, 8;
+
+    const Matrix<long> M = SRC;
+    auto f = M.cbegin();
+    auto l = M.cend();
+
+    ASSERT_FALSE(f == l) << "the matrix is not empty";
+
+    ASSERT_EQ(1, *f) << "begin() should point to data[0]";
+    ASSERT_EQ(8, *(l - 1)) << "end() should point to data[size]";
+
+    ASSERT_EQ(2, *(++f)) << "didn't increment before evaluation";
+    ASSERT_EQ(3, *(f++));
+    ASSERT_EQ(2, *f) << "previous f++ should not be kept";
+    ASSERT_EQ(1, *(--f)) << "didn't decrement before evaluation";
+
+    ASSERT_EQ(5, *(f + 4)) << "indexing is off";
+
+    Matrix<Complex> M1(1, 1);
+    M1 << Complex(1, 1);
+
+    ASSERT_NEAR(1, M1.begin()->getRe(), EPS_L<double>);
+}
+
+TYPED_TEST(MatrixBase, STLCompatibility) {
+    Matrix<long> M(2, 3);
+    M <<  72, -2, -3, 
+         -4,  -5,  6;
+
+    auto f = M.begin();
+    auto l = M.end();
+
+    long neg = std::count_if(f, l, [](long n){ return n < 0; });
+    EXPECT_EQ(4, neg);
+
+    std::swap(*(f), *(f + 3));
+    EXPECT_EQ(-4, M(0, 0));
+
+    EXPECT_EQ((long) -5, *std::min_element(f, l));
+    EXPECT_EQ((long) 72, *std::max_element(f, l));
+
+    std::sort(f, l);
+    EXPECT_TRUE(std::is_sorted(f, l));
+
+    EXPECT_TRUE(std::all_of(f, l, [](long n){ return utils::abs(n) < 100; }));
+    EXPECT_TRUE(std::any_of(f, l, [](long n){ return n == 6; }));
+
+    std::fill(f, l, 5);
+    EXPECT_TRUE(std::none_of(f, l, [](long n){ return n != 5; }));
 }

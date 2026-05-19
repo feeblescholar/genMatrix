@@ -61,7 +61,7 @@ public:
 
     Matrix_Iterator operator++(int) noexcept {
         Matrix_Iterator tmp = *this;
-        ++(*this);
+        ++(tmp);
         return tmp;
     }
 
@@ -72,7 +72,7 @@ public:
 
     Matrix_Iterator operator--(int) noexcept {
         Matrix_Iterator tmp = *this;
-        --(*this);
+        --(tmp);
         return tmp;
     }
 
