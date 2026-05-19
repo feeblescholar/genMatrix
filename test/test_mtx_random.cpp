@@ -5,6 +5,9 @@
  */
 #include "test_main.hpp"
 
+#include <fstream>
+#include <filesystem>
+
 /**
  * @class MatrixTyped
  * @brief Dummy osztály a gtest-hez, a templatek példányosításához szükséges
