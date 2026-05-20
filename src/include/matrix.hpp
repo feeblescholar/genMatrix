@@ -10,6 +10,7 @@
 #include <iterator>
 
 #include "matrix_error.hpp"
+#include "random_iterator.hpp"
 
 
 namespace genMatrix {
@@ -49,14 +50,10 @@ class Matrix {
 
 public:
     /* Segédosztályok deklarációi */
-
     class CommaInit;
 
-    template<typename P, typename R>
-    class Matrix_Iterator;
-
-    using iterator = Matrix_Iterator<T*, T&>;
-    using const_iterator = Matrix_Iterator<const T*, const T&>;
+    using iter = internal::types::RandomIterator<T, T*, T&>;
+    using const_iter = internal::types::RandomIterator<const T, const T*, const T&>;
 
     /**
      * @brief Létrehoz egy n*m-es mátrixot. Ha mind a két érték 0, akkor a mátrix dinamikus.
@@ -160,32 +157,24 @@ public:
     bool operator==(const Matrix<S>& other) const;
 
     /**
-     * @return Matrix_Iterator, ami mátrix adatainak elejére mutat.
+     * @return RandomIterator, ami mátrix adatainak elejére mutat.
      */
-    iterator begin() noexcept {
-        return iterator(data);
-    }
+    iter begin() noexcept { return iter(data); }
 
     /**
-     * @return Matrix_Iterator, ami mátrix adatainak végére mutat.
+     * @return RandomIterator, ami mátrix adatainak vége UTÁN mutat.
      */
-    iterator end() noexcept {
-        return iterator(data + this->size());
-    }
+    iter end() noexcept { return iter(data + this->size()); }
 
     /**
-     * @return Matrix_Iterator, ami mátrix adatainak elejére mutat.
+     * @return Konstans RandomIterator, ami mátrix adatainak elejére mutat.
      */
-    const_iterator cbegin() const noexcept {
-        return const_iterator(data);
-    }
+    const_iter cbegin() const noexcept { return const_iter(data); }
 
     /**
-     * @return Matrix_Iterator, ami mátrix adatainak végére mutat.
+     * @return Konstans RandomIterator, ami mátrix adatainak vége UTÁN mutat.
      */
-    const_iterator cend() const noexcept {
-        return const_iterator(data + this->size());
-    }
+    const_iter cend() const noexcept { return const_iter(data + this->size()); }
 
     /**
      * Felcseréli a mátrix két sorát.
@@ -378,7 +367,6 @@ public:
 };
 }
 
-#include "matrix_iterator.hpp"
 #include "matrix.ipp"
 
 #endif

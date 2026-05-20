@@ -18,7 +18,11 @@ class Vector {
     size_t _capacity;
 
 public:
+    /** CommaInit segédosztály deklarációja (ld. vector_commaInit.hpp) */
     class CommaInit;
+
+    using iter = internal::types::RandomIterator<T, T*, T&>;
+    using const_iter = internal::types::RandomIterator<const T, const T*, const T&>;
 
     /**
      * @brief Létrehoz egy n magas oszlopvektort.
@@ -141,6 +145,26 @@ public:
      */
     template<typename S>
     bool operator==(const Vector<S>& rhs_vec) const;
+
+    /**
+     * @return RandomIterator, ami a vektor adatainak elejére mutat.
+     */
+    iter begin() noexcept { return iter(data); }
+
+    /**
+     * @return RandomIterator, ami a vektor adatainak vége UTÁN mutat.
+     */
+    iter end() noexcept { return iter(data + this->size()); }
+
+    /**
+     * @return Konstans RandomIterator, ami a vektor adatainak elejére mutat.
+     */
+    const_iter cbegin() const noexcept { return const_iter(data); }
+
+    /**
+     * @return Konstans RandomIterator, ami a vektor adatainak vége UTÁN mutat.
+     */
+    const_iter cend() const noexcept { return const_iter(data + this->size()); }
 
     /**
      * @brief Hozzáadja a kapott paramétert a Vektorhoz.
