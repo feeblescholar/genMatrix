@@ -12,8 +12,8 @@ on:
       - feature_complex
 
 jobs:
-  linux-build:
-    name: Build and Test (Linux x86)
+  linux-test-build:
+    name: '[test][ubuntu-latest][x86] Build and Test'
     runs-on: ubuntu-latest
 
     steps:
@@ -29,10 +29,10 @@ jobs:
         run  : make test_build
 
       - name : Run
-        run  : ./build/genMatrix_gtest --gtest_color=yes
+        run  : ./build/genMatrix_gtest --gtest_color=yes --gtest_break_on_failure
 
-  macos-build:
-    name: Build and Test (macOS arm64)
+  macos-test-build:
+    name: '[test][macos-latest][arm64] Build and Test'
     runs-on: macos-latest
 
     steps:
@@ -48,10 +48,10 @@ jobs:
         run  : make test_build
 
       - name : Run
-        run  : ./build/genMatrix_gtest --gtest_color=yes
+        run  : ./build/genMatrix_gtest --gtest_color=yes --gtest_break_on_failure
   
-  windows-build:
-    name: Build and Test (Windows x86)
+  windows-test-build:
+    name: '[test][windows-latest][x86] Build and Test (memtrace disabled)'
     runs-on: windows-latest
 
     steps:
@@ -75,4 +75,72 @@ jobs:
       
       - name: Run
         shell: msys2 {0}
-        run: ./build/genMatrix_gtest.exe --gtest_color=yes
+        run: ./build/genMatrix_gtest.exe --gtest_color=yes --gtest_break_on_failure
+
+  linux-prod-build:
+      name: '[prod][ubuntu-latest][x86] Build and Test'
+      runs-on: ubuntu-latest
+      needs: linux-test-build
+
+      steps:
+        - name : Checkout
+          uses : actions/checkout@v6
+          with : 
+            submodules: recursive
+        
+        - name : Dependencies
+          run  : "sudo apt-get update && sudo apt-get install -y cmake g++ make"
+
+        - name : Build
+          run  : make prod_build
+
+        - name : Run
+          run  : ./build/genMatrix
+
+  macos-prod-build:
+      name: '[prod][macos-latest][arm64] Build and Test'
+      runs-on: macos-latest
+      needs: macos-test-build
+
+      steps:
+        - name : Checkout
+          uses : actions/checkout@v6
+          with : 
+            submodules: recursive
+        
+        - name : Dependencies
+          run  : "brew install cmake make"
+
+        - name : Build
+          run  : make prod_build
+
+        - name : Run
+          run  : ./build/genMatrix
+  
+  windows-prod-build:
+      name: '[prod][windows-latest][x86] Build and Test'
+      runs-on: windows-latest
+      needs: windows-test-build
+
+      steps:
+        - name : Checkout
+          uses : actions/checkout@v6
+          with : 
+            submodules: recursive
+        
+        - name : MSYS2
+          uses: msys2/setup-msys2@v2
+          with:
+            update: true
+            install: >-
+              base-devel
+              mingw-w64-x86_64-toolchain
+              cmake
+
+        - name: Build
+          shell: msys2 {0}
+          run: make prod_build
+        
+        - name: Run
+          shell: msys2 {0}
+          run: ./build/genMatrix.exe
