@@ -112,13 +112,13 @@ jobs:
           run  : "brew install cmake make"
 
         - name : Build
-          run  : make prod_build
+          run  : make prod_build CPPFLAGS="-std=c++17 -O3 -Wall -Werror -Wextra -pedantic -Wno-error=format-pedantic"
 
         - name : Run
           run  : ./build/genMatrix
   
   windows-prod-build:
-      name: '[prod][windows-latest][x86] Build and Test'
+      name: '[prod][windows-latest][x86] Build and Test (memtrace disabled)'
       runs-on: windows-latest
       needs: windows-test-build
 
@@ -139,7 +139,7 @@ jobs:
 
         - name: Build
           shell: msys2 {0}
-          run: make prod_build
+          run: make prod_build CPPFLAGS=""
         
         - name: Run
           shell: msys2 {0}
