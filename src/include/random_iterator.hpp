@@ -10,7 +10,7 @@
 
 namespace genMatrix::internal::types {
 /**
- * @class genMatrix_Iterator
+ * @class RandomIterator
  * @brief Osztálysablon a genMatrix tárolóinak iterátoraihoz.
  * @details Ez az iterátor implementálja a C++ szabvány szerinti operátorokat, 
  *          amiket a std::random_access_iterator megkövetel. A függvények nincsenek 

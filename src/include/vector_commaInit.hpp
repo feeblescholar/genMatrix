@@ -1,7 +1,7 @@
 /**
  * @file vector_commainit.hpp
  * @author Kovács Botond
- * @brief A vektorok feltöltéséhez használt segédosztály definiciója, valamint a 
+ * @brief A vektorok feltöltéséhez használt segédosztály definíciója, valamint a 
  *        hozzátartozó vektor operátoré.
  */
 #ifndef VECTOR_COMMAINIT_H

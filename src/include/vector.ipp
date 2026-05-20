@@ -1,3 +1,8 @@
+/**
+ * @file vector.ipp
+ * @author Kovács Botond
+ * @brief Generikus vektor osztály tagfüggvényeinek implementációi.
+ */
 #ifndef VECTOR_I
 #define VECTOR_I
 

@@ -1,7 +1,7 @@
 /**
  * @file matrix.hpp
  * @author Kovács Botond
- * @brief Generikus mátrix osztály deklarációja.
+ * @brief Generikus mátrix osztály és tagfüggvényeinek deklarációi.
  */
 #ifndef MATRIX_H
 #define MATRIX_H

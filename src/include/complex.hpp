@@ -120,7 +120,7 @@ public:
     Complex operator-(const T& rhs_type) const;
 
     /**
-     * @brief Kivnja a balértékből a kapott komplex paramétert.
+     * @brief Kivonja a balértékből a kapott komplex paramétert.
      * @param rhs_c A másik tag referenciája.
      * @return A balérték referenciája.
      */
@@ -169,6 +169,7 @@ public:
      * @brief Leosztja a komplex számot a kapott paraméterrel.
      * @param rhs_c Az osztó referenciája.
      * @return Egy új komplex szám az eredménnyel.
+     * @throws std::domain_error nullával való osztás esetén.
      */
     Complex operator/(const Complex& rhs_c) const;
 
@@ -176,6 +177,7 @@ public:
      * @brief Leosztja a komplex számot a kapott paraméterrel.
      * @param rhs_type Az osztó referenciája.
      * @return Egy új komplex szám az eredménnyel.
+     * @throws std::domain_error nullával való osztás esetén.
      */
     template<typename T>
     Complex operator/(const T& rhs_type) const;

@@ -1,7 +1,7 @@
 /**
  * @file utils.hpp
  * @author Kovács Botond
- * @brief A genMatrix segédfüggvényeinek implementáció.
+ * @brief A genMatrix segédfüggvényeinek deklarációi.
  */
 #ifndef UTILS_H
 #define UTILS_H
@@ -82,6 +82,7 @@ inline genMatrix::Complex sqrt(const genMatrix::Complex a);
  * @param b A másik szorzótényező referenciája.
  * @param c Azon szám referenciája amit a szorzathoz adunk.
  * @return A forrástípus, melynek értéke a * b + c
+ * @note A működéshez szükséges -mfma fordítókapcsoló.
  */
 template<typename T>
 inline typename std::enable_if_t<std::is_arithmetic_v<T>, T>
@@ -93,6 +94,7 @@ fma(const T& a, const T& b, const T& c);
  * @param b A másik szorzótényező referenciája.
  * @param c Azon szám referenciája amit a szorzathoz adunk.
  * @return Egy új komplex, melynek értéke a * b + c
+ * @note A működéshez szükséges -mfma fordítókapcsoló.
  */
 inline Complex 
 fma(const Complex& a, const Complex& b, const Complex& c);

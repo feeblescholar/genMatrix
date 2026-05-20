@@ -1,3 +1,8 @@
+/**
+ * @file utils.ipp
+ * @author Kovács Botond
+ * @brief A genMatrix segédfüggvényeinek implementációi.
+ */
 #ifndef UTILS_I
 #define UTILS_I
 

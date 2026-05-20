@@ -1,8 +1,7 @@
 /**
  * @file matrix.ipp
  * @author Kovács Botond
- * @brief Generikus mátrix osztály implementáció.
- * @note A függvények dokumentációja a matrix.hpp fájban található.
+ * @brief Generikus mátrix osztály tagfüggvényeinek implementáció.
  */
 #ifndef MATRIX_I
 #define MATRIX_I

@@ -1,7 +1,7 @@
 /**
  * @file complex.ipp
  * @author Kovács Botond
- * @brief genMatrix kompatibilis komplex osztály implementáció.
+ * @brief genMatrix kompatibilis komplex osztály sablonjainak implementáció.
  */
 #ifndef COMPLEX_I
 #define COMPLEX_I
@@ -45,7 +45,9 @@ Complex Complex::operator/(const T& rhs_type) const {
 	if (genMatrix::utils::eq(rhs_type, T(0)))
 		throw std::domain_error("Division by zero.");
 
-	return Complex(re / static_cast<double>(rhs_type), im / static_cast<double>(rhs_type));
+	double rhs_type_c = static_cast<double>(rhs_type);
+
+	return Complex(re / rhs_type_c, im / rhs_type_c);
 }
 
 template<typename T>

@@ -1,7 +1,7 @@
 /**
  * @file vector.hpp
  * @author Kovács Botond
- * @brief Generikus vektor deklaráció.
+ * @brief Generikus vektor osztály és segédfüggvényeinek deklarációi.
  */
 #ifndef VECTOR_H
 #define VECTOR_H

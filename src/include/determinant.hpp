@@ -3,9 +3,9 @@
  * @author Kovács Botond
  * @brief Determináns számítás implementációja.
  * @details A mátrix determinánsa az összes lehetséges bástyaelhelyezés előjeles
- *          szorzatának összege vagy geometriailag egy n dimenziós parallelepipedon
- *          térfogata. Megállapítja az invertálhatóságot és a sorok/oszlopok lineáris 
- *          függetlenségét. Kiszámítása elég költséges művelet (O(n^3)).
+ *          szorzatának összege vagy geometriailag egy n-paralelotópnak a
+ *          térfogata. Megállapítja az invertálhatóságot és a sorok/oszlopok 
+ *          lineáris függetlenségét. Kiszámítása elég költséges művelet (O(n^3)).
  */
 #ifndef GENMATRIX_DET
 #define GENMATRIX_DET
@@ -22,9 +22,7 @@ namespace genMatrix {
 *          is befolyásolják, rosszul kondícionált ("majdnem szinguláris") mátrix 
 *          esetében az eredmény jelentősen eltérhet a valóságtól (1 - 2 tizedesjegyel 
 *          az epsilon felett). Kondícionált mátrixok esetében ez nem okoz nagy 
-*          eltérést. A pontosság további javítása érdekében FMA-t (Fused Multiply-Add) 
-*          is használunk, ami 1 órajel alatt kiszámítja [a * b + c]-t és csak 
-*          egyszer kerekíti az értéket.
+*          eltérést.
 * @return A mátrix determinánsa a mátrix típusának megfelelően.
 * @throw Matrix_Error kivétel, ha nem létezik.
 * @warning A mátrix mérete (n) erősen befolyásolja a futási időt.

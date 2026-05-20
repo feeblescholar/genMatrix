@@ -1,10 +1,11 @@
 /**
  * @file genMatrix.hpp
  * @author Kovács Botond
- * @brief Main header file a genMatrixhoz.
+ * @brief Main header file a genMatrixhoz. Őt kell behúzni.
  */
 #ifndef GENMATRIX
-#if 1
+#define GENMATRIX
+#if __cplusplus >= 201703L
     #define GENMATRIX
 
     #include "utils.hpp"
