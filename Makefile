@@ -73,5 +73,5 @@ build/testobj/%.o: %.cpp
 	$(CXX) -c $< -o $@ $(TESTCXXFLAGS) $(TESTCPPFLAGS)
 
 clean:
-	rm -rf build
+	rm -rf build/testobj build/obj $(TARGET) $(TESTTARGET) build/test.txt
 	rm -rf lib/googletest/build
