@@ -50,6 +50,12 @@ public:
     Vector(Vector&& other);
 
     /**
+     * @brief Készít egy N soros 1 oszlopos mátrixot a vektorból
+     */
+    template<typename S>
+    operator Matrix<S>() const;
+
+    /**
      * @brief Dummy értékadó operátor. Át van vezetve generikus értékadásra.
      */
     Vector& operator=(const Vector& other);
@@ -188,7 +194,6 @@ public:
     decltype(auto) operator*(const S& rhs_type) const;
 
     ~Vector();
-
 };
 }
 

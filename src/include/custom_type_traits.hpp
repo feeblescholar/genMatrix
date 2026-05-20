@@ -51,6 +51,21 @@ template<typename T>
 constexpr bool is_hypercomplex2 = __is_hypercomplex2<T>();
 
 /** ----------------------------------------------------------------------- **/
+
+template<typename T>
+constexpr bool __is_arithmetic_type() {
+    if constexpr (std::is_arithmetic_v<T> || is_hypercomplex<T>)
+        return true;
+    else
+        return false;
+}
+
+/**
+ * @brief Igaz, ha genMatrix aritmetikai típus (hiperkomplex vagy elemi).
+ */
+template<typename T>
+constexpr bool is_arithmetic_type = __is_arithmetic_type<T>();
+
 /** ------------------------ Pontosság vizsgálat -------------------------- **/
 
 template <typename T>

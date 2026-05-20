@@ -230,7 +230,8 @@ public:
      * Hozzáadja a mátrixot a kapott paraméterhez.
      * @param rhs_mtx A másik tag.
      * @return A balérték referenciája.
-     * @throws Matrix_Error kivétel, ha az összeadás nem értelmezett.
+     * @throws Matrix_Error, ha a műveletre nincs definiált operátor.
+     * @throws Matrix_Error, ha a méretek nem egyeznek.
      */
     Matrix& operator+=(const Matrix<T>& rhs_mtx);
 
@@ -238,6 +239,8 @@ public:
      * Hozzáadja a kapott paramétert a mátrixhoz.
      * @param rhs_type A másik tag.
      * @return A balérték referenciája.
+     * @throws Matrix_Error, ha a műveletre nincs definiált operátor.
+     * @throws Matrix_Error, ha a méretek nem egyeznek.
      */
     template<typename S>
     Matrix& operator+=(const S& rhs_type);
@@ -246,7 +249,8 @@ public:
      * Kivonja a mátrixból a kapott paramétert.
      * @param rhs_mtx A másik tag.
      * @return Egy új mátrix az eredménnyel.
-     * @throws Matrix_Error kivétel, ha a kivonás nem értelmezett.
+     * @throws Matrix_Error, ha a műveletre nincs definiált operátor.
+     * @throws Matrix_Error, ha a méretek nem egyeznek.
      */
     template<typename S>
     decltype(auto) operator-(const Matrix<S>& rhs_mtx) const;
@@ -255,6 +259,8 @@ public:
      * Kivonja a kapott paramétert a mátrixhoz.
      * @param rhs_type A másik tag.
      * @return A balérték referenciája.
+     * @throws Matrix_Error, ha a műveletre nincs definiált operátor.
+     * @throws Matrix_Error, ha a méretek nem egyeznek.
      */
     template<typename S>
     decltype(auto) operator-(const S& rhs_type) const;
@@ -263,7 +269,8 @@ public:
      * Kivonja a mátrixból a kapott paramétert.
      * @param rhs_mtx A másik tag.
      * @return A balérték referenciája.
-     * @throws Matrix_Error kivétel, ha a kivonás nem értelmezett.
+     * @throws Matrix_Error, ha a műveletre nincs definiált operátor.
+     * @throws Matrix_Error, ha a méretek nem egyeznek.
      */
     Matrix& operator-=(const Matrix<T>& rhs_mtx);
 
@@ -271,6 +278,8 @@ public:
      * Kivonja a kapott paramétert a mátrixhoz.
      * @param rhs_type A másik tag.
      * @return A balérték referenciája.
+     * @throws Matrix_Error, ha a műveletre nincs definiált operátor.
+     * @throws Matrix_Error, ha a méretek nem egyeznek.
      */
     template<typename S>
     Matrix& operator-=(const S& rhs_type);
@@ -279,7 +288,8 @@ public:
      * Összeszorozza a mátrixszal a kapott paramétert.
      * @param rhs_mtx A másik tag.
      * @return Egy új mátrix az eredménnyel.
-     * @throws Matrix_Error kivétel, ha a szorzás nem értelmezett.
+     * @throws Matrix_Error, ha a műveletre nincs definiált operátor.
+     * @throws Matrix_Error, ha a méretek nem megfelelőek.
      */
     template<typename S>
     decltype(auto) operator*(const Matrix<S>& rhs_mtx) const;
@@ -288,6 +298,8 @@ public:
      * Összeszorozza a kapott paramétert a mátrixszal.
      * @param rhs_type A másik tag.
      * @return Egy új mátrix az eredménnyel.
+     * @throws Matrix_Error, ha a műveletre nincs definiált operátor.
+     * @throws Matrix_Error, ha a méretek nem megfelelőek.
      */
     template<typename S>
     decltype(auto) operator*(const S& rhs_type) const;
@@ -296,7 +308,8 @@ public:
      * Összeszorozza a mátrixszal a kapott paramétert.
      * @param rhs_mtx A másik tag.
      * @return A balérték referenciája.
-     * @throws Matrix_Error kivétel, ha a szorzás nem értelmezett.
+     * @throws Matrix_Error, ha a műveletre nincs definiált operátor.
+     * @throws Matrix_Error, ha a méretek nem megfelelőek.
      */
     Matrix& operator*=(const Matrix<T>& rhs_mtx);
 
@@ -304,6 +317,8 @@ public:
      * Összeszorozza a kapott paramétert a mátrixszal.
      * @param rhs_type A másik tag.
      * @return A balérték referenciája.
+     * @throws Matrix_Error, ha a műveletre nincs definiált operátor.
+     * @throws Matrix_Error, ha a méretek nem megfelelőek.
      */
     template<typename S>
     Matrix& operator*=(const S& rhs_type);

@@ -57,6 +57,17 @@ Vector<T>::~Vector() {
 }
 
 template<typename T>
+template<typename S>
+Vector<T>::operator Matrix<S>() const {
+    Matrix<S> ret(_size, 1);
+
+    for (size_t i = 0; i < _size; i++)
+        ret(i, 0) = data[i];
+
+    return ret;
+}
+
+template<typename T>
 Vector<T>& Vector<T>::operator=(const Vector<T>& other) {
     if (this != &other)
         *this = this->operator=<T>(other);
