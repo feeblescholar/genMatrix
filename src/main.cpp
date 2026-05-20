@@ -5,6 +5,12 @@
 
 using namespace genMatrix;
 
+/** 
+ * Hibajavítás miatt (commit 788b2185adfd130e573b3fe3d42e59d4a4d34c37):
+ * genMatrix CI/[prod][windows-latest][x86]: M_PI was not declared in this scope
+ */
+#define PI 3.14159265358979323846264338327950288
+
 int main(void) {
     /**
      * Oldjuk meg a következő egyenletrendszert!
@@ -93,7 +99,7 @@ int main(void) {
         Matrix<double> rot(4, 4);
         Matrix<double> scale(4, 4);
         Vector<double> P;
-        double a = 45.0 * M_PI / 180.0;
+        double a = 45.0 * PI / 180.0;
 
         shift << 1, 0, 0, 2.5,
                 0, 1, 0, -1.0,

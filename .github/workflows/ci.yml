@@ -139,7 +139,7 @@ jobs:
 
         - name: Build
           shell: msys2 {0}
-          run: make prod_build CPPFLAGS=""
+          run: make prod_build CPPFLAGS="" CXXFLAGS="-std=c++17 -O3 -Wall -Werror -Wextra -Wno-error=unused-parameter"
         
         - name: Run
           shell: msys2 {0}
