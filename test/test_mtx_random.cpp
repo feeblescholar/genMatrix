@@ -23,9 +23,6 @@ TYPED_TEST_SUITE(MatrixTyped, MatrixTypes);
 using namespace genMatrix;
 namespace fs = std::filesystem;
 
-const int lbound = -12; /** A tesztértékek alsó határa. */
-const int ubound = 20;  /** A tesztértékek felső határa. */
-
 /** Leellenőrizzük, hogy az rng tényleg működik-e és nem csak 1 értéket ad. */
 TYPED_TEST(MatrixTyped, RNG_SanityCheck) {
     Matrix<TypeParam> M(RNG_MTX<TypeParam>(5, 5, lbound, ubound));

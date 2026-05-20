@@ -13,6 +13,16 @@
 
 #include "../src/include/genMatrix.hpp"
 
+/** 
+ * @brief A random tesztértékek alsó határa. 
+ */
+const int lbound = -12;
+
+/** 
+ * @brief A random tesztértékek felső határa. 
+ */
+const int ubound = 20;  
+
 /**
  * @brief A gépi epszilon, azaz a típus értékei közötti legkisebb reprezentálható
  *        tavolság.

@@ -76,7 +76,6 @@ public:
     /** 
      * @brief Eigen stílusú vektor feltöltés.
      * @param val A vektor első értéke.
-     * @note A vektort az aktuális kapacitásáig fel kell tölteni.
      */
     template<typename S>
     CommaInit operator<<(const S& val);

@@ -29,6 +29,10 @@ TYPED_TEST(VectorBase, SanityCheck) {
     ASSERT_EQ((size_t) 3, V.size());
     ASSERT_EQ((size_t) 4, V.capacity()) << "push_back should double the capacity";
 
+    /** Kapacitáscsökkentés */
+    V.shrink();
+    ASSERT_EQ(V.size(), V.capacity());
+
     /** Megjegyzés: a '<<'-t nem teszteljük, mert a push_back-en alapszik */
 
     /** Member access. */
@@ -43,7 +47,7 @@ TYPED_TEST(VectorBase, SanityCheck) {
     /** Copy konstruktor. */
     Vector<int> VC = V;
     ASSERT_EQ((size_t) 3, VC.size());
-    ASSERT_EQ((size_t) 4, VC.capacity());
+    ASSERT_EQ((size_t) 3, VC.capacity());
     ASSERT_NO_THROW(ASSERT_EQ((int) 1, V[0])) << "value changed after copy?";
     ASSERT_NO_THROW(ASSERT_EQ((int) 3, V[2])) << "value changed after copy?";
 

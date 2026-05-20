@@ -31,8 +31,8 @@ void CMP_MTX(const genMatrix::Matrix<T>& a,
              const genMatrix::Matrix<T>& b, 
              const double eps) 
 {
-    EXPECT_EQ(a.getRows(), b.getRows());
-    EXPECT_EQ(a.getCols(), b.getCols());
+    ASSERT_EQ(a.getRows(), b.getRows());
+    ASSERT_EQ(a.getCols(), b.getCols());
 
     for (size_t i = 0; i < a.getRows(); i++)
         for (size_t j = 0; j < a.getCols(); j++)
@@ -48,7 +48,7 @@ void CMP_VEC(const genMatrix::Vector<T>& a,
              const genMatrix::Vector<T>& b, 
              const double eps) 
 {
-    EXPECT_EQ(a.size(), b.size());
+    ASSERT_EQ(a.size(), b.size());
 
     for (size_t i = 0; i < a.size(); i++)
         CMP_VAL(a[i], b[i], eps);
@@ -99,6 +99,25 @@ genMatrix::Matrix<T> RNG_MTX(size_t n, size_t m, int lbound, int ubound) {
             mtx(i, j) = RNG<T>(lbound, ubound);
 
     return mtx;
+}
+
+/**
+ * @brief Generál egy random értékekkel teli vektort típusnak megfelelően.
+ * @param n A vektor sorainak száma.
+ * @param lbound A random értékek alsó határa.
+ * @param ubound A random értékek felső határa.
+ * @return A random vektor.
+ * @note A vektornak van move konstruktora, így nagy vektorok esetében sem okoz
+ *       jelentős lassulást.
+ */
+template<typename T>
+genMatrix::Vector<T> RNG_VEC(size_t n, int lbound, int ubound) {
+    genMatrix::Vector<T> vec(n);
+
+    for(size_t i = 0; i < n; i++)
+        vec.push_back(RNG<T>(lbound, ubound));
+
+    return vec;
 }
 
 
