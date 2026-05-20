@@ -11,7 +11,11 @@
 
 #include "matrix_error.hpp"
 
+
 namespace genMatrix {
+
+/** Vektor deklaráció */
+template<typename T> class Vector;
 
 enum __MatrixState {
     FixedStack,     /** A mátrix fix méretű, adatai a stacken vannak. */
@@ -295,6 +299,16 @@ public:
     decltype(auto) operator*(const Matrix<S>& rhs_mtx) const;
 
     /**
+     * Összeszorozza a mátrixszal a kapott paramétert.
+     * @param rhs_vec A másik tag.
+     * @return Egy új vektor az eredménnyel.
+     * @throws Matrix_Error, ha a műveletre nincs definiált operátor.
+     * @throws Matrix_Error, ha a méretek nem megfelelőek.
+     */
+    template<typename S>
+    decltype(auto) operator*(const Vector<S>& rhs_vec) const;
+
+    /**
      * Összeszorozza a kapott paramétert a mátrixszal.
      * @param rhs_type A másik tag.
      * @return Egy új mátrix az eredménnyel.
@@ -312,6 +326,15 @@ public:
      * @throws Matrix_Error, ha a méretek nem megfelelőek.
      */
     Matrix& operator*=(const Matrix<T>& rhs_mtx);
+
+    /**
+     * Összeszorozza a mátrixszal a kapott paramétert.
+     * @param rhs_vec A másik tag.
+     * @return A balérték referenciája.
+     * @throws Matrix_Error, ha a műveletre nincs definiált operátor.
+     * @throws Matrix_Error, ha a méretek nem megfelelőek.
+     */
+    Matrix& operator*=(const Vector<T>& rhs_vec);
 
     /**
      * Összeszorozza a kapott paramétert a mátrixszal.

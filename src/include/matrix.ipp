@@ -322,7 +322,7 @@ template<typename S>
 decltype(auto) Matrix<T>::operator*(const Matrix<S>& rhs_mtx) const {
     if constexpr (has_mul_v<T, S>) {
         if (m != rhs_mtx.getRows()) 
-            throw Matrix_Error("[operator(*/*=)]", "this.m == other.n");
+            throw Matrix_Error("[operator(*/*=)]", "this.m != other.n");
 
         using ReturnType = decltype(T(0) * S(0));
         Matrix<ReturnType> rval(n, rhs_mtx.getCols());
@@ -333,6 +333,22 @@ decltype(auto) Matrix<T>::operator*(const Matrix<S>& rhs_mtx) const {
                     rval(i, j) += this->operator()(i, k) * rhs_mtx(k, j);
                     
         return rval;
+    }
+    else
+        throw Matrix_Error("[operator*]", "Multiplication is undefined.");
+}
+
+template<typename T>
+template<typename S>
+decltype(auto) Matrix<T>::operator*(const Vector<S>& rhs_vec) const {
+    if constexpr (has_mul_v<T, S>) {
+        if (m != rhs_vec.size()) 
+            throw Matrix_Error("[operator(*/*=)]", "this.m != vec._size");
+        
+        auto mul = *this * (Matrix<S>)rhs_vec;
+        using ReturnType = decltype(T(0) * S(0));
+
+        return Vector<ReturnType>(mul, 0);
     }
     else
         throw Matrix_Error("[operator*]", "Multiplication is undefined.");
@@ -358,6 +374,18 @@ template<typename T>
 Matrix<T>& Matrix<T>::operator*=(const Matrix<T>& rhs_mtx) {
     if constexpr (has_mul_v<T, T>) {
         Matrix<T> res = *this * rhs_mtx;
+        *this = std::move(res);
+    }
+    else
+        throw Matrix_Error("[operator*=]", "Multiplication is undefined.");
+
+    return *this; 
+}
+
+template<typename T>
+Matrix<T>& Matrix<T>::operator*=(const Vector<T>& rhs_vec) {
+    if constexpr (has_mul_v<T, T>) {
+        Matrix<T> res = *this * (Matrix<T>)rhs_vec;
         *this = std::move(res);
     }
     else

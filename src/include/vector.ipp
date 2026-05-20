@@ -62,7 +62,7 @@ Vector<T>::operator Matrix<S>() const {
     Matrix<S> ret(_size, 1);
 
     for (size_t i = 0; i < _size; i++)
-        ret(i, 0) = data[i];
+        ret(i, 0) = static_cast<S>(data[i]);
 
     return ret;
 }
