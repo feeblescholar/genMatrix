@@ -132,7 +132,7 @@ Vector<T>& Vector<T>::push_back(const T& val) {
 template<typename T>
 void Vector<T>::resize(const size_t ncap) {
     if (ncap < _size)
-        throw "hibaosztaly ide";
+        Vector_Error("[resize]", "Capacity cannot be less than size.");
     
     if (ncap == _capacity)
         return;
