@@ -29,8 +29,8 @@ Vector<T>::Vector(const Matrix<T>& mtx, const size_t idx)
 template<typename T>
 Vector<T>::Vector(const Vector<T>& other) 
     : data(nullptr) 
-    , _size(other._size)
-    , _capacity(other._capacity) 
+    , _size(other.size())
+    , _capacity(other.capacity()) 
 {
     *this = other;
 }
@@ -39,8 +39,8 @@ template<typename T>
 template<typename S>
 Vector<T>::Vector(const Vector<S>& other) 
     : data(nullptr) 
-    , _size(other._size)
-    , _capacity(other._capacity) 
+    , _size(other.size())
+    , _capacity(other.capacity()) 
 {
     *this = other;
 }
@@ -83,19 +83,17 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& other) {
 template<typename T>
 template<typename S>
 Vector<T>& Vector<T>::operator=(const Vector<S>& other) {
-    if (this != &other) {
-        if (data) 
-            delete[] data;
+    if (data) 
+        delete[] data;
 
-        data = new T[other.capacity()];
-        _capacity = other.capacity();
-        _size = other.size();
+    data = new T[other.capacity()];
+    _capacity = other.capacity();
+    _size = other.size();
 
-        for (size_t i = 0; i < _size; i++) {
-            data[i] = static_cast<T>(other[i]);
-        }
-    }
-    
+    for (size_t i = 0; i < _size; i++)
+        data[i] = static_cast<T>(other[i]);
+
+
     return *this;
 }
 

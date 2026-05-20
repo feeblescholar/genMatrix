@@ -7,8 +7,23 @@
 #define NORMS_H
 
 #include "matrix.hpp"
+#include <numeric>
 
 namespace genMatrix {
+
+/**
+ * @param vec - A normált vektor referenciája.
+ * @return A vektor 1-normája.
+ */
+template<typename T>
+auto norm_1(const Vector<T>& vec) {
+    using ReturnType = decltype(utils::abs(T(0)));
+    Vector<ReturnType> absVec = vec;
+
+    std::transform(vec.begin(), vec.end(), absVec.begin(), utils::abs<T>);
+
+    return std::accumulate(absVec.begin(), absVec.end(), 0);
+}
 
 /**
  * @param mtx - A normált mátrix referenciája.
@@ -16,22 +31,27 @@ namespace genMatrix {
  */
 template<typename T>
 auto norm_1(const Matrix<T>& mtx) {
-    /** itt ez megoldja azon problémát, hogy a decltype előléptet */
     using ReturnType = decltype(utils::abs(T(0)));
+    Vector<ReturnType> sumVector(mtx.getCols());
 
-    ReturnType norm = ReturnType(0);
+    for (size_t i = 0; i < mtx.getCols(); i++)
+       sumVector.push_back(norm_1(Vector<T>(mtx, i)));
 
-    for (size_t i = 0; i < mtx.getCols(); i++) {
-        ReturnType sum = ReturnType(0);
+    return *std::max_element(sumVector.begin(), sumVector.end());
+}
 
-        for (size_t j = 0; j < mtx.getRows(); j++) {
-            sum += utils::abs(mtx(j, i));
-        }
+/**
+ * @param vec - A normált vektor referenciája.
+ * @return A vektor végtelen (maximum) normája.
+ */
+template<typename T>
+auto norm_inf(const Vector<T>& vec) {
+    using ReturnType = decltype(utils::abs(T(0)));
+    Vector<ReturnType> absVec = vec;
 
-        if (sum > norm) norm = sum;
-    }
+    std::transform(vec.begin(), vec.end(), absVec.begin(), utils::abs<T>);
 
-    return norm;
+    return *std::max_element(absVec.begin(), absVec.end());
 }
 
 /**
@@ -40,22 +60,7 @@ auto norm_1(const Matrix<T>& mtx) {
  */
 template<typename T>
 auto norm_inf(const Matrix<T>& mtx) {
-    /** itt ez megoldja azon problémát, hogy a decltype előléptet */
-    using ReturnType = decltype(utils::abs(T(0)));
-
-    ReturnType norm = ReturnType(0);
-
-    for (size_t i = 0; i < mtx.getRows(); i++) {
-        ReturnType sum = ReturnType(0);
-
-        for (size_t j = 0; j < mtx.getCols(); j++) {
-            sum += utils::abs(mtx(i, j));
-        }
-
-        if (sum > norm) norm = sum;
-    }
-
-    return norm;
+    return norm_1(mtx.transpose());
 }
 
 /**
@@ -65,16 +70,28 @@ auto norm_inf(const Matrix<T>& mtx) {
  */
 template<typename T>
 auto norm_frobenius(const Matrix<T>& mtx) {
-    /** itt ez megoldja azon problémát, hogy a decltype előléptet */
-    using ReturnType = decltype(utils::abs(T(0)));
+    using ReturnType = decltype(utils::abs(T(0)) + float(0));
+    ReturnType norm = ReturnType(0);
+
+    for (auto item : mtx)
+        norm += utils::abs(item) * utils::abs(item);
+    
+    return utils::sqrt(norm);
+}
+
+/**
+ * @param vec - A normált vektor referenciája.
+ * @return A vektor Frobenius normája.
+ * @note Minimum floatra lépteti elő az eredményt.
+ */
+template<typename T>
+auto norm_frobenius(const Vector<T>& vec) {
+    using ReturnType = decltype(utils::abs(T(0)) + float(0));
 
     ReturnType norm = ReturnType(0);
 
-    for (size_t i = 0; i < mtx.getRows(); i++) {
-        for (size_t j = 0; j < mtx.getCols(); j++) {
-            norm += utils::abs(mtx(i, j)) * utils::abs(mtx(i, j));
-        }
-    }
+    for (auto item : vec)
+        norm += utils::abs(item) * utils::abs(item);
     
     return utils::sqrt(norm);
 }

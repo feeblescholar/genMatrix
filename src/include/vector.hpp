@@ -167,6 +167,16 @@ public:
     const_iter cend() const noexcept { return const_iter(data + this->size()); }
 
     /**
+     * @return Konstans RandomIterator, ami a vektor adatainak elejére mutat.
+     */
+    const_iter begin() const noexcept { return cbegin(); }
+
+    /**
+     * @return Konstans RandomIterator, ami a vektor adatainak vége UTÁN mutat.
+     */
+    const_iter end() const noexcept { return cend(); }
+
+    /**
      * @brief Hozzáadja a kapott paramétert a Vektorhoz.
      * @param rhs_vec A másik tag referenciája.
      * @return Egy új vektor az eredménnyel.

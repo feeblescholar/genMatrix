@@ -167,14 +167,24 @@ public:
     iter end() noexcept { return iter(data + this->size()); }
 
     /**
-     * @return Konstans RandomIterator, ami mátrix adatainak elejére mutat.
+     * @return Konstans RandomIterator, ami a mátrix adatainak elejére mutat.
      */
     const_iter cbegin() const noexcept { return const_iter(data); }
 
     /**
-     * @return Konstans RandomIterator, ami mátrix adatainak vége UTÁN mutat.
+     * @return Konstans RandomIterator, ami a mátrix adatainak vége UTÁN mutat.
      */
     const_iter cend() const noexcept { return const_iter(data + this->size()); }
+
+    /**
+     * @return Konstans RandomIterator, ami a mátrix adatainak elejére mutat.
+     */
+    const_iter begin() const noexcept { return cbegin(); }
+
+    /**
+     * @return Konstans RandomIterator, ami a mátrix adatainak vége UTÁN mutat.
+     */
+    const_iter end() const noexcept { return cend(); }
 
     /**
      * Felcseréli a mátrix két sorát.

@@ -26,6 +26,12 @@ public:
     Complex(double _re = 0, double _im = 0) : Hypercomplex2D(_re, _im) {}
 
     /**
+     * @brief A képzetes részt elhagyva double-t csinál a komplex számból.
+     * @note A bugok elkerülése érdekében a konverzió explicit.
+     */
+    explicit operator double() const { return re; }
+
+    /**
      * @return A komplex szám valós része.
      */
     double getRe() const { return re; }
