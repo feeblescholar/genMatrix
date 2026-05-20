@@ -112,3 +112,55 @@ TYPED_TEST(VectorBase, InvalidBinaryOperations) {
      EXPECT_THROW(A * B, Vector_Error);
      EXPECT_THROW(B * A, Vector_Error);
 }
+
+TYPED_TEST(VectorBase, IteratorSanityCheck) {
+    Vector<long> SRC(8);
+    SRC << 1, 2, 3, 4, 5, 6, 7, 8;
+
+    const Matrix<long> V = SRC;
+    auto f = V.cbegin();
+    auto l = V.cend();
+
+    ASSERT_FALSE(f == l) << "the vector is not empty";
+
+    ASSERT_EQ(1, *f) << "begin() should point to data[0]";
+    ASSERT_EQ(8, *(l - 1)) << "end() should point to data[size]";
+
+    ASSERT_EQ(2, *(++f)) << "didn't increment before evaluation";
+    ASSERT_EQ(3, *(f++));
+    ASSERT_EQ(2, *f) << "previous f++ should not be kept";
+    ASSERT_EQ(1, *(--f)) << "didn't decrement before evaluation";
+
+    ASSERT_EQ(5, *(f + 4)) << "indexing is off";
+
+    Vector<Complex> V1(1);
+    V1 << Complex(1, 1);
+
+    ASSERT_NEAR(1, V1.begin()->getRe(), EPS_L<double>);
+}
+
+TYPED_TEST(VectorBase, STLCompatibility) {
+    Vector<long> V(6);
+    V <<  92, -21, -30, -4,  -70,  600;
+
+    auto f = V.begin();
+    auto l = V.end();
+
+    long neg = std::count_if(f, l, [](long n){ return n < 0; });
+    EXPECT_EQ(4, neg);
+
+    std::swap(*(f), *(f + 3));
+    EXPECT_EQ(-4, V[0]);
+
+    EXPECT_EQ((long) -70, *std::min_element(f, l));
+    EXPECT_EQ((long) 600, *std::max_element(f, l));
+
+    std::sort(f, l);
+    EXPECT_TRUE(std::is_sorted(f, l));
+
+    EXPECT_FALSE(std::all_of(f, l, [](long n){ return utils::abs(n) < 100; }));
+    EXPECT_TRUE(std::any_of(f, l, [](long n){ return n == -70; }));
+
+    std::fill(f, l, 5);
+    EXPECT_TRUE(std::none_of(f, l, [](long n){ return n != 5; }));
+}
