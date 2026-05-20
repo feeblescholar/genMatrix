@@ -112,7 +112,7 @@ jobs:
           run  : "brew install cmake make"
 
         - name : Build
-          run  : make prod_build CPPFLAGS="-std=c++17 -O3 -Wall -Werror -Wextra -pedantic -Wno-error=format-pedantic"
+          run  : make prod_build CXXFLAGS="-std=c++17 -O3 -Wall -Werror -Wextra -pedantic -Wno-error=format-pedantic"
 
         - name : Run
           run  : ./build/genMatrix

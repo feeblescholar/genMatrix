@@ -78,17 +78,19 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& other) {
 template<typename T>
 template<typename S>
 Vector<T>& Vector<T>::operator=(const Vector<S>& other) {
-    if (data) 
-        delete[] data;
+    if (this != &other) {
+        if (data) 
+            delete[] data;
 
-    data = new T[other.capacity()];
-    _capacity = other.capacity();
-    _size = other.size();
+        data = new T[other.capacity()];
+        _capacity = other.capacity();
+        _size = other.size();
 
-    for (size_t i = 0; i < _size; i++) {
-        data[i] = static_cast<T>(other[i]);
+        for (size_t i = 0; i < _size; i++) {
+            data[i] = static_cast<T>(other[i]);
+        }
     }
-
+    
     return *this;
 }
 
