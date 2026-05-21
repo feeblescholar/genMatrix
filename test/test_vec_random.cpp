@@ -1,3 +1,8 @@
+/**
+ * @file test_vec_random.cpp
+ * @author Kovács Botond
+ * @brief Vektorosztály tesztesetei random értékkel, több típuson.
+ */
 #include "test_main.hpp"
 
 /**

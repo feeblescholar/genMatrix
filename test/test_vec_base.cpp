@@ -33,10 +33,16 @@ TYPED_TEST(VectorBase, SanityCheck) {
     V.shrink();
     ASSERT_EQ(V.size(), V.capacity());
 
-    /** Megjegyzés: a '<<'-t nem teszteljük, mert a push_back-en alapszik */
+    /** Törlések */
+    V.pop_back();
+    V.remove(0);
+    ASSERT_EQ(2, V[0]);
 
+    /** Megjegyzés: a '<<'-t nem teszteljük, mert a push_back-en alapszik */
+    V << 1, 3;
+    
     /** Member access. */
-    ASSERT_NO_THROW(ASSERT_EQ((int) 1, V[0]));
+    ASSERT_NO_THROW(ASSERT_EQ((int) 2, V[0]));
     ASSERT_NO_THROW(ASSERT_EQ((int) 3, V[2]));
     ASSERT_THROW(V[4], Vector_Error) << "missing bounds check for >= size";
     ASSERT_THROW(V[583], Vector_Error) << "missing bounds check for >= capacity";
@@ -48,7 +54,7 @@ TYPED_TEST(VectorBase, SanityCheck) {
     Vector<int> VC = V;
     ASSERT_EQ((size_t) 3, VC.size());
     ASSERT_EQ((size_t) 3, VC.capacity());
-    ASSERT_NO_THROW(ASSERT_EQ((int) 1, V[0])) << "value changed after copy?";
+    ASSERT_NO_THROW(ASSERT_EQ((int) 2, V[0])) << "value changed after copy?";
     ASSERT_NO_THROW(ASSERT_EQ((int) 3, V[2])) << "value changed after copy?";
 
     /** Copy utáni compare */

@@ -130,6 +130,26 @@ Vector<T>& Vector<T>::push_back(const T& val) {
 }
 
 template<typename T>
+Vector<T>& Vector<T>::pop_back() {
+    if (_size != 0)
+        _size--;
+
+    return *this;
+}
+
+template<typename T>
+void Vector<T>::remove(size_t idx) {
+    if (idx > _size)
+        throw Vector_Error("[remove]", "Out of index");
+    
+    for (size_t i = idx; i < _size - 1; i++) {
+        data[i] = data[i + 1];
+    }
+
+    _size--;
+}
+
+template<typename T>
 void Vector<T>::resize(const size_t ncap) {
     if (ncap < _size)
         Vector_Error("[resize]", "Capacity cannot be less than size.");

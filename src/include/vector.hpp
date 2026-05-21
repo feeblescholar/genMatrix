@@ -116,6 +116,19 @@ public:
     Vector& push_back(const T& val);
 
     /**
+     * @brief Kitöröl egy elemet a vektor végéről.
+     * @return Önmaga referenciája, így lehet láncban hívni.
+     */
+    Vector& pop_back();
+
+    /**
+     * @brief Kitöröl egy elemet az adott indexről.
+     * @param idx A törlendő elem indexe.
+     * @throws Vector_Error túlindexelés esetén.
+     */
+    void remove(size_t idx);    
+
+    /**
      * @brief Újraméretezi a vektort a paraméternek megfelelően.
      * @param ncap Az új kapacitás érték.
      */
