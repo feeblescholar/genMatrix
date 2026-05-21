@@ -1,0 +1,206 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam backgroundColor white
+skinparam roundcorner 10
+
+namespace genMatrix.internal.types {
+    
+    class Hypercomplex {
+        + {abstract} ~Hypercomplex()
+    }
+
+    abstract class Hypercomplex2D {
+        # re: double
+        # im: double
+        + Hypercomplex2D(_re: double = 0, _im: double = 0)
+        + real(): double
+        + unreal(): double
+        + {abstract} abs(): double
+        + {abstract} unit_sq(): double
+    }
+
+    interface genMatrix_Error {
+        + {abstract} src() const: const char*
+        + {abstract} what() const: const char*
+    }
+
+    class "RandomIterator<T, P, R>" as RandomIterator {
+        - ptr: P
+        + RandomIterator(_ptr: P = nullptr)
+        + operator*() const: R
+        + operator->() const: P
+        + operator[](rhs_diff: ptrdiff_t) const: R
+        + operator++(): RandomIterator&
+        + operator++(int): RandomIterator
+        + operator--(): RandomIterator&
+        + operator--(int): RandomIterator
+        + operator+(rhs_diff: ptrdiff_t) const: RandomIterator
+        + operator-(rhs_diff: ptrdiff_t) const: RandomIterator
+        + operator+=(rhs_diff: ptrdiff_t): RandomIterator&
+        + operator-=(rhs_diff: ptrdiff_t): RandomIterator&
+    }
+
+    Hypercomplex <|-- Hypercomplex2D
+}
+
+namespace genMatrix {
+
+    class Complex {
+        + Complex(_re: double = 0, _im: double = 0)
+        + explicit operator double() const
+        + getRe(): double
+        + getIm(): double
+        + unit_sq(): double
+        + abs(): double
+        + setRe(_re: double): void
+        + setIm(_im: double): void
+        + operator==(rhs_c: const Complex&): bool
+        + operator!=(rhs_c: const Complex&): bool
+        + "operator~"(): Complex
+        + operator+(rhs_c: const Complex&): Complex
+        + operator+<T>(rhs_type: const T&): Complex
+        + operator+=(rhs_c: const Complex&): Complex&
+        + operator+=<T>(rhs_type: const T&): Complex&
+        + operator-(rhs_c: const Complex&): Complex
+        + operator-<T>(rhs_type: const T&): Complex
+        + operator-=(rhs_c: const Complex&): Complex&
+        + operator-=<T>(rhs_type: const T&): Complex&
+        + operator*(rhs_c: const Complex&): Complex
+        + operator*<T>(rhs_type: const T&): Complex
+        + operator*=(rhs_c: const Complex&): Complex&
+        + operator*=<T>(rhs_type: const T&): Complex&
+        + operator/(rhs_c: const Complex&): Complex
+        + operator/<T>(rhs_type: const T&): Complex
+        + operator/=(rhs_c: const Complex&): Complex&
+        + operator/=<T>(rhs_type: const T&): Complex&
+    }
+
+    enum __MatrixState {
+        FixedStack
+        FixedHeap
+        DynamicHeap
+    }
+
+    class "Matrix<T>" as Matrix {
+        - staticBuf: T[25]
+        - data: T*
+        - n: size_t
+        - m: size_t
+        - dataLocation: __MatrixState
+        - swap(a: T*, b: T*): void
+        - exact_size(matA: const Matrix<T>&, matB: const Matrix<T>): bool
+        + Matrix(_n: size_t = 0, _m: size_t = 0)
+        + Matrix(other: const Matrix&)
+        + operator=(other: const Matrix&): Matrix&
+        + Matrix(other: Matrix&&)
+        + operator=(other: Matrix&&): Matrix&
+        + "operator<<"(val: const S&): CommaInit
+        + getRows(): size_t
+        + getCols(): size_t
+        + size(): size_t
+        + getDataLocation(): __MatrixState
+        + operator()(row: const size_t, col: const size_t) const: const T&
+        + operator()(row: const size_t, col: const size_t): T&
+        + operator==(other: const Matrix&): bool
+        + begin(): iter
+        + end(): iter
+        + cbegin() const: const_iter
+        + cend() const: const_iter
+        + swapRow(n1: size_t, n2: size_t): Matrix&
+        + swapCol(m1: size_t, m2: size_t): Matrix&
+        + resize(_n: size_t, _m: size_t): void
+        + operator+(rhs_mtx: const Matrix&) const: Matrix
+        + operator+=(rhs_mtx: const Matrix&): Matrix&
+        + operator-(rhs_mtx: const Matrix&) const: Matrix
+        + operator-=(rhs_mtx: const Matrix&): Matrix&
+        + operator*(rhs_mtx: const Matrix&) const: Matrix
+        + operator*(rhs_vec: const Vector&) const: Vector
+        + operator*=(rhs_mtx: const Matrix&): Matrix&
+        + operator*=(rhs_vec: const Vector&): Matrix&
+        + transposeInPlace(): void
+        + transpose() const: Matrix
+        + inverse() const: Matrix
+    }
+
+    class "Matrix<T>::CommaInit" as MatrixCommaInit {
+        - mtx: Matrix<T>&
+        - nextidx: size_t
+        + CommaInit(_mtx: Matrix<T>&, init: const S&)
+        + "operator,"(rhs_val: const S&): CommaInit&
+    }
+
+    class "Vector<T>" as Vector {
+        - data: T*
+        - _size: size_t
+        - _capacity: size_t
+        + Vector(n: size_t = 1)
+        + Vector(mtx: const Matrix<T>&, idx: const size_t)
+        + Vector(other: const Vector&)
+        + Vector(other: Vector&&)
+        + operator Matrix() const
+        + operator=(other: const Vector&): Vector&
+        + operator=(other: Vector&&): Vector&
+        + "operator<<"(val: const S&): CommaInit
+        + size(): size_t
+        + capacity(): size_t
+        + operator[](idx: const size_t) const: const T&
+        + operator[](idx: const size_t): T&
+        + push_back(val: const T&): Vector&
+        + resize(ncap: const size_t): void
+        + shrink(): void
+        + length(): T
+        + operator==(rhs_vec: const Vector&) const: bool
+        + begin(): iter
+        + end(): iter
+        + cbegin() const: const_iter
+        + cend() const: const_iter
+        + operator+(rhs_vec: const Vector&) const: Vector
+        + operator+=(rhs_vec: const Vector&): Vector&
+        + operator-(rhs_vec: const Vector&) const: Vector
+        + operator-=(rhs_vec: const Vector&): Vector&
+        + operator*(rhs_vec: const Vector&) const: T
+    }
+
+    class "Vector<T>::CommaInit" as VectorCommaInit {
+        - vec: Vector<T>&
+        + CommaInit(_vec: Vector<T>&, init: const S&)
+        + "operator,"(rhs_val: const S&): CommaInit&
+    }
+
+    class Matrix_Error {
+        - _src: const char*
+        - _msg: const char*
+        - _fatal: bool
+        + Matrix_Error(src: const char*, msg: const char*, fatal: bool = false)
+        + src() const: const char*
+        + what() const: const char*
+    }
+
+    class Vector_Error {
+        - _src: const char*
+        - _msg: const char*
+        - _fatal: bool
+        + Vector_Error(src: const char*, msg: const char*, fatal: bool = false)
+        + src() const: const char*
+        + what() const: const char*
+    }
+
+    Matrix *-down- MatrixCommaInit
+    Vector *-down- VectorCommaInit
+    Matrix .down.> Vector
+    Vector .up.> Matrix
+    Matrix *-down-> __MatrixState
+    
+    Matrix .right.> Matrix_Error
+    MatrixCommaInit .right.> Matrix_Error
+    Vector .right.> Vector_Error
+}
+
+genMatrix.internal.types.Hypercomplex2D <|-- genMatrix.Complex
+genMatrix.Matrix .left.> genMatrix.internal.types.RandomIterator
+genMatrix.Vector .left.> genMatrix.internal.types.RandomIterator
+
+genMatrix.internal.types.genMatrix_Error <|-- genMatrix.Matrix_Error
+genMatrix.internal.types.genMatrix_Error <|-- genMatrix.Vector_Error
+
+@enduml

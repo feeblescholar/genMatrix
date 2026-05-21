@@ -164,7 +164,7 @@ A hibaosztály nem komponense a mátrix osztálynak, mert nem típusfüggő.
 Ezzel rengeteg felesleges kódtól megkíméljük a fordítót és csökkentjük a fordítási időt.
 
 ## Egyesített osztálydiagram
-Az UML diagram PlantUML kódból készült. A PlantUML editor <a href=https://editor.plantuml.com>itt</a> érhető el. A forrásfájl, amiből generálták, a vektorgrafikás képpel együtt elérhető a projekt GitHubon <a href=https://github.com/feeblescholar/genMatrix>itt</a>. <center><img src="UML diagram rendered.svg"></img></center>
+Az UML diagram PlantUML kódból készült. A PlantUML editor <a href=https://editor.plantuml.com>itt</a> érhető el. A forrásfájl, amiből generálták, a vektorgrafikás képpel együtt elérhető a projekt GitHubon <a href=https://github.com/feeblescholar/genMatrix>itt</a>. <center><img src="UML diagram terv rendered.svg"></img></center>
 
 ## Tesztelés
 A tesztprogram a szabványos bemenetről fog várni egy karaktert (implementáció kérdése lesz, mi legyen), amire az összes tesztesetet le fogja futattni, majd kilépni. 
