@@ -22,7 +22,7 @@ auto norm_1(const Vector<T>& vec) {
 
     std::transform(vec.begin(), vec.end(), absVec.begin(), utils::abs<T>);
 
-    return std::accumulate(absVec.begin(), absVec.end(), 0);
+    return std::accumulate(absVec.begin(), absVec.end(), ReturnType(0));
 }
 
 /**
